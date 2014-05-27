@@ -1,0 +1,16 @@
+;;; Bytecode object file for si/loading.scm
+
+;;; Dynamic variables
+()
+
+;;; Global modifiable variables
+(FACT)
+
+;;; Quotations
+#("si/fact")
+
+;;; Bytecode
+#(245 20 247 38 43 19 24 34 9 0 34 51 60 39 37 45 38 94 8 0 34 79 5 34 51 60 39 37 45 38 94 43)
+
+;;; Entry point
+5

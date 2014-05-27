@@ -1,0 +1,16 @@
+;;; Bytecode object file for tmp.si/fact.scm
+
+;;; Dynamic variables
+()
+
+;;; Global modifiable variables
+(FACT)
+
+;;; Quotations
+#()
+
+;;; Bytecode
+#(245 20 247 38 43 40 2 30 32 72 32 1 34 81 35 106 31 3 82 30 19 1 34 8 0 34 1 34 82 35 105 34 51 60 39 37 45 38 35 109 43 27 0 43)
+
+;;; Entry point
+5
