@@ -30,7 +30,7 @@ SCC		= scc
 # # shell (tcsh does this), at that time, you can leave empty this
 # # definition, it will be automatically inherited from your shell.
 
-HOSTTYPE	= YourCpuType
+HOSTTYPE	= $(shell uname -m)
 
 # # Choose a Scheme interpreter. This interpreter must contain Meroonet,
 # # hygienic macros and a test-suite driver. It is better to build a
