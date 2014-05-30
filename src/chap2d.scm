@@ -67,13 +67,14 @@
              ((even) (lambda (n) (if (= n 0) #t
                                      ((f 'odd) (- n 1)) ))) ) ) )) )
 
-(define odd? (odd-and-even 'odd))
-(define even? (odd-and-even 'even))
+;;; odd? and even? are read-only in bigloo.
+(define _odd? (odd-and-even 'odd))
+(define _even? (odd-and-even 'even))
 
-(or (and (odd? 5)
-         (not (odd? 4))
-         (even? 4)
-         (not (even? 5)) )
+(or (and (_odd? 5)
+         (not (_odd? 4))
+         (_even? 4)
+         (not (_even? 5)) )
     this-would-be-an-error )
 
 (define fix2
@@ -124,9 +125,9 @@
                                       (lambda (odd? even?)    ;\relax{\tt even?}
                                         (lambda (n)
                                           (if (= n 0) #t (odd? (- n 1))) ) ) ))))
-       (set! odd? (car odd-and-even))
-       (set! even? (cadr odd-and-even))
-       (list (odd? 5) (odd? 4) (even? 5) (even? 4)) )
+       (set! _odd? (car odd-and-even))
+       (set! _even? (cadr odd-and-even))
+       (list (_odd? 5) (_odd? 4) (_even? 5) (_even? 4)) )
      '(#t #f #f #t) )
     this-would-be-an-error )
 
@@ -150,9 +151,9 @@
                                       (lambda (odd? even?)    ;\relax{\tt even?}
                                         (lambda (n)
                                           (if (= n 0) #t (odd? (- n 1))) ) ) ))))
-       (set! odd? (car odd-and-even))
-       (set! even? (cadr odd-and-even))
-       (list (odd? 5) (odd? 4) (even? 5) (even? 4)) )
+       (set! _odd? (car odd-and-even))
+       (set! _even? (cadr odd-and-even))
+       (list (_odd? 5) (_odd? 4) (_even? 5) (_even? 4)) )
      '(#t #f #f #t) )
     this-would-be-an-error )
 
@@ -205,6 +206,9 @@
 
 ;;; Exercice on Plists
 
+;;; getprop is read-only in bigloo.
+(define _getprop '())
+
 (let ((properties '()))
   (set! putprop 
         (lambda (symbol key value)
@@ -218,7 +222,7 @@
                 (let ((plist (list symbol (cons key value))))
                   (set! properties (cons plist properties)) ) ) )
           value ) )
-  (set! getprop
+  (set! _getprop
         (lambda (symbol key)
           (let ((plist (assq symbol properties)))
             (if (pair? plist)
@@ -229,10 +233,10 @@
                 #f ) ) ) ) ) 
 
 (or (begin (putprop 'symbol 'key 'value)
-           (eq? (getprop 'symbol 'key) 'value) )
+           (eq? (_getprop 'symbol 'key) 'value) )
     this-would-be-an-error )
 
-(or (not (getprop 'symbol 'lad))
+(or (not (_getprop 'symbol 'lad))
     this-would-be-an-error )
 
 ;;; end of chap2d.scm
