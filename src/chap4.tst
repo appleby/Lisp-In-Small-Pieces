@@ -136,12 +136,14 @@
    #t
 
 ;;; Redefine memq so that errors are reported.
-(define (memq a l)
+(define (_memq a l)
  (if (pair? l)
      (if (eq? a (car l))
          l
-         (memq a (cdr l)) )
+         (_memq a (cdr l)) )
      #f ) )
+   ---
+(set! *memq* _memq)
    ---
 (vowel<= #\o #\u)
    (#\u)
