@@ -46,7 +46,8 @@ HOSTTYPE	= $(shell uname -m)
 
 # # Scm 4e1 is perfect here. This command is intended to be run in the
 # # current directory only.
-SCHEME		= scm -u -l scm/Init.scm
+# SCHEME		= scm -u -l scm/Init.scm
+SCHEME	=	o/${HOSTTYPE}/book.bigloo
 
 # # This variable allows to measure time.
 # # I personnally use Gnu time but time will do also.
