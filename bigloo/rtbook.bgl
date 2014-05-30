@@ -195,9 +195,10 @@
 (define (start options)
   (display "[C. Queinnec's book] Bigloo+Meroonet...")
   (newline)
-  (set! *hygien?* #t)
+  ;; TODO: Confirm these are no longer needed and remove. - ma
+  ;; (set! *hygien?* #t)
   ;; This is a hack to redefine load without hurting the compiler:
-  (eval '(set! load syntax-case-load))
+  ;; (eval '(set! load syntax-case-load))
   (interpreter
    "? " "= " #t
    (lambda (read print error)
@@ -220,7 +221,8 @@
 
 ;;; The clone function that performs a shallow copy of a Meroonet object.
 
-(set! *hygien?* #f)
+;; TODO: Confirm this is no longer needed and remove. - ma
+;;(set! *hygien?* #f)
 (eval '
        (begin
           ;;(display " . . .")(newline) ; DEBUG
