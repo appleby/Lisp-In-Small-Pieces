@@ -1,2 +1,4 @@
+*.out
+*.so
 o/*
-tmp.si/*
+tmp.si/tmp.scm
