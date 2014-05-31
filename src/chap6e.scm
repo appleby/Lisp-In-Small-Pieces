@@ -58,11 +58,11 @@
                              (max (car at-least) n)
                              (+ n 1 (quotient n 2)) )
                          #f )) )
-    (vector-copy! s r 0 n)
+    (_vector-copy! s r 0 n)
     r ) )
 
 ;;; Copy vector old[start..end[ into vector new[start..end[
-(define (vector-copy! old new start end)
+(define (_vector-copy! old new start end)
   (let copy ((i start))
     (when (< i end)
           (vector-set! new i (vector-ref old i))
