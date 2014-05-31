@@ -19,19 +19,23 @@
          (L-meaning-label (cadr e) (caddr e)) )
         (else        (L-meaning-combination (car e) (cadr e))) ) )
 
-(define ((L-meaning-reference n) r)
-  (r n) )
+(define (L-meaning-reference n)
+  (lambda (r)
+    (r n) ) )
 
-(define ((L-meaning-abstraction n e) r)
-  (lambda (v) 
-    ((L-meaning e) (extend r n v)) ) )
+(define (L-meaning-abstraction n e)
+  (lambda (r)
+    (lambda (v) 
+      ((L-meaning e) (extend r n v)) ) ) )
 
-(define ((L-meaning-combination e1 e2) r)
-  (((L-meaning e1) r) ((L-meaning e2) r)) )
+(define (L-meaning-combination e1 e2)
+  (lambda (r)
+    (((L-meaning e1) r) ((L-meaning e2) r)) ) )
 
-(define ((L-meaning-label n e) r)
-  (fix (lambda (v)
-         ((L-meaning e) (extend r n v)) )) )
+(define (L-meaning-label n e)
+  (lambda (r)
+    (fix (lambda (v)
+           ((L-meaning e) (extend r n v)) )) ) )
 
 (define fix
   (let ((d (lambda (w)

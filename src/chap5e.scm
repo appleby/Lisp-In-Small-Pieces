@@ -66,18 +66,20 @@
 ;;; The denotation of an application. E+ represents all the terms of an
 ;;; application. As usual R is the lexical environment, K the continuation
 ;;; and S the store.
-(define ((meaning-orderless-application *e*0*n) r k s)
-  ((possible-paths (map meaning *e*0*n))
-   r 
-   (lambda (v* s)
-     ((Value->Function (car v*)) (cdr v*) k s) )
-   s ) )
+(define (meaning-orderless-application *e*0*n)
+  (lambda (r k s)
+    ((possible-paths (map meaning *e*0*n))
+     r 
+     (lambda (v* s)
+       ((Value->Function (car v*)) (cdr v*) k s) )
+     s ) ) )
 
 (set! meaning-application 
       (lambda (e e*) (meaning-orderless-application (cons e e*))) )
 
-(define ((new-meaning e*0*n) r k s)
-  (oneof ((meaning e*0*n) r k s)) )
+(define (new-meaning e*0*n)
+  (lambda (r k s)
+    (oneof ((meaning e*0*n) r k s)) ) )
 
 ;;; Tests
 

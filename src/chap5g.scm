@@ -58,15 +58,17 @@
         ((global) (meaning-global-reference (cadr e)))
         (else     (meaning-application (car e) (cdr e))) ) ) )
 
-(define ((meaning-quotation v) r g k s)
-  (translate v s (lambda (v s) (k v g s))) )
+(define (meaning-quotation v)
+  (lambda (r g k s)
+    (translate v s (lambda (v s) (k v g s))) ) )
 
-(define ((meaning-global-reference n) r g k s)
-  (let ((a (g n)))
-    (if (eq? a no-such-global-binding)
+(define (meaning-global-reference n)
+  (lambda (r g k s)
+    (let ((a (g n)))
+      (if (eq? a no-such-global-binding)
         (wrong "No such variable" n)
-        (k (s a) g s) ) ) )
-  
+        (k (s a) g s) ) ) ) )
+
 (define (meaning-reference n) 
   (lambda (r g k s)
     (let ((a (r n)))
@@ -87,86 +89,93 @@
       (lambda (x y) y) 
       (lambda (x y) x) ) )
 
-(define ((meaning-alternative e1 e2 e3) r g k s)
-  ((meaning e1) r
-                g 
-                (lambda (v g1 s1)
-                  (ef (boolify v)
-                      ((meaning e2) r g1 k s1) 
-                      ((meaning e3) r g1 k s1) ) )
-                s ) )
+(define (meaning-alternative e1 e2 e3)
+  (lambda (r g k s)
+    ((meaning e1) r
+                  g 
+                  (lambda (v g1 s1)
+                    (ef (boolify v)
+                        ((meaning e2) r g1 k s1) 
+                        ((meaning e3) r g1 k s1) ) )
+                  s ) ) )
 
-(define ((meaning-other-alternative e1 e2 e3) r g k s)
-  ((meaning e1) r
-                g 
-                (lambda (v g1 s1)
-                  ((ef (boolify v) (meaning e2) (meaning e3))
-                   r g1 k s1 ) )
-                s ) )
+(define (meaning-other-alternative e1 e2 e3)
+  (lambda (r g k s)
+    ((meaning e1) r
+                  g 
+                  (lambda (v g1 s1)
+                    ((ef (boolify v) (meaning e2) (meaning e3))
+                     r g1 k s1 ) )
+                  s ) ) )
 
-(define ((meaning-assignment n e) r g k s)
-  ((meaning e) r
-               g 
-               (lambda (v g1 s1)
-                 (let ((a (r n)))
-                   (if (eq? a no-such-binding)
-                       (let ((a (g1 n)))
-                         (if (eq? a no-such-global-binding)
-                             (wrong "No such variable" n)
-                             (k v g1 (extend s1 a v)) ) )
-                       (k v g1 (extend s1 a v)) ) ) )
-               s ) )
-
-(define ((meaning-definition n e) r g k s)
-  ((meaning e) r
-               g 
-               (lambda (v g1 s1)
-                 (let ((a (g n)))
-                   (if (eq? a no-such-global-binding)
-                       (allocate s1 1
-                                 (lambda (s2 a*)
-                                   (k v 
-                                      (extend g1 n (car a*))
-                                      (extend s2 (car a*) v) ) ) )
-                       (k v g1 (extend s1 a v)) ) ) )
-               s ) )
-
-(define ((meaning-global-definition n e) r g k s)
-  ((meaning e) r
-               g 
-               (lambda (v g1 s1)
-                 (let ((a (g n)))
-                   (if (eq? a no-such-global-binding)
-                       (allocate s1 1
-                                 (lambda (s2 a*)
-                                   (k v 
-                                      (extend g1 n (car a*))
-                                      (extend s2 (car a*) v) ) ) )
-                       (k v g1 (extend s1 a v)) ) ) )
-               s ) )
-
-(define ((meaning-defining-assignment n e) r g k s)
+(define (meaning-assignment n e)
+  (lambda (r g k s)
     ((meaning e) r
-               g 
-               (lambda (v g1 s1)
-                 (let ((a (r n)))
-                   (if (eq? a no-such-binding)
+                 g 
+                 (lambda (v g1 s1)
+                   (let ((a (r n)))
+                     (if (eq? a no-such-binding)
                        (let ((a (g1 n)))
                          (if (eq? a no-such-global-binding)
-                             (allocate s1 1
+                           (wrong "No such variable" n)
+                           (k v g1 (extend s1 a v)) ) )
+                       (k v g1 (extend s1 a v)) ) ) )
+                 s ) ) )
+
+(define (meaning-definition n e)
+  (lambda (r g k s)
+    ((meaning e) r
+                 g 
+                 (lambda (v g1 s1)
+                   (let ((a (g n)))
+                     (if (eq? a no-such-global-binding)
+                       (allocate s1 1
                                  (lambda (s2 a*)
                                    (k v 
                                       (extend g1 n (car a*))
                                       (extend s2 (car a*) v) ) ) )
-                             (k v g1 (extend s1 a v)) ) )
                        (k v g1 (extend s1 a v)) ) ) )
-               s ) )
+                 s ) ) )
+
+(define (meaning-global-definition n e)
+  (lambda (r g k s)
+    ((meaning e) r
+                 g 
+                 (lambda (v g1 s1)
+                   (let ((a (g n)))
+                     (if (eq? a no-such-global-binding)
+                       (allocate s1 1
+                                 (lambda (s2 a*)
+                                   (k v 
+                                      (extend g1 n (car a*))
+                                      (extend s2 (car a*) v) ) ) )
+                       (k v g1 (extend s1 a v)) ) ) )
+                 s ) ) )
+
+(define (meaning-defining-assignment n e)
+  (lambda (r g k s)
+    ((meaning e) r
+                 g 
+                 (lambda (v g1 s1)
+                   (let ((a (r n)))
+                     (if (eq? a no-such-binding)
+                       (let ((a (g1 n)))
+                         (if (eq? a no-such-global-binding)
+                           (allocate s1 1
+                                     (lambda (s2 a*)
+                                       (k v 
+                                          (extend g1 n (car a*))
+                                          (extend s2 (car a*) v) ) ) )
+                           (k v g1 (extend s1 a v)) ) )
+                       (k v g1 (extend s1 a v)) ) ) )
+                 s ) ) )
 
 ;;; This denotation does not allow dotted variables.
 
-(define ((meaning-abstraction n* e+) r g k s)
-  (k (inValue (lambda (v* g1 k1 s1)
-                (if (= (length v*) (length n*))
+(define (meaning-abstraction n* e+)
+  (lambda (r g k s)
+    (k (inValue (lambda (v* g1 k1 s1)
+                  (if (= (length v*) (length n*))
                     (allocate s1 (length n*)
                               (lambda (s2 a*)
                                 ((meaning*-sequence e+) 
@@ -175,12 +184,13 @@
                                  k1
                                  (extend* s2 a* v*) ) ) )
                     (wrong "Incorrect arity") ) ))
-     g 
-     s ) )
+       g 
+       s ) ) )
 
-(define ((meaning-hyperstatic-abstraction n* e+) r g k s)
-  (k (inValue (lambda (v* g2 k1 s1)
-                (if (= (length v*) (length n*))
+(define (meaning-hyperstatic-abstraction n* e+)
+  (lambda (r g k s)
+    (k (inValue (lambda (v* g2 k1 s1)
+                  (if (= (length v*) (length n*))
                     (allocate s1 (length n*)
                               (lambda (s2 a*)
                                 ((meaning*-sequence e+) 
@@ -189,39 +199,43 @@
                                  k1
                                  (extend* s2 a* v*) ) ) )
                     (wrong "Incorrect arity") ) ))
-     g 
-     s ) )
+       g 
+       s ) ) )
 
 ;;; Nor does this one. Meaning-fix-abstraction is the same as the
 ;;; previous one except that it is written in a form that makes it
 ;;; similar to meaning-dotted-abstraction.
 
-(define ((meaning-fix-abstraction n* e+) r g k s)
-  (k (inValue (lambda (v* g1 k1 s1)
-                (if (= (length v*) (length n*))
+(define (meaning-fix-abstraction n* e+)
+  (lambda (r g k s)
+    (k (inValue (lambda (v* g1 k1 s1)
+                  (if (= (length v*) (length n*))
                     (((meaning-regular-variables n*)
-                     (lambda (v* r g k s) ((meaning*-sequence e+) r g k s)) )
+                      (lambda (v* r g k s) ((meaning*-sequence e+) r g k s)) )
                      v* r g1 k1 s1 )
                     (wrong "Incorrect arity") ) ))
-     g s ) )
+       g s ) ) )
 
 (define (meaning-regular-variables n*)
   (if (pair? n*) 
       (meaning-some-regular-variables (car n*) (cdr n*))
       (meaning-no-regular-variables) ) )
 
-(define ((meaning-no-regular-variables) m)
-  m )
+(define (meaning-no-regular-variables)
+  (lambda (m)
+    m ) )
 
-(define ((meaning-some-regular-variables n n*) m)
-  ((meaning-variable n) ((meaning-regular-variables n*) m)) )
+(define (meaning-some-regular-variables n n*)
+  (lambda (m)
+    ((meaning-variable n) ((meaning-regular-variables n*) m)) ) )
 
-(define ((meaning-variable n) m) 
-  (lambda (v* r g k s)
-    (allocate 
-     s 1 (lambda (s a*)
-           (let ((a (car a*)))
-             (m (cdr v*) (extend r n a) g k (extend s a (car v*))) ) ) ) ) )
+(define (meaning-variable n)
+  (lambda (m) 
+    (lambda (v* r g k s)
+      (allocate 
+        s 1 (lambda (s a*)
+              (let ((a (car a*)))
+                (m (cdr v*) (extend r n a) g k (extend s a (car v*))) ) ) ) ) ) )
 
 (define (meaning-possibly-dotted-abstraction n* e+)
   (let parse ((n* n*)
@@ -231,43 +245,45 @@
      ((null? n*) (meaning-fix-abstraction (reverse regular) e+))
      (else       (meaning-dotted-abstraction (reverse regular) n* e+)) ) ) )
 
-(define ((meaning-dotted-abstraction n* n e+) r g k s)
-  (k (inValue (lambda (v* g1 k1 s1)
-                (if (>= (length v*) (length n*))
+(define (meaning-dotted-abstraction n* n e+)
+  (lambda (r g k s)
+    (k (inValue (lambda (v* g1 k1 s1)
+                  (if (>= (length v*) (length n*))
                     (((meaning-regular-variables n*)
                       ((meaning-dotted-variable n) 
                        (lambda (v* r g k s) 
                          ((meaning*-sequence e+) r g k s) ) ) )
                      v* r g1 k1 s1 )
                     (wrong "Incorrect arity") ) ))
-     g
-     s ) )
+       g
+       s ) ) )
 
-(define ((meaning-dotted-variable n) m)
-  (lambda (v* r g k s)
-    (letrec ((listify 
-              (lambda (v* g s q)
-                (if (pair? v*)
-                    (allocate 
-                     s 2 (lambda (s a*)
-                           (let ((qq (lambda (v g s)
-                                       (q (inValue a*)
-                                          g
-                                          (extend s (cadr a*) v) ) )))
-                             (listify (cdr v*)
-                                      g
-                                      (extend s (car a*) (car v*))
-                                      qq ) ) ) )
-                    (q (inValue (list)) g s) ) )))
-      (listify v* g s (lambda (v g s)
-                        (allocate s 1
-                                  (lambda (s a*)
-                                    (let ((a (car a*)))
-                                      (m (list) 
-                                         (extend r n a)
-                                         g 
-                                         k 
-                                         (extend s a v) ) ) ) ) )) ) ) )
+(define (meaning-dotted-variable n)
+  (lambda (m)
+    (lambda (v* r g k s)
+      (letrec ((listify 
+                 (lambda (v* g s q)
+                   (if (pair? v*)
+                     (allocate 
+                       s 2 (lambda (s a*)
+                             (let ((qq (lambda (v g s)
+                                         (q (inValue a*)
+                                            g
+                                            (extend s (cadr a*) v) ) )))
+                               (listify (cdr v*)
+                                        g
+                                        (extend s (car a*) (car v*))
+                                        qq ) ) ) )
+                     (q (inValue (list)) g s) ) )))
+        (listify v* g s (lambda (v g s)
+                          (allocate s 1
+                                    (lambda (s a*)
+                                      (let ((a (car a*)))
+                                        (m (list) 
+                                           (extend r n a)
+                                           g 
+                                           k 
+                                           (extend s a v) ) ) ) ) )) ) ) ) )
 
 ;;; Retrofit!
 
@@ -275,51 +291,56 @@
 (set! meaning-alternative meaning-other-alternative)
 
 
-(define ((meaning-application e e*) r g k s)
-  ((meaning e) r
-               g 
-               (lambda (f g1 s1)
-                 ((meaning* e*) r
-                                g1
-                                (lambda (v* g2 s2)
-                                  ((Value->Function f) v* g2 k s2) )
-                                s1 ) )
-               s ) )
+(define (meaning-application e e*)
+  (lambda (r g k s)
+    ((meaning e) r
+                 g 
+                 (lambda (f g1 s1)
+                   ((meaning* e*) r
+                                  g1
+                                  (lambda (v* g2 s2)
+                                    ((Value->Function f) v* g2 k s2) )
+                                  s1 ) )
+                 s ) ) )
 
-(define ((meaning-exercice-application e e*) r g k s)
-  ((meaning e) r 
-               g
-               (lambda (f g1 ss)
-                 ((meaning-stack-application e*)
-                  (list)
-                  r 
-                  g 
-                  (lambda (v* g s) ((Value->Function f) v* g k s))
-                  ss ) )
-               s ) )
+(define (meaning-exercice-application e e*)
+  (lambda (r g k s)
+    ((meaning e) r 
+                 g
+                 (lambda (f g1 ss)
+                   ((meaning-stack-application e*)
+                    (list)
+                    r 
+                    g 
+                    (lambda (v* g s) ((Value->Function f) v* g k s))
+                    ss ) )
+                 s ) ) )
 
 (define (meaning-stack-application e*)
   (if (pair? e*) 
       (meaning-stack-some-arguments (car e*) (cdr e*))
       (meaning-stack-no-arguments) ) )
 
-(define ((meaning-stack-no-arguments) v* r g k s)
-  (k (reverse v*) g s) )
+(define (meaning-stack-no-arguments)
+  (lambda (v* r g k s)
+    (k (reverse v*) g s) ) )
 
-(define ((meaning-stack-some-arguments e e*) v* r g k s)
-  ((meaning e) r 
-               g
-               (lambda (v g ss)
-                 ((meaning-stack-application e*)
-                  (cons v v*) r g k ss ) )
-               s ) )
+(define (meaning-stack-some-arguments e e*)
+  (lambda (v* r g k s)
+    ((meaning e) r 
+                 g
+                 (lambda (v g ss)
+                   ((meaning-stack-application e*)
+                    (cons v v*) r g k ss ) )
+                 s ) ) )
 ;;; tests
 (set! meaning-application meaning-exercice-application)
 
 ;;; iterator aka eprogn
 
-(define ((meaning-sequence e+) r g k s)
-  ((meaning*-sequence e+) r g k s) )
+(define (meaning-sequence e+)
+  (lambda (r g k s)
+    ((meaning*-sequence e+) r g k s) ) )
 
 (define (meaning*-sequence e+)
   (if (pair? e+)
@@ -331,15 +352,17 @@
 ;;; The meaning-single-sequence function can be eta-simplified as well as
 ;;; the meaning-sequence function above.
 
-(define ((meaning*-single-sequence e) r g k s)
-  ((meaning e) r g k s) )
+(define (meaning*-single-sequence e)
+  (lambda (r g k s)
+    ((meaning e) r g k s) ) )
 
-(define ((meaning*-multiple-sequence e e+) r g k s)
-  ((meaning e) r
-               g 
-               (lambda (v g1 s1)
-                 ((meaning*-sequence e+) r g1 k s1) )
-               s ) )
+(define (meaning*-multiple-sequence e e+)
+  (lambda (r g k s)
+    ((meaning e) r
+                 g 
+                 (lambda (v g1 s1)
+                   ((meaning*-sequence e+) r g1 k s1) )
+                 s ) ) )
 
 ;;; Iterator aka evlis
 
@@ -348,19 +371,21 @@
       (meaning-some-arguments (car e*) (cdr e*))
       (meaning-no-argument) ) )
 
-(define ((meaning-some-arguments e e*) r g k s)
-  ((meaning e) r
-               g
-               (lambda (v g1 s1)
-                 ((meaning* e*) r 
-                                g
-                                (lambda (v* g2 s2)
-                                  (k (cons v v*) g2 s2) )
-                                s1 ) )
-               s ) )
+(define (meaning-some-arguments e e*)
+  (lambda (r g k s)
+    ((meaning e) r
+                 g
+                 (lambda (v g1 s1)
+                   ((meaning* e*) r 
+                                  g
+                                  (lambda (v* g2 s2)
+                                    (k (cons v v*) g2 s2) )
+                                  s1 ) )
+                 s ) ) )
 
-(define ((meaning-no-argument) r g k s)
-  (k (list) g s) )
+(define (meaning-no-argument)
+  (lambda (r g k s)
+    (k (list) g s) ) )
 
 ;;; Representation of environment and store
 

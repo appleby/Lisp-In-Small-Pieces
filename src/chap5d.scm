@@ -54,8 +54,9 @@
         ((set!)   (meaning-assignment (cadr e) (caddr e)))
         (else     (meaning-application (car e) (cdr e))) ) ) )
 
-(define ((meaning-quotation v) r k s)
-  (translate v s k) )
+(define (meaning-quotation v)
+  (lambda (r k s)
+    (translate v s k) ) )
 
 (define (meaning-reference n) 
   (lambda (r k s)
@@ -120,19 +121,21 @@
                         (wrong "Incorrect arity") ) ))
          s ) ) ) )
 
-(define ((meaning-regular-variables n*) m)
-  (if (pair? n*)
+(define (meaning-regular-variables n*)
+  (lambda (m)
+    (if (pair? n*)
       (let ((m1 (meaning-variable (car n*)))
             (m2 (meaning-regular-variables (cdr n*))) )
         (m1 (m2 m)) )
-      m ) )
+      m ) ) )
 
-(define ((meaning-variable n) m)
-  (lambda (v* r k s)
-    (allocate 
-     s 1 (lambda (s a*)
-           (let ((a (car a*)))
-             (m (cdr v*) (extend r n a) k (extend s a (car v*))) ) ) ) ) )
+(define (meaning-variable n)
+  (lambda (m)
+    (lambda (v* r k s)
+      (allocate 
+        s 1 (lambda (s a*)
+              (let ((a (car a*)))
+                (m (cdr v*) (extend r n a) k (extend s a (car v*))) ) ) ) ) ) )
 
 (define (meaning-possibly-dotted-abstraction n* e+)
   (let parse ((n* n*)
@@ -155,27 +158,28 @@
                         (wrong "Incorrect arity") ) ))
          s ) ) ) )
 
-(define ((meaning-dotted-variable n) m)
-  (lambda (v* r k s)
-    (letrec ((listify 
-              (lambda (v* s q)
-                (if (pair? v*)
-                    (allocate 
-                     s 2 (lambda (s a*)
-                           (listify (cdr v*)
-                                    (extend s (car a*) (car v*))
-                                    (lambda (v s)
-                                      (q (inValue a*)
-                                         (extend s (cadr a*) v) ) ) ) ))
-                    (q (inValue '()) s) ) )))
-      (listify v* s (lambda (v s)
-                      (allocate s 1
-                                (lambda (s a*)
-                                  (let ((a (car a*)))
-                                    (m '() 
-                                       (extend r n a)
-                                       k 
-                                       (extend s a v) ) ) ) ) )) ) ) )
+(define (meaning-dotted-variable n)
+  (lambda (m)
+    (lambda (v* r k s)
+      (letrec ((listify 
+                 (lambda (v* s q)
+                   (if (pair? v*)
+                     (allocate 
+                       s 2 (lambda (s a*)
+                             (listify (cdr v*)
+                                      (extend s (car a*) (car v*))
+                                      (lambda (v s)
+                                        (q (inValue a*)
+                                           (extend s (cadr a*) v) ) ) ) ))
+                     (q (inValue '()) s) ) )))
+        (listify v* s (lambda (v s)
+                        (allocate s 1
+                                  (lambda (s a*)
+                                    (let ((a (car a*)))
+                                      (m '() 
+                                         (extend r n a)
+                                         k 
+                                         (extend s a v) ) ) ) ) )) ) ) ) )
 
 ;;; Retrofit!
 
@@ -236,8 +240,9 @@
                   s1 ) )
           s ) ) ) )
 
-(define ((meaning-no-argument) r k s)
-  (k (list) s) )
+(define (meaning-no-argument)
+  (lambda (r k s)
+    (k (list) s) ) )
 
 ;;; Representation of environment and store
 

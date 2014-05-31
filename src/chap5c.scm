@@ -59,21 +59,25 @@
          (meaning-dynamic-reference (cadr e)) )
         (else     (meaning-application (car e) (cdr e))) ) ) )
 
-(define ((meaning-dynamic-reference n) r d k s)
-  (k (d n) s) )
+(define (meaning-dynamic-reference n)
+  (lambda (r d k s)
+    (k (d n) s) ) )
 
-(define ((meaning-dynamic-binding n e e+) r d k s)
-  ((meaning e) r d
-               (lambda (v s1)
-                 ((meaning*-sequence e+)
-                  r (extend d n v) k s1 ) )
-               s ) )
+(define (meaning-dynamic-binding n e e+)
+  (lambda (r d k s)
+    ((meaning e) r d
+                 (lambda (v s1)
+                   ((meaning*-sequence e+)
+                    r (extend d n v) k s1 ) )
+                 s ) ) )
 
-(define ((meaning-quotation v) r d k s)
-  (translate v s k) )
+(define (meaning-quotation v)
+  (lambda (r d k s)
+    (translate v s k) ) )
 
-(define ((meaning-reference n) r d k s)
-  (k (s (r n)) s) )
+(define (meaning-reference n)
+  (lambda (r d k s)
+    (k (s (r n)) s) ) )
 
 (define (ef v v1 v2)
   (v v1 v2) )
@@ -83,24 +87,27 @@
       (lambda (x y) y) 
       (lambda (x y) x) ) )
 
-(define ((meaning-alternative e1 e2 e3) r d k s)
-  ((meaning e1) r d 
-                (lambda (v s1)
-                  ((ef (boolify v) (meaning e2) (meaning e3))
-                   r d k s1 ) )
-                s ) )
+(define (meaning-alternative e1 e2 e3)
+  (lambda (r d k s)
+    ((meaning e1) r d 
+                  (lambda (v s1)
+                    ((ef (boolify v) (meaning e2) (meaning e3))
+                     r d k s1 ) )
+                  s ) ) )
 
-(define ((meaning-assignment n e) r d k s)
-  ((meaning e) r d 
-               (lambda (v s1)
-                 (k v (extend s1 (r n) v)) )
-               s ) )
+(define (meaning-assignment n e)
+  (lambda (r d k s)
+    ((meaning e) r d 
+                 (lambda (v s1)
+                   (k v (extend s1 (r n) v)) )
+                 s ) ) )
 
 ;;; This denotation does not allow dotted variables.
 
-(define ((meaning-abstraction n* e+) r d k s)
-  (k (inValue (lambda (v* d1 k1 s1)
-                (if (= (length v*) (length n*))
+(define (meaning-abstraction n* e+)
+  (lambda (r d k s)
+    (k (inValue (lambda (v* d1 k1 s1)
+                  (if (= (length v*) (length n*))
                     (allocate s1 (length n*)
                               (lambda (s2 a*)
                                 ((meaning*-sequence e+) 
@@ -109,33 +116,36 @@
                                  k1
                                  (extend* s2 a* v*) ) ) )
                     (wrong "Incorrect arity") ) ))
-     s ) )
+       s ) ) )
 
 ;;; Nor does this one. Meaning-fix-abstraction is the same as the
 ;;; previous one except that it is written in a form that makes it
 ;;; similar to meaning-dotted-abstraction.
 
-(define ((meaning-fix-abstraction n* e+) r d k s)
-  (k (inValue (lambda (v* d1 k1 s1)
-                (if (= (length v*) (length n*))
+(define (meaning-fix-abstraction n* e+)
+  (lambda (r d k s)
+    (k (inValue (lambda (v* d1 k1 s1)
+                  (if (= (length v*) (length n*))
                     (((meaning-regular-variables n*)
                       (lambda (v* r d k s) ((meaning*-sequence e+) r d k s)) )
                      v* r d1 k1 s1 )
                     (wrong "Incorrect arity") ) ))
-     s ) )
+       s ) ) )
 
-(define ((meaning-regular-variables n*) m)
-  (if (pair? n*)
+(define (meaning-regular-variables n*)
+  (lambda (m)
+    (if (pair? n*)
       ((meaning-variable (car n*))
        ((meaning-regular-variables (cdr n*)) m) )
-      m ) )
+      m ) ) )
 
-(define ((meaning-variable n) m)
-  (lambda (v* r d k s)
-    (allocate 
-     s 1 (lambda (s a*)
-           (let ((a (car a*)))
-             (m (cdr v*) (extend r n a) d k (extend s a (car v*))) ) ) ) ) )
+(define (meaning-variable n)
+  (lambda (m)
+    (lambda (v* r d k s)
+      (allocate 
+        s 1 (lambda (s a*)
+              (let ((a (car a*)))
+                (m (cdr v*) (extend r n a) d k (extend s a (car v*))) ) ) ) ) ) )
 
 (define (meaning-possibly-dotted-abstraction n* e+)
   (let parse ((n* n*)
@@ -145,52 +155,55 @@
      ((null? n*) (meaning-fix-abstraction (reverse regular) e+))
      (else       (meaning-dotted-abstraction (reverse regular) n* e+)) ) ) )
 
-(define ((meaning-dotted-abstraction n* n e+) r d k s)
-  (k (inValue (lambda (v* d1 k1 s1)
-                (if (>= (length v*) (length n*))
+(define (meaning-dotted-abstraction n* n e+)
+  (lambda (r d k s)
+    (k (inValue (lambda (v* d1 k1 s1)
+                  (if (>= (length v*) (length n*))
                     (((meaning-regular-variables n*)
                       ((meaning-dotted-variable n) 
                        (lambda (v* r d k s) 
                          ((meaning*-sequence e+) r d k s) ) ) )
                      v* r d1 k1 s1 )
                     (wrong "Incorrect arity") ) ))
-     s ) )
+       s ) ) )
 
-(define ((meaning-dotted-variable n) m)
-  (lambda (v* r d k s)
-    (letrec ((listify 
-              (lambda (v* s q)
-                (if (pair? v*)
-                    (allocate 
-                     s 2 (lambda (s a*)
-                           (listify (cdr v*)
-                                    (extend s (car a*) (car v*))
-                                    (lambda (v s)
-                                      (q (inValue a*)
-                                         (extend s (cadr a*) v) ) ) ) ))
-                    (q (inValue '()) s) ) )))
-      (listify v* s (lambda (v s)
-                      (allocate s 1
-                                (lambda (s a*)
-                                  (let ((a (car a*)))
-                                    (m '() 
-                                       (extend r n a)
-                                       d 
-                                       k 
-                                       (extend s a v) ) ) ) ) )) ) ) )
+(define (meaning-dotted-variable n)
+  (lambda (m)
+    (lambda (v* r d k s)
+      (letrec ((listify 
+                 (lambda (v* s q)
+                   (if (pair? v*)
+                     (allocate 
+                       s 2 (lambda (s a*)
+                             (listify (cdr v*)
+                                      (extend s (car a*) (car v*))
+                                      (lambda (v s)
+                                        (q (inValue a*)
+                                           (extend s (cadr a*) v) ) ) ) ))
+                     (q (inValue '()) s) ) )))
+        (listify v* s (lambda (v s)
+                        (allocate s 1
+                                  (lambda (s a*)
+                                    (let ((a (car a*)))
+                                      (m '() 
+                                         (extend r n a)
+                                         d 
+                                         k 
+                                         (extend s a v) ) ) ) ) )) ) ) ) )
 
 ;;; Retrofit!
 
 (set! meaning-abstraction meaning-possibly-dotted-abstraction)
 
-(define ((meaning-application e e*) r d k s)
-  ((meaning e) r d 
-               (lambda (f s1)
-                 ((meaning* e*) r d 
-                                (lambda (v* s2)
-                                  ((Value->Function f) v* d k s2) )
-                                s1 ) )
-               s ) )
+(define (meaning-application e e*)
+  (lambda (r d k s)
+    ((meaning e) r d 
+                 (lambda (f s1)
+                   ((meaning* e*) r d 
+                                  (lambda (v* s2)
+                                    ((Value->Function f) v* d k s2) )
+                                  s1 ) )
+                 s ) ) )
 
 ;;; iterator aka eprogn
 
@@ -207,14 +220,16 @@
 ;;; The meaning-single-sequence function can be eta-simplified as well as
 ;;; the meaning-sequence function above.
 
-(define ((meaning*-single-sequence e) r d k s)
-  ((meaning e) r d k s) )
+(define (meaning*-single-sequence e)
+  (lambda (r d k s)
+    ((meaning e) r d k s) ) )
 
-(define ((meaning*-multiple-sequence e e+) r d k s)
-  ((meaning e) r d 
-               (lambda (v s1)
-                 ((meaning*-sequence e+) r d k s1) )
-               s ) )
+(define (meaning*-multiple-sequence e e+)
+  (lambda (r d k s)
+    ((meaning e) r d 
+                 (lambda (v s1)
+                   ((meaning*-sequence e+) r d k s1) )
+                 s ) ) )
 
 ;;; Iterator aka evlis
 
@@ -223,17 +238,19 @@
       (meaning-some-arguments (car e*) (cdr e*))
       (meaning-no-argument) ) )
 
-(define ((meaning-some-arguments e e*) r d k s)
-  ((meaning e) r d 
-               (lambda (v s1)
-                 ((meaning* e*) r d 
-                                (lambda (v* s2)
-                                  (k (cons v v*) s2) )
-                                s1 ) )
-               s ) )
+(define (meaning-some-arguments e e*)
+  (lambda (r d k s)
+    ((meaning e) r d 
+                 (lambda (v s1)
+                   ((meaning* e*) r d 
+                                  (lambda (v* s2)
+                                    (k (cons v v*) s2) )
+                                  s1 ) )
+                 s ) ) )
 
-(define ((meaning-no-argument) r d k s)
-  (k (list) s) )
+(define (meaning-no-argument)
+  (lambda (r d k s)
+    (k (list) s) ) )
 
 ;;; Representation of environment and store
 
