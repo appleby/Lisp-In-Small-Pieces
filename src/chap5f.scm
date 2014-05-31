@@ -10,19 +10,19 @@
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
 
-(define-syntax delay
+(define-syntax delay_
   (syntax-rules ()
-    ((delay expression) (lambda () expression)) ) )
+    ((delay_ expression) (lambda () expression)) ) )
 
-(define (force promise) (promise)) 
+(define (force_ promise) (promise)) 
 
-(define (print x)
+(define (print_ x)
   (display x) 
   x ) 
 
 ;;; prints 66 
-(let ((p (delay (print (* 2 3)))))
-  (list (force p) (force p)) )
+(let ((p (delay_ (print_ (* 2 3)))))
+  (list (force_ p) (force_ p)) )
 
 (define-syntax memo-delay
   (syntax-rules ()
@@ -37,8 +37,8 @@
          value ) ) ) ) )
 
 ;;; prints 6 (only one time)
-(let ((p (memo-delay (print (* 2 3)))))
-  (list (force p) (force p)) )
+(let ((p (memo-delay (print_ (* 2 3)))))
+  (list (force_ p) (force_ p)) )
 
 ;;; CPS 
 
