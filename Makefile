@@ -840,30 +840,30 @@ TEST_CHAP7 =		test.chap7a				test.chap7b 				test.chap7c				test.chap7d 				test
 # # Linearize the intermediate language to make register *val* appear.
 # # 13.48user 1.84system 0:31.70elapsed
 test.chap7a : src/chap6d.scm src/chap7a.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7a.scm\")					(test-Scheme7a \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7a.scm\")					(test-scheme7a \"src/scheme.tst\")"  		| ${SCHEME}
 
 # # make stack appear (as well as other registers)
 # # 13.91user 1.81system 0:33.46elapsed
 test.chap7b : src/chap6d.scm src/chap7b.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7b.scm\")					(test-Scheme7b \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7b.scm\")					(test-scheme7b \"src/scheme.tst\")"  		| ${SCHEME}
 
 # # represents instructions by list of closures. Make register PC appear.
 # # 18.09user 1.95system 0:42.60elapsed
 test.chap7c : src/chap6d.scm src/chap7c.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7c.scm\")					(test-Scheme7c \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7c.scm\")					(test-scheme7c \"src/scheme.tst\")"  		| ${SCHEME}
 
 # # the complete bytecode compiler itself.
 # # The instruction set is defined in chap7f but is directly
 # # handled by chap7d.
 # # 64.28user 2.92system 1:39.47elapsed
 test.chap7d : src/chap6d.scm src/chap7d.scm src/chap7f.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(test-Scheme7d \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(test-scheme7d \"src/scheme.tst\")"  		| ${SCHEME}
 
 # # added bind-exit, dynamic variables and error handling (first version
 # # with dynenv register) in the bytecode compiler.
 # # 106.45user 4.26system 2:48.65elapsed
 test.chap7e : src/chap7d.scm src/chap7e.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7e.scm\")					(and (test-Scheme7e \"src/scheme.tst\")				     (test-Scheme7e \"src/chap7d.tst\")				     (test-Scheme7e \"src/chap5c.tst\") )"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7e.scm\")					(and (test-scheme7e \"src/scheme.tst\")				     (test-scheme7e \"src/chap7d.tst\")				     (test-scheme7e \"src/chap5c.tst\") )"  		| ${SCHEME}
 
 # # chap7f.scm contains the definition of the instructions of the machine
 
@@ -871,19 +871,19 @@ test.chap7e : src/chap7d.scm src/chap7e.scm
 # # with the bytecode compiler.
 # # 219.27user 13.58system 8:47.39elapsed
 test.chap7g : src/chap7h.scm src/chap7g.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(load \"src/chap7g.scm\")					(and (test-Scheme7g \"src/scheme.tst\")				     (test-Scheme7g \"src/chap7d.tst\")				     (test-Scheme7g \"src/chap5c.tst\") )			(compile-file \"tmp.si/foo\")					(run-application 100 \"tmp.si/foo.so\")				(compile-file \"tmp.si/fact\")					(compile-file \"tmp.si/fib\")					(compile-file \"tmp.si/after\")					(build-application \"tmp.si/a.out\" 				   \"tmp.si/fact\" \"tmp.si/fib\" 				   \"tmp.si/foo\" \"tmp.si/after\" )				(run-application 400 \"tmp.si/a.out\")				(build-application-renaming-variables 				     \"tmp.si/na.out\" \"tmp.si/a.out\" 			     '((fib fact) (fact fib)) )					(run-application 400 \"tmp.si/na.out\")				(assoc 'long-goto (disassemble *code*))"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(load \"src/chap7g.scm\")					(and (test-scheme7g \"src/scheme.tst\")				     (test-scheme7g \"src/chap7d.tst\")				     (test-scheme7g \"src/chap5c.tst\") )			(compile-file \"tmp.si/foo\")					(run-application 100 \"tmp.si/foo.so\")				(compile-file \"tmp.si/fact\")					(compile-file \"tmp.si/fib\")					(compile-file \"tmp.si/after\")					(build-application \"tmp.si/a.out\" 				   \"tmp.si/fact\" \"tmp.si/fib\" 				   \"tmp.si/foo\" \"tmp.si/after\" )				(run-application 400 \"tmp.si/a.out\")				(build-application-renaming-variables 				     \"tmp.si/na.out\" \"tmp.si/a.out\" 			     '((fib fact) (fact fib)) )					(run-application 400 \"tmp.si/na.out\")				(assoc 'long-goto (disassemble *code*))"  		| ${SCHEME}
 
 # # implementation variant for dynamic variables, error handlers
 # # with labels in the stack (without dynenv register).
 # # 106.77user 4.34system 2:49.31elapsed
 test.chap7h : src/chap7d.scm src/chap7h.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(and (test-Scheme7h \"src/scheme.tst\")				     (test-Scheme7h \"src/chap7d.tst\")				     (test-Scheme7h \"src/chap5c.tst\") )"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(and (test-scheme7h \"src/scheme.tst\")				     (test-scheme7h \"src/chap7d.tst\")				     (test-scheme7h \"src/chap5c.tst\") )"  		| ${SCHEME}
 
 # # shallow binding for dynamic variables
 # # It will fail on the last test of src/chap7d.tst
 shallow.test.chap7i : test.chap7i
 test.chap7i : src/chap7h.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(load \"src/chap7i.scm\")					(and (test-Scheme7h \"src/scheme.tst\")				     (test-Scheme7h \"src/chap5c.tst\")				     (test-Scheme7h \"src/chap7d.tst\") )"  		| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(load \"src/chap7i.scm\")					(and (test-scheme7h \"src/scheme.tst\")				     (test-scheme7h \"src/chap5c.tst\")				     (test-scheme7h \"src/chap7d.tst\") )"  		| ${SCHEME}
 
 # ##################################### Chap 8 ##############################
 # # Chapter on evaluation and reflection
@@ -909,7 +909,7 @@ test.chap8c : src/chap8c.scm src/chap6d.scm
 # # Add eval/ce (as a special form) to the bytecode compiler
 # # 157.23user 14.52system 5:20.46elapsed
 test.chap8d : src/chap8c.scm src/chap8d.scm src/chap6d.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8d.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-Scheme7g \"src/chap5c.tst\")		     (test-Scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8d.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8a.tst\")		     )"						| ${SCHEME}
 
 # # add eval/at (a function) as a function to the naive interpreter
 # # It fails on a test preceded by "eval as a function will fail..."
@@ -921,7 +921,7 @@ evalf.test.chap8e : src/chap8e.scm src/chap1.scm
 # # It fails on a test preceded by "eval as a function will fail..."
 # # 156.77user 14.10system 5:03.18elapsed
 evalf.test.chap8f : src/chap8f.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8f.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-Scheme7g \"src/chap5c.tst\")		     (test-Scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8f.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8a.tst\")		     )"						| ${SCHEME}
 
 # # represent interpreted functions as functions in the naive interpreter.
 # # It fails on a test preceded by "eval as a function will fail..."
@@ -933,12 +933,12 @@ evalf.test.chap8g : src/chap8g.scm src/chap1.scm
 # # also add procedure->body and procedure->environment.
 # # 173.64user 15.58system 5:33.69elapsed
 test.chap8h : src/chap8h.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-Scheme7g \"src/chap5c.tst\")		     (test-Scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8h.tst\")		     )"						| ${SCHEME}
+	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8h.tst\")		     )"						| ${SCHEME}
 
 # # add the import special form
 # # 180.38user 16.38system 5:48.37elapsed
 test.chap8i : src/chap8i.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(load \"src/chap8i.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-Scheme7g \"src/chap5c.tst\")		     (test-Scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8h.tst\")		     (test-scheme7g \"src/chap8i.tst\")		     )"						| ${SCHEME}
+	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(load \"src/chap8i.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8h.tst\")		     (test-scheme7g \"src/chap8i.tst\")		     )"						| ${SCHEME}
 
 # # a little reflective interpreter.
 # # Pay attention, this is very long and needs much much space...
