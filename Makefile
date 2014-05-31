@@ -572,7 +572,7 @@ test.chap6.bgl :	test.chap6a.bgl
 # # Fast interpretation, code is precompiled into (lambda (sr k)..)
 # # 10.71user 1.80system 0:26.55elapsed
 test.chap6a : src/chap6a.scm
-	echo  "							(load \"src/chap6a.scm\")					(test-Scheme6a \"src/scheme.tst\")"				| ${SCHEME}
+	echo  "							(load \"src/chap6a.scm\")					(test-scheme6a \"src/scheme.tst\")"				| ${SCHEME}
 
 # # Interpreted bench
 # # 5.42user 0.90system 0:08.78elapsed
@@ -589,7 +589,7 @@ o/${HOSTTYPE}/bglchap6a : src/chap6a.scm bigloo/compapp.scm
 
 # # Compiled bench with Scheme->C	(obsolete)
 test.chap6a.scc : src/chap6a.scm
-	echo "								(module chap6a (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-Scheme6a \"src/scheme.tst\")					  (bench6a (string->number (cadr args))					           (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6a.scm\")"		> o/${HOSTTYPE}/chap6a.sc
+	echo "								(module chap6a (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-scheme6a \"src/scheme.tst\")					  (bench6a (string->number (cadr args))					           (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6a.scm\")"		> o/${HOSTTYPE}/chap6a.sc
 
 	${SCC} -o o/${HOSTTYPE}/chap6a ${SCCFLAGS} o/${HOSTTYPE}/chap6a.sc 		${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
 
@@ -665,7 +665,7 @@ test.chap6.ml :
 # # patch to chap6a.scm to define new global variables on the fly:
 # # 11.06user 1.86system 0:31.25elapsed
 test.chap6b : src/chap6a.scm src/chap6b.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6b.scm\")					(and (test-Scheme6b \"src/chap6b.tst\")				     (test-Scheme6b \"src/scheme.tst\") )"			| ${SCHEME}
+	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6b.scm\")					(and (test-scheme6b \"src/chap6b.tst\")				     (test-scheme6b \"src/scheme.tst\") )"			| ${SCHEME}
 
 # # Interpreted bench
 # # 5.65user 0.89system 0:11.17elapsed
@@ -676,7 +676,7 @@ bench.chap6b : src/chap6a.scm src/chap6b.scm
 # # Programs are precompiled into (lambda (k) ...)
 # # 11.97user 2.01system 0:34.30elapsed
 test.chap6c : src/chap6c.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6c.scm\")					(test-Scheme6c \"src/scheme.tst\")"				| ${SCHEME}
+	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6c.scm\")					(test-scheme6c \"src/scheme.tst\")"				| ${SCHEME}
 
 # # Interpreted bench
 bench.chap6c : src/chap6c.scm
@@ -685,7 +685,7 @@ bench.chap6c : src/chap6c.scm
 # # Compile it with scc.			(obsolete)
 test.chap6c.scc : src/chap6c.scm
 	${MAKE} ${MAKEFLAGS} mkdir
-	echo "								(module chap6c (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-Scheme6c \"src/scheme.tst\")					  (bench6c (string->number (cadr args))					           (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6a.scm\")						(include \"src/chap6c.scm\")"		> o/${HOSTTYPE}/chap6c.sc
+	echo "								(module chap6c (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-scheme6c \"src/scheme.tst\")					  (bench6c (string->number (cadr args))					           (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6a.scm\")						(include \"src/chap6c.scm\")"		> o/${HOSTTYPE}/chap6c.sc
 
 	${SCC} -o o/${HOSTTYPE}/chap6c ${SCCFLAGS} o/${HOSTTYPE}/chap6c.sc 		${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
 
@@ -699,7 +699,7 @@ test.chap6c.scc : src/chap6c.scm
 # # The program is precompiled into (lambda ()...)
 # # 11.09user 1.90system 0:27.29elapsed
 test.chap6d : src/chap6d.scm
-	echo  "							(load \"src/chap6d.scm\")					(test-Scheme6d \"src/scheme.tst\")"				| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(test-scheme6d \"src/scheme.tst\")"				| ${SCHEME}
 
 # # Interpreted bench
 # # 5.35user 0.81system 0:10.35elapsed
@@ -712,7 +712,7 @@ bench.chap6d : src/chap6d.scm
 # # continuation to return multiply."
 shared.test.chap6dd : test.chap6dd
 test.chap6dd : src/chap6d.scm src/chap6dd.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6dd.scm\")					(and (test-Scheme6d \"src/chap6dd.tst\")			     (test-Scheme6d \"src/scheme.tst\") )"  			| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6dd.scm\")					(and (test-scheme6d \"src/chap6dd.tst\")			     (test-scheme6d \"src/scheme.tst\") )"  			| ${SCHEME}
 
 # # Compile with scc				(obsolete)
 test.chap6d.scc : src/chap6d.scm
@@ -742,7 +742,7 @@ test.chap6d.scc : src/chap6d.scm
 # # a small byte-tree-code compiler. (Not used in the book)
 # #
 test.chap6e : src/chap6e.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6e.scm\")					(test-Scheme6e \"src/scheme.tst\")"				| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6e.scm\")					(test-scheme6e \"src/scheme.tst\")"				| ${SCHEME}
 
 bench.chap6e : src/chap6e.scm
 	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6e.scm\")					(bench6e 1 (call-with-input-file \"src/chap5-bench.scm\" read))	"								| ${SCHEME}
@@ -826,11 +826,11 @@ test.chap6f.scc : src/chap6f.scm
 
 # # Handling the define special form.
 test.chap6g : src/chap6a.scm src/chap6b.scm src/chap6g.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6b.scm\")					(load \"src/chap6g.scm\")					(and (test-Scheme6b \"src/chap6g.tst\")				     (test-Scheme6b \"src/scheme.tst\") )"			| ${SCHEME}
+	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6b.scm\")					(load \"src/chap6g.scm\")					(and (test-scheme6b \"src/chap6g.tst\")				     (test-scheme6b \"src/scheme.tst\") )"			| ${SCHEME}
 
 # # exercice on a specialized invocation protocol for thunks
 test.chap6h : src/chap6d.scm src/chap6h.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6h.scm\")					(test-Scheme6d \"src/scheme.tst\")"  				| ${SCHEME}
+	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6h.scm\")					(test-scheme6d \"src/scheme.tst\")"  				| ${SCHEME}
 
 # ##################################### Chap 7 ##############################
 # # Bytecode compilation
