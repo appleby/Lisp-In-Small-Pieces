@@ -47,15 +47,15 @@
 
 (define (save-stack)
   (let ((copy (make-vector *stack-index*)))
-    (vector-copy! *stack* copy 0 *stack-index*)
+    (_vector-copy! *stack* copy 0 *stack-index*)
     copy ) )
 
 (define (restore-stack copy)
   (set! *stack-index* (vector-length copy))
-  (vector-copy! copy *stack* 0 *stack-index*) )
+  (_vector-copy! copy *stack* 0 *stack-index*) )
 
 ;;; Copy vector old[start..end[ into vector new[start..end[
-(define (vector-copy! old new start end)
+(define (_vector-copy! old new start end)
   (let copy ((i start))
     (when (< i end)
           (vector-set! new i (vector-ref old i))
