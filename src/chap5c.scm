@@ -408,8 +408,8 @@
                        (alloc (cdr v*)
                               (extend s (car a*) (car v*))
                               (lambda (v s)
-                                (k (InValue a*) (extend s (cadr a*) v)) ) ) ) )
-           (k (InValue '()) s) ) ) ) ) )
+                                (k (inValue a*) (extend s (cadr a*) v)) ) ) ) )
+           (k (inValue '()) s) ) ) ) ) )
 
 (definitial t (inValue #t))
 (definitial f (inValue #f))

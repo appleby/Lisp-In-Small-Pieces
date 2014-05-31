@@ -408,8 +408,8 @@
                        (alloc (cdr v*)
                               (extend s (car a*) (car v*))
                               (lambda (v s)
-                                (k (InValue a*) (extend s (cadr a*) v)) ) ) ) )
-           (k (InValue '()) s) ) ) ) ) )
+                                (k (inValue a*) (extend s (cadr a*) v)) ) ) ) )
+           (k (inValue '()) s) ) ) ) ) )
 
 ;;; Used in chap5-bench.scm
 (definitial display
@@ -417,7 +417,7 @@
    (lambda (v* k s)
      ;; Quick and dirty: do not check arity!
      (display (convert (car v*) s))
-     (k (InValue #t) s) ) ) )
+     (k (inValue #t) s) ) ) )
 
 (definitial t (inValue #t))
 (definitial f (inValue #f))

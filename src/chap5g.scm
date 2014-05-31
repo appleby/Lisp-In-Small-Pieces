@@ -545,10 +545,10 @@
                        (alloc (cdr v*)
                               (extend s (car a*) (car v*))
                               (lambda (v g s)
-                                (k (InValue a*) 
+                                (k (inValue a*) 
                                    g
                                    (extend s (cadr a*) v) ) ) ) ) )
-           (k (InValue '()) g s) ) ) ) ) )
+           (k (inValue '()) g s) ) ) ) ) )
 
 (definitial t (inValue #t))
 (definitial f (inValue #f))
