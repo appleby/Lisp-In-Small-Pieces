@@ -123,7 +123,7 @@
               (vector-set! code (+ pc 1) (get-index name)) ) )
           (scan (+ pc (instruction-size code pc))) ) ) ) )
   (let ((v (make-vector (length sg.current.names) undefined-value)))
-    (vector-copy! sg.current v 0 (vector-length sg.current))
+    (_vector-copy! sg.current v 0 (vector-length sg.current))
     (set! sg.current v) ) )
 
 (define DYNAMIC-REF-code 240)
@@ -163,8 +163,8 @@
 
 ;;; rather inefficient !
 
-(define (vector-append v1 v2)
-  (apply vector (append (vector->list v1) (vector->list v2))) )
+;;(define (vector-append v1 v2)
+;;  (apply vector (append (vector->list v1) (vector->list v2))) )
 
 ;;;ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; A function to dynamically load a file
