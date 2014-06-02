@@ -301,7 +301,7 @@
   (let ((a 11)(x 33))
     (let-abbreviation ( ( (werk y) (list 'cons x (list 'cons y 33)) ) )
       (list (werk (* 2 3)) (car '(a b))) ) ) )
-    ((312 6 . 33) A)
+    ((312 6 . 33) a)
 
 ; on a magic word
 (with-aliases ((q quote)(s set!)(l lambda)(b begin)(i if))
