@@ -23,7 +23,7 @@
 
 (define Cfile (string-append *a.out* ".c"))
 
-(define *cc+cflags* "gcc -ansi -pedantic -gg ")
+(define *cc+cflags* "gcc -ansi -pedantic -g ")
 
 (define (appear? s e)
   (or (eq? s e)
@@ -83,7 +83,7 @@
     (unless (= status 0)
       (evaluate-error "C compilation aborted.") )
     (set! status 
-          (system (string-append "cd " dir "; "
+          (system (string-append "cd " dir "; ./"
                                  *a.out* " > /tmp/ttlog " )) )
     (system (string-append 
              "sed -e 's:#<:\<:g' -e 's:@::g' < /tmp/ttlog >" log) )
