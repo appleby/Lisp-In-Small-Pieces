@@ -481,8 +481,8 @@
 
 (define-method (->C (e Free-Environment) out)
   (format out ",")
-  (->C (Free-environment-first e) out)
-  (->C (Free-environment-others e) out) )
+  (->C (Free-Environment-first e) out)
+  (->C (Free-Environment-others e) out) )
 
 ;;;ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; Count terms
