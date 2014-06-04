@@ -98,7 +98,7 @@
 (define (IdScheme->IdC name)
   (let ((v (assq name Scheme->C-names-mapping)))
     (if (pair? v) (cdr v)
-        (let ((str (symbol->string name)))
+        (let ((str (convert-string-uppercase (symbol->string name))))
           (let retry ((Cname (compute-Cname str)))
             (if (Cname-clash? Cname Scheme->C-names-mapping)
                 (retry (compute-another-Cname str))
@@ -106,6 +106,9 @@
                              (cons (cons name Cname) 
                                    Scheme->C-names-mapping ) )
                        Cname ) ) ) ) ) ) )
+
+(define (convert-string-uppercase str)
+  (list->string (map char-upcase (string->list str))) )
 
 (define (Cname-clash? Cname mapping)
   (let check ((mapping mapping))
