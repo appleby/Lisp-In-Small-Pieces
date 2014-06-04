@@ -294,7 +294,7 @@
            (format out "#define thing~A SCM_Int2fixnum(~A)~%"
                    index value ) )
           ((string? value)
-           (format out "SCM_DefineString(thing~A_object,\"~A\");~%"
+           (format out "SCM_DefineString(thing~A_object,~S);~%"
                    index value )
            (format out "#define thing~A SCM_Wrap(&thing~A_object)~%"
                    index index ) ) ) ) )
