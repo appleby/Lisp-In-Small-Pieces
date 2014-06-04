@@ -42,7 +42,7 @@
 ;;; Boxes are coded in the cdr of pairs, why not !
 
 (define-method (evaluate (e Box-Read) sr)
-  (cdr (evaluate (Box-read-reference e) sr)) )
+  (cdr (evaluate (Box-Read-reference e) sr)) )
 
 (define-method (evaluate (e Box-Write) sr)
   (set-cdr! (evaluate (Box-Write-reference e) sr)
