@@ -52,7 +52,7 @@
    naive-match ) )
 
 (define *tests-to-skip*
-  '( (SET! XYZZY 3)
+  '( (set! xyzzy 3)
      ) )     
 
 (define (test-expression e)
