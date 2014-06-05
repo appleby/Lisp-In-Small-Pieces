@@ -86,13 +86,6 @@ env.global
 (unless #f 1 2 3)
    3
 
-;;; Test the old define style
-(define ((f x) y) (cons x y))
-   ---
-(let ((g (f 3)))
-  (g '(4)) )
-   (3 4)
-
 ;;; Some additional functions are required
 (atom? 'foo) 
    #t
