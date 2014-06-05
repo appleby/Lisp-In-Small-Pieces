@@ -1098,7 +1098,7 @@ start.chap10e : ${all-o}
 
 # # test indepently a compiled file o/chap10e.c.
 test.chap10e.c : ${all-o}
-	cd o/${HOSTTYPE} ; 	${CC} ${CFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e &&	chap10e
+	cd o/${HOSTTYPE} ; 	${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e &&	chap10e
 
 # # chap10k.scm : CPS transformation, use schemeklib.c
 # # Very long test but it does not fail on call/cc tests.
