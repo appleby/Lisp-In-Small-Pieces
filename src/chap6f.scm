@@ -274,8 +274,8 @@ static SCM ~A = (SCM) &(~A) ;" name reference ) )
          (let ((reference (format #f "thing~A" index)))
            (format out "
 static struct SCM_string ~A =
-  {{SCM_STRING_TAG, (SCM) NULL}, SIZEOF(\"~A\")-1, 
-   \"~A\" } ;" 
+  {{SCM_STRING_TAG, (SCM) NULL}, SIZEOF(~S)-1, 
+   ~S } ;" 
                    reference value value )
            reference ) )
 
