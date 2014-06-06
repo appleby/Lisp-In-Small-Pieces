@@ -30,7 +30,7 @@ SCC		= scc
 # # shell (tcsh does this), at that time, you can leave empty this
 # # definition, it will be automatically inherited from your shell.
 
-HOSTTYPE	= $(shell uname -m)
+export HOSTTYPE	= $(shell uname -m)
 
 # # Choose a Scheme interpreter. This interpreter must contain Meroonet,
 # # hygienic macros and a test-suite driver. It is better to build a
@@ -84,6 +84,9 @@ CFLAGS  = -ansi -pedantic -Wall -O
 # # mandatory to setup this variable.
 
 PERL =  perl
+
+# # Absolute path to LiSP source root.
+export LiSP_TOPDIR = ${CURDIR}
 
 # # end of Site.def
 
@@ -802,7 +805,7 @@ test.chap6f.scc : o/${HOSTTYPE}/rt.o src/chap6f.scm
 bench.chap6f : o/${HOSTTYPE}/chap6f-bench
 	${TIME} o/${HOSTTYPE}/chap6f-bench
 
-CaFLAGS	=	-I../../src/c ${CFLAGS}
+export CaFLAGS	=	-I${LiSP_TOPDIR}/src/c ${CFLAGS}
 
 o/${HOSTTYPE}/chap6f-bench.c : src/chap6f.scm src/chap5-bench.scm
 	echo  "							(loadq \"src/chap6f.scm\")					(compile-file \"src/chap5-bench.scm\" \"o/${HOSTTYPE}/tt.c\")	"	| ${SCHEME} -sch 8
@@ -1101,7 +1104,7 @@ start.chap10e : ${all-o}
 
 # # test indepently a compiled file o/chap10e.c.
 test.chap10e.c : ${all-o}
-	cd o/${HOSTTYPE} ; 	${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e &&	chap10e
+	cd o/${HOSTTYPE} ; 	${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e &&        ./chap10e
 
 # # chap10k.scm : CPS transformation, use schemeklib.c
 # # Very long test but it does not fail on call/cc tests.
