@@ -779,6 +779,8 @@ test.chap6e.scc : src/chap6e.scm
 # # grafted to the precompiler similarly to the bytecode compiler.
 # # ATTENTION, this is a very long test:
 # # 751.89user 555.90system 42:25.34elapsed
+# # This test fails on continuation used out of their dynamic extent (no
+# # full continuation a la Scheme).
 long.dynext.test.chap6f :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap6f ; else : ; fi
 dynext.test.chap6f : test.chap6f
