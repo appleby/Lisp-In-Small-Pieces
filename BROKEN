@@ -8,14 +8,6 @@ Time
 Make is complaining: time: Command not found, which breaks any *.bench target
 that relies on the time command.
 
-Chap6f
-------
-test.chap6f
-
-The runtime rt.o for the old scheme to C compiler in chap6f does not compile.
-According to the Makefile, this code is not included in the book and was
-superceded by chap10.
-
 Reflisp
 -------
 test.chap8j

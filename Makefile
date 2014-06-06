@@ -391,7 +391,7 @@ ALL_GRAND_TESTS =	${TEST_CHAP1}			${TEST_CHAP2}			${TEST_CHAP3}			${TEST_CHAP4}	
 
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 
-BROKEN_TESTS=dynext.test.chap6f big.test.chap8j test.reflisp
+BROKEN_TESTS=big.test.chap8j test.reflisp
 GRAND_TESTS=$(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 
 # # roughly 4 hours.
