@@ -1222,16 +1222,19 @@ SCM SCM_NIL = (SCM) &(SCM_empty_object) ;
 DefineImmediateObject(SCM_undef, SCM_UNDETERMINED_TAG) ;
 DefineImmediateObject(SCM_eof,   SCM_EOF_TAG) ;
 
-#define DefinePort(name,stream,way)                       \
+#define DefinePort(name,way)                              \
 static struct SCM_port SCM_CONC(name,_object) =           \
-  {{SCM_PORT_TAG, (SCM) NULL}, way, (SCM) NULL, stream} ; \
+  {{SCM_PORT_TAG, (SCM) NULL}, way, (SCM) NULL, NULL} ;   \
 SCM name = (SCM) &(SCM_CONC(name,_object)) ;
 
-DefinePort(SCM_stdin,  stdin, O_RDONLY) ;
+#define InitPortStream(name,stream) SCM_CONC(name,_object).file = stream
+
+/* The file pointer for each port must be initialized in SCM_initialize. */
+DefinePort(SCM_stdin,  O_RDONLY) ;
 SCM SCM_STDIN = (SCM) &(SCM_stdin_object) ;
-DefinePort(SCM_stdout, stdout,O_WRONLY) ;
+DefinePort(SCM_stdout, O_WRONLY) ;
 SCM SCM_STDOUT = (SCM) &(SCM_stdout_object) ;
-DefinePort(SCM_stderr, stderr,O_WRONLY) ;
+DefinePort(SCM_stderr, O_WRONLY) ;
 SCM SCM_STDERR = (SCM) &(SCM_stderr_object) ;
 
 /* the options of the command gathered in a list. 
@@ -1321,6 +1324,10 @@ void SCM_initialize (int argc, char *argv[])
       SCM_error(1) ; } ;
   /* Determine the way the stack grows. */
   if ( SCM_Cstack_bottom < ((void*) &i) ) SCM_stack_grows = UP ;
+  /* Initialize port streams. */
+  InitPortStream(SCM_stdin,  stdin);
+  InitPortStream(SCM_stdout, stdout);
+  InitPortStream(SCM_stderr, stderr);
   /* Initialize the allocator(s) */
   initialize_allocator() ;
   /* Initialize characters		*/
