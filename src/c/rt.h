@@ -30,6 +30,7 @@
 #include <sys/resource.h>
 #include <setjmp.h>
 #include <stdlib.h>
+#include <string.h>
 
 /***********************************************************************
  * General machine dependencies:
