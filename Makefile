@@ -780,7 +780,7 @@ long.dynext.test.chap6f :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap6f ; else : ; fi
 dynext.test.chap6f : test.chap6f
 test.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
-	echo  "							(load \"src/chap6f.scm\")					(test-Scheme \"src/scheme.tst\")" 				| ${SCHEME}
+	echo  "							(load \"src/chap6f.scm\")					(test-scheme \"src/scheme.tst\")" 				| ${SCHEME}
 
 # # start an interpreter to interactively compile towards C.
 # # The (scheme) toplevel reads an expression and shows the generated C.
