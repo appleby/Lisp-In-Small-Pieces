@@ -42,12 +42,11 @@ export HOSTTYPE	= $(shell uname -m)
 
 # #SCHEME	=	o/${HOSTTYPE}/book.sci
 # #SCHEME	=	o/${HOSTTYPE}/book.bigloo
-# #SCHEME	=	"gsi '(include \"gambit/book.scm\")' "
 
 # # Scm 4e1 is perfect here. This command is intended to be run in the
 # # current directory only.
 # SCHEME		= scm -u -l scm/Init.scm
-SCHEME	=	o/${HOSTTYPE}/book.bigloo
+SCHEME  = 	o/${HOSTTYPE}/book.gsi
 
 # # This variable allows to measure time.
 # # I personnally use Gnu time but time will do also.
@@ -181,7 +180,7 @@ o/${HOSTTYPE}/rtbook+.o : bigloo/rtbook+.bgl 			bigloo/others/pp.scm				bigloo/o
 build.interpreter : mkdir
 	@if [ "X${SCHEME}" = X ] ;	then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ;	else : ; fi
 
-	case "${SCHEME}" in *bigloo|*scc) ${MAKE} ${SCHEME} ;; *) : ;; esac
+	case "${SCHEME}" in *bigloo|*scc|*gsi) ${MAKE} ${SCHEME} ;; *) : ;; esac
 
 # ######################################## Test interpreters
 
@@ -205,8 +204,9 @@ o/${HOSTTYPE}/book.mit :
 
 # # Makes a command for Gambit interpreter similar to the others.
 # # This command has to be run from the current directory.
-o/${HOSTTYPE}/book.gsi :
-	echo "exec gsi '(include \"gambit/book.scm\")'" > o/${HOSTTYPE}/book.gsi
+o/${HOSTTYPE}/book.gsi : o/${HOSTTYPE}/book-gsc.scm 
+	echo "#!/bin/sh" > o/${HOSTTYPE}/book.gsi
+	echo "exec gsi -:d- o/${HOSTTYPE}/book-gsc.scm" >> o/${HOSTTYPE}/book.gsi
 	chmod a=rx o/${HOSTTYPE}/book.gsi
 
 # # Compile for Gambit
