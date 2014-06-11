@@ -206,7 +206,7 @@ o/${HOSTTYPE}/book.mit :
 # # This command has to be run from the current directory.
 o/${HOSTTYPE}/book.gsi : mkdir o/${HOSTTYPE}/book-gsc.scm 
 	echo "#!/bin/sh" > o/${HOSTTYPE}/book.gsi
-	echo "exec gsi -:d- o/${HOSTTYPE}/book-gsc.scm" >> o/${HOSTTYPE}/book.gsi
+	echo "exec gsi -:s,d- o/${HOSTTYPE}/book-gsc.scm" >> o/${HOSTTYPE}/book.gsi
 	chmod a=rwx o/${HOSTTYPE}/book.gsi
 
 # # Compile for Gambit
