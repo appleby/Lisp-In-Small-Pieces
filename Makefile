@@ -190,13 +190,13 @@ test.interpreters :	o/${HOSTTYPE}/book.sci.test				o/${HOSTTYPE}/book.bigloo.tes
 # # run from the current directory.
 o/${HOSTTYPE}/book.scm :
 	echo "exec scm -u -l scm/Init.scm" > o/${HOSTTYPE}/book.scm
-	chmod a=rx o/${HOSTTYPE}/book.scm
+	chmod a=rwx o/${HOSTTYPE}/book.scm
 
 # # Makes a command for Elk. Must be run from the current directory.
 # # You must load elk/book.elk by hand.
 o/${HOSTTYPE}/book.elk :
 	echo "(echo '(load \"elk/book.elk\")' ; tee ) | exec elk -i -h 5000" > o/${HOSTTYPE}/book.elk
-	chmod a=rx o/${HOSTTYPE}/book.elk
+	chmod a=rwx o/${HOSTTYPE}/book.elk
 
 # # Makes a command to run mitscheme. Must be run from the current directory.
 o/${HOSTTYPE}/book.mit :
@@ -207,7 +207,7 @@ o/${HOSTTYPE}/book.mit :
 o/${HOSTTYPE}/book.gsi : o/${HOSTTYPE}/book-gsc.scm 
 	echo "#!/bin/sh" > o/${HOSTTYPE}/book.gsi
 	echo "exec gsi -:d- o/${HOSTTYPE}/book-gsc.scm" >> o/${HOSTTYPE}/book.gsi
-	chmod a=rx o/${HOSTTYPE}/book.gsi
+	chmod a=rwx o/${HOSTTYPE}/book.gsi
 
 # # Compile for Gambit
 # # Gambit rules to find files are relative to previous ones (as in Mac)
