@@ -188,13 +188,13 @@ test.interpreters :	o/${HOSTTYPE}/book.sci.test				o/${HOSTTYPE}/book.bigloo.tes
 
 # # Makes a command for SCM similar to the others. This command has to be
 # # run from the current directory.
-o/${HOSTTYPE}/book.scm :
+o/${HOSTTYPE}/book.scm : mkdir
 	echo "exec scm -u -l scm/Init.scm" > o/${HOSTTYPE}/book.scm
 	chmod a=rwx o/${HOSTTYPE}/book.scm
 
 # # Makes a command for Elk. Must be run from the current directory.
 # # You must load elk/book.elk by hand.
-o/${HOSTTYPE}/book.elk :
+o/${HOSTTYPE}/book.elk : mkdir
 	echo "(echo '(load \"elk/book.elk\")' ; tee ) | exec elk -i -h 5000" > o/${HOSTTYPE}/book.elk
 	chmod a=rwx o/${HOSTTYPE}/book.elk
 
@@ -204,7 +204,7 @@ o/${HOSTTYPE}/book.mit :
 
 # # Makes a command for Gambit interpreter similar to the others.
 # # This command has to be run from the current directory.
-o/${HOSTTYPE}/book.gsi : o/${HOSTTYPE}/book-gsc.scm 
+o/${HOSTTYPE}/book.gsi : mkdir o/${HOSTTYPE}/book-gsc.scm 
 	echo "#!/bin/sh" > o/${HOSTTYPE}/book.gsi
 	echo "exec gsi -:d- o/${HOSTTYPE}/book-gsc.scm" >> o/${HOSTTYPE}/book.gsi
 	chmod a=rwx o/${HOSTTYPE}/book.gsi
