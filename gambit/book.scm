@@ -256,9 +256,8 @@
 
 (define (protected-eval thunk)
   (call/cc (lambda (exit)
-             (##dynamic-let (list (cons '##SIGNAL-CATCHER 
-                                        (make-new-error exit) ))
-                            thunk ) )) )
+             (with-exception-catcher (make-new-error exit)
+		 thunk ) )) )
 ;;; Test: (protected-eval (lambda () (car #t)))
 
 ;;; Since the define-abbreviation is also necessary for the book when
@@ -283,7 +282,7 @@
      (set! support-error  err)
      (lambda ()
        (set-gc-report #t)
-       (##dynamic-let (list (cons '##SIGNAL-CATCHER err))
+       (with-exception-catcher err
           (lambda ()
             (let* ((e (read))
                    (r (eval e))
@@ -340,21 +339,21 @@
      (set! meroonet-error err)
      (set! error-hook     err)
      (set! support-error  err)
-     (set! ##user-interrupt
+     (current-user-interrupt-handler
            (lambda ()
              (newline stderr-port)
              (display "*** INTERRUPT" stderr-port)
              (newline stderr-port)
              (err '***) ) )
      (lambda ()
-       (##dynamic-let (list (cons '##SIGNAL-CATCHER err))
+       (with-exception-catcher err
           (lambda ()
             (let* ((e (read))
                    (r (eval e)) )
               (print r) ) ) ) ) ) )
   (display " Ite LiSP est.")
   (newline)
-  (##quit) )
+  (exit) )
 
 ;;; Warp into the new toplevel.
 (start)
