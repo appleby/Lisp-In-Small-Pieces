@@ -152,13 +152,6 @@
 
 ;;; property lists are already present.
 
-;;; pp is already present but not format. but format needs internal functions
-;;; of pp so redefine pp.
-
-(include "gambit/pp.scm")
-
-(include "gambit/format.scm")
-
 (define error-hook error)
 
 ;;;ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
@@ -210,6 +203,14 @@
 (define meroonet-error 'wait)
 
 (define tester-error 'wait)
+
+;;; pp is already present but not format. but format needs internal functions
+;;; of pp so redefine pp.
+
+(include "gambit/pp.scm")
+
+(include "gambit/format.scm")
+
 
 ;;; Load the test-driver (fortunately it does not need macros, so use
 ;;; load instead of syntax-case-load).
