@@ -220,12 +220,9 @@
 
 ;;; Load Meroonet. Meroonet defines three macros with
 ;;; define-meroonet-macro.
-(define-syntax define-meroonet-macro
-  (syntax-rules ()
-    ((define-meroonet-macro (name . args) body ...)
-     (define-syntax name
-        (syntax-rules ()
-          ((name . args) body ...))))))
+(define-macro (define-meroonet-macro call . body)
+  `(begin (eval '(define-macro ,call . ,body))
+          (define-macro ,call . ,body) ) )
 
 (include "meroonet/meroonet.scm")
 
@@ -312,14 +309,13 @@
 
 ;;; The clone function that performs a shallow copy of a Meroonet object.
 
-; TODO FixMe
-;(eval '(begin
-;          (define-generic (show (o) . stream)
-;            (let ((stream (if (pair? stream) (car stream)
-;                              (current-output-port) )))
-;              (bounded-display o stream) ) )
-;          (define-generic (clone (o))
-;            (list->vector (vector->list o)) ) ) )
+(eval '(begin
+          (define-generic (show (o) . stream)
+            (let ((stream (if (pair? stream) (car stream)
+                              (current-output-port) )))
+              (bounded-display o stream) ) )
+          (define-generic (clone (o))
+            (list->vector (vector->list o)) ) ) )
 
 ;;; Define a new toplevel with syntax-case as macroexpander.
 ;;; A small toplevel loop that uses the syntax-case package of Hieb
