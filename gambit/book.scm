@@ -114,7 +114,8 @@
 
 ;;; internal runtime
 
-(define get-internal-run-time runtime)
+(define (get-internal-run-time)
+  (time->seconds (current-time)))
 
 ;;; No flush function on buffers.
 
