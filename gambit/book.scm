@@ -203,6 +203,7 @@
 (define meroonet-error 'wait)
 
 (define tester-error 'wait)
+(define support-error 'wait)
 
 ;;; pp is already present but not format. but format needs internal functions
 ;;; of pp so redefine pp.
@@ -312,13 +313,14 @@
 
 ;;; The clone function that performs a shallow copy of a Meroonet object.
 
-(eval '(begin
-          (define-generic (show (o) . stream)
-            (let ((stream (if (pair? stream) (car stream)
-                              (current-output-port) )))
-              (bounded-display o stream) ) )
-          (define-generic (clone (o))
-            (list->vector (vector->list o)) ) ) )
+; TODO FixMe
+;(eval '(begin
+;          (define-generic (show (o) . stream)
+;            (let ((stream (if (pair? stream) (car stream)
+;                              (current-output-port) )))
+;              (bounded-display o stream) ) )
+;          (define-generic (clone (o))
+;            (list->vector (vector->list o)) ) ) )
 
 ;;; Define a new toplevel with syntax-case as macroexpander.
 ;;; A small toplevel loop that uses the syntax-case package of Hieb
