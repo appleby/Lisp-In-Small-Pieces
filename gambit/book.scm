@@ -80,7 +80,7 @@
 ;;; Name the Un*x ports (no flush function ?)
 
 (define stdout-port (current-output-port))
-(define stderr-port ##stderr)
+(define stderr-port (current-error-port))
 
 ;;; plist are present but not under the same functions.  Unfortunately
 ;;; Gambit-C 2.2b seems to have a buf on Plists of certain symbols. So
