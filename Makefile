@@ -24,6 +24,11 @@ BIGLOO		= bigloo
 
 SCC		= scc
 
+# # If you decide to build a specialized interpreter on top of Gambit
+# # then indicate the correct command to invoke the Gambit compiler.
+
+GSC		= gambitc
+
 # # If you decide to build multiple specialized interpreters on multiple
 # # machines, then you must give different HOSTTYPE for all these
 # # CPU-different machines. Very often, HOSTTYPE is set up for you by your
@@ -213,15 +218,15 @@ o/${HOSTTYPE}/book.gsi : mkdir o/${HOSTTYPE}/book-gsc.scm
 # # Gambit rules to find files are relative to previous ones (as in Mac)
 # # so change pathnames to absolute pathnames. Takes five hours on my
 # # old Sony.
-o/${HOSTTYPE}/book-gsc.scm : gambit/book.scm
+o/${HOSTTYPE}/book-gsc.scm : mkdir gambit/book.scm
 	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm 		> o/${HOSTTYPE}/book-gsc.scm
 
 o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
-	cd o/${HOSTTYPE} ; 		gsc -:h20000 -expansion book-gsc.scm 			> book-gsc.escm
+	cd o/${HOSTTYPE} ; 		${GSC} -:s -expansion book-gsc.scm 			> book-gsc.escm
 
 	more o/${HOSTTYPE}/book-gsc.escm
 o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
-	cd o/${HOSTTYPE} ; 		gsc -:h20000 -link -verbose -report book-gsc.scm
+	cd o/${HOSTTYPE} ; 		${GSC} -:s -link -verbose -report book-gsc.scm
 
 o/${HOSTTYPE}/book-gsc.o : o/${HOSTTYPE}/book-gsc.c
 	cd o/${HOSTTYPE} ; gcc -c book-gsc.c
