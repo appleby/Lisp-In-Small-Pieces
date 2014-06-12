@@ -281,7 +281,7 @@
      (set! error-hook     err)
      (set! support-error  err)
      (lambda ()
-       (set-gc-report #t)
+       ;(gc-report-set! #t)
        (with-exception-catcher err
           (lambda ()
             (let* ((e (read))
