@@ -77,6 +77,15 @@
                        (else (error 'symbol-append args)) ) )
                args ) ) ) )
 
+
+;;; Gambit's GENSYM expects it's argument to be a symbol, not a string.
+(define native-gensym gensym)
+
+(define (gensym . args)
+  (cond ((null? args) (native-gensym))
+        ((string? (car args)) (native-gensym (string->symbol (car args))))
+        (else (native-gensym (car args))) ) )
+
 ;;; Name the Un*x ports (no flush function ?)
 
 (define stdout-port (current-output-port))
