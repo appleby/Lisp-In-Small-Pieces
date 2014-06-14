@@ -228,13 +228,18 @@ o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 	cd o/${HOSTTYPE} ; 		${GSC} -:s -link -verbose -report book-gsc.scm
 
+# # Due to a bug in gsc, compiling with the -:s appears to be broken. See the
+# # following threads for more info:
+# # http://comments.gmane.org/gmane.lisp.scheme.gambit/6980
+# # https://mercure.iro.umontreal.ca/pipermail/gambit-list/2013-October/007106.html
+# # TODO: check back on this and see if a fix has landed -- ma.
 o/${HOSTTYPE}/book-gsc.o : o/${HOSTTYPE}/book-gsc.c
-	cd o/${HOSTTYPE} ; gcc -c book-gsc.c
+	cd o/${HOSTTYPE} ; ${GSC} -:s -obj book-gsc.c
 o/${HOSTTYPE}/book-gsc_.o : o/${HOSTTYPE}/book-gsc.c
-	cd o/${HOSTTYPE} ; gcc -c book-gsc_.c
+	cd o/${HOSTTYPE} ; ${GSC} -:s -obj book-gsc_.c
 o/${HOSTTYPE}/book.gsc : o/${HOSTTYPE}/book-gsc.o
 o/${HOSTTYPE}/book.gsc : o/${HOSTTYPE}/book-gsc_.o
-	cd o/${HOSTTYPE} ; gcc -o book.gsc book-gsc.o book-gsc_.o 		-lgambc -lm
+	cd o/${HOSTTYPE} ; ${GSC} -:s -exe -o book.gsc book-gsc.o book-gsc_.o
 
 check.results :
 	@if grep -i '= done' ${RESULTS} ; 					then echo '*** Tests successfully passed ***' ;				else echo '*** *** Abnormal results **** ***' ; exit 1 ; fi
