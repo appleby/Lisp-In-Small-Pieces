@@ -98,7 +98,7 @@
 (define (other-box-set! box new-value)
   (set-cdr! box new-value) )
 
-(define (crypt pw) \ldots)
+(define (crypt pw) "\\ldots")
 
 (let ((passwd "timhukiTrolrk"))
   (set! can-access? (lambda (pw) (string=? passwd (crypt pw)))) )
