@@ -86,10 +86,15 @@
         ((string? (car args)) (native-gensym (string->symbol (car args))))
         (else (native-gensym (car args))) ) )
 
+(define (system command)
+  (shell-command command))
+
 ;;; Name the Un*x ports (no flush function ?)
 
 (define stdout-port (current-output-port))
 (define stderr-port (current-error-port))
+
+(define flush-buffer force-output)
 
 ;;; plist are present but not under the same functions.  Unfortunately
 ;;; Gambit-C 2.2b seems to have a buf on Plists of certain symbols. So
