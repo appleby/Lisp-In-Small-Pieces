@@ -26,6 +26,9 @@ SCC		= scc
 
 # # If you decide to build a specialized interpreter on top of Gambit
 # # then indicate the correct command to invoke the Gambit compiler.
+# # Note that the default binary name is ``gsc'', but that name conflicts with
+# # the ghostscript binary on my Archlinux system, so the gambit compiler has
+# # been renamed to gambitc.
 
 GSC		= gambitc
 
