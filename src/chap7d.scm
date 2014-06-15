@@ -150,21 +150,32 @@
 ;;;oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; Instructions definers
 
+;;; HACK! HACK! HACK!
+;;; In Gambit, a DEFINE-SYNTAX macro that expands to a (define ...) form does
+;;; not introduce a new toplevel definition, but rather a definition local to
+;;; the macro's lexical env. Wrapping the (define ...) form in an EVAL works,
+;;; but I'm not sure how to go about escaping the elipses correctly in the
+;;; backquoted form, so instead we just bind the symbols to WRONG initially,
+;;; and SET! them to the correct definitions at the end of the macro expansion.
+(define run wrong)
+(define instruction-size wrong)
+(define instruction-decode wrong)
+
 (define-syntax define-instruction-set
   (syntax-rules (define-instruction)
     ((define-instruction-set
        (define-instruction (name . args) n . body) ... )
      (begin 
-       (define (run)
+       (define (run_)
          (let ((instruction (fetch-byte)))
            (case instruction
              ((n) (run-clause args body)) ... ) )
          (run) )
-       (define (instruction-size code pc)
+       (define (instruction-size_ code pc)
          (let ((instruction (vector-ref code pc)))
            (case instruction
              ((n) (size-clause args)) ... ) ) )
-       (define (instruction-decode code pc)
+       (define (instruction-decode_ code pc)
          (define (fetch-byte)
            (let ((byte (vector-ref code pc)))
              (set! pc (+ pc 1))
@@ -180,7 +191,10 @@
                     (list 'iname a b) ) ) )))
            (let ((instruction (fetch-byte)))
              (case instruction
-               ((n) (decode-clause name args)) ... ) ) ) ) ) ) ) )
+               ((n) (decode-clause name args)) ... ) ) ) )
+       (set! run run_)
+       (set! instruction-size instruction-size_)
+       (set! instruction-decode instruction-decode_) ) ) ) )
 
 ;;; This uses the global fetch-byte function that increments *pc*.
 
