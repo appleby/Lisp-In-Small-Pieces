@@ -86,7 +86,7 @@
           (system (string-append "cd " dir "; ./"
                                  *a.out* " > /tmp/ttlog " )) )
     (system (string-append 
-             "sed -e 's:#<:\<:g' -e 's:@::g' < /tmp/ttlog >" log) )
+             "sed -e 's:#<:<:g' -e 's:@::g' < /tmp/ttlog >" log) )
     (unless (= status 0)
       (evaluate-error "C execution arborted" status) )
     (call-with-input-file log read) ) )
