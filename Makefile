@@ -71,6 +71,11 @@ MAKE		= make
 
 RESULTS		= /tmp/result
 
+# # A temporary file used to store the names of failing tests when running the
+# # grand.test target.
+
+FAILURES	= /tmp/failures
+
 # # Make an archive grouping *.o files
 # # You need it if you want to test the Scheme towards C compiler.
 
@@ -411,9 +416,9 @@ GRAND_TESTS=$(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 grand.test :
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 do.grand.test :
-	@for test in ${GRAND_TESTS} 					;	do ( echo Testing $$test ...					;	     ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS}	;	   echo Checking results of $$test ...				;	   ${PERL} perl/check.prl ${RESULTS} $$test			;	   done
+	@for test in ${GRAND_TESTS} 					;	do ( echo Testing $$test ...					;	     ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS}	;	   echo Checking results of $$test ...				;	   ${PERL} perl/check.prl ${RESULTS} $$test			;	   [ $$? -ne 0 ] && echo $$test >> ${FAILURES} ; done; echo "Finished grand.test"
 
-	@echo "All tests passed."
+	@[ -e ${FAILURES} ] && ( echo "The following tests failed:"; cat ${FAILURES} ) || echo "All tests passed."
 
 grand.test.with.bigloo : o/${HOSTTYPE}/book.bigloo
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo TIME=time
