@@ -126,6 +126,13 @@
     (if (pair? result) (car result)
         (handler #f result) ) ) )
 
+(define (gsi-monitor handler body)
+  (with-exception-handler
+    (lambda (e)
+      (display `(error**** ,e))(newline)
+      (handler #f `(list ,e)))
+    body))
+
 (define-syntax monitor
   (case book-interpreter-support
     ((bigloo)
@@ -140,6 +147,10 @@
      (syntax-rules ()
        ((monitor handler . body)
         (scm-monitor handler (lambda () . body)) ) ) )
+    ((gsi)
+     (syntax-rules ()
+       ((monitor handler . body)
+        (gsi-monitor handler (lambda () . body)) ) ) )
     (else (display `(*** monitor simulation not supported ***))
           (newline)
           (/ 3 0) ) ) )
@@ -225,7 +236,7 @@
                    (set! reflisp-code e)
                    (set! coded-reflisp-code ne)
                    ne ) ))))
-      (set! expanded-reflisp-code e) ;;(pp e)   ; DEBUG
+      (set! expanded-reflisp-code e) (pp e)   ; DEBUG
       ;; use the native eval
       (lambda () (eval e)) ) ) )
 
