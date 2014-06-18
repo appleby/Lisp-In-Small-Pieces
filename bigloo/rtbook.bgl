@@ -31,6 +31,7 @@
                 tester-error
                 (test file)
                 the-Point
+                display-exception
                 wrong
                 static-wrong
                 (list* . args)
@@ -150,6 +151,9 @@
 ;;; This variable is needed by meroonet/oo-tests.scm test suite.
 
 (define the-Point 'useful4tests)
+
+;;; Needed by src/tester.scm
+(define display-exception display)
 
 ;;; They also suppose some variables to be predefined such as wrong
 ;;; when runtime errors are caught or static-wrong for preparation
