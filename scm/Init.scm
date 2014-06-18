@@ -80,6 +80,8 @@
                        (else (error 'symbol-append args)) ) )
                args ) ) ) )
 
+(define display-exception display)
+
 ;;; Name the Un*x ports and flush them.
 
 (define stdout-port (current-output-port))

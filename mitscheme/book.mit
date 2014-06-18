@@ -70,6 +70,8 @@
                        (else (error 'symbol-append args)) ) )
                args ) ) ) )
 
+(define display-exception display)
+
 ;;; Name the Un*x ports and flush them.
 ;;; Seems that there is no stderr?
 

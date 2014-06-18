@@ -103,7 +103,7 @@
     (case status
       ((unexpected-error)
        (newline)
-       (display v)
+       (display-exception v)
        (display "  an unexpected ERROR occurs !!!")
        (newline)
        continue? )
@@ -194,7 +194,7 @@
          #t )                           ; continue iteration
         ((unexpected-error)
          (newline)
-         (display v)
+         (display-exception v)
          (set! echo? #t)
          (display "  an unexpected ERROR occured !!!")
          (newline)

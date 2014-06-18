@@ -127,6 +127,8 @@
   '#t )
 (hack)
 
+(define display-exception display)
+
 ;;;ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; Prepare this macro for compiling Meroonet. It will only define a
 ;;; Dybvig macro.
