@@ -416,6 +416,7 @@ GRAND_TESTS=$(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 grand.test :
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 do.grand.test :
+	@rm -f ${FAILURES}
 	@for test in ${GRAND_TESTS} 					;	do ( echo Testing $$test ...					;	     ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS}	;	   echo Checking results of $$test ...				;	   ${PERL} perl/check.prl ${RESULTS} $$test			;	   [ $$? -ne 0 ] && echo $$test >> ${FAILURES} ; done; echo "Finished grand.test"
 
 	@[ -e ${FAILURES} ] && ( echo "The following tests failed:"; cat ${FAILURES} ) || echo "All tests passed."
