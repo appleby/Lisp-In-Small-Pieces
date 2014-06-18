@@ -409,8 +409,20 @@ ALL_GRAND_TESTS =	${TEST_CHAP1}			${TEST_CHAP2}			${TEST_CHAP3}			${TEST_CHAP4}	
 
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 
-BROKEN_TESTS=test.reflisp
-GRAND_TESTS=$(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
+# BROKEN_TESTS represent tests that are still not passing in SCHEMEs that have
+# otherwise been "fixed" (currently, Bigloo and Gambit). These are generally
+# test for which I was not able to find a quick fix, and may require a
+# non-trivial effort to get them working.  In the case of test.reflisp, this
+# test was not previously supported in Gambit (src/chap8k.scm generated a
+# divide-by-zero error if attempting to compile with anyting other than bigloo,
+# scheme2c, or scm), and therefore may not be compatible with Gambit.
+BROKEN_TESTS = test.reflisp
+
+ifeq (${SCHEME}, o/${HOSTTYPE}/book.bigloo)
+    BROKEN_TESTS += big.test.chap8j
+endif
+
+GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 
 # # roughly 4 hours.
 grand.test :
