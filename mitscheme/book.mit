@@ -31,6 +31,8 @@
         (if (pair? args) (car args) "G")
         (number->string counter) ) ) ) ) )
 
+(define call/cc call-with-current-continuation)
+
 (define (atom? x) (not (pair? x)))
 
 ;;; I also like the iota function. (iota 0 4) -> (0 1 2 3)
@@ -142,24 +144,16 @@
 
 ;;; pp is present (and autoloaded)
 
-;;; Loads syntax-case V2.0. 
 ;;; Attention Mit-Scheme confuses #f and () as Scheme->C.
 
-(syntax-table-define system-global-syntax-table 
-    's2c-if
-  (macro (condition . rest)
-    `(if (let ((condition ,condition))
-           (or condition (null? condition)) )
-         . ,rest ) ) )
+(define-syntax s2c-if
+  (syntax-rules ()
+      ((s2c-if condition . rest)
+	(if (let ((c condition))
+	       (or c (null? c)) )
+	     . rest ) ) ) )
 
-(load "mitscheme/others/compat.ss")
-(load "mitscheme/others/hooks.mit")
-(load "mitscheme/others/output.ss")
-(load "mitscheme/others/init.ss")
-(load "mitscheme/others/expand.sc")
-(load "mitscheme/others/macro-defs.sc")
-
-;;; This function loads a file expanded with syntax-expand.
+;;; This function loads a file
 
 (define *syntax-case-load-verbose?* #f)
 
@@ -174,7 +168,7 @@
       (let loop ((e (read in)))
         (if (eof-object? e) 
             file
-            (let ((r (eval (expand-syntax e) top-level-environment)))
+            (let ((r (eval e top-level-environment)))
               (if *syntax-case-load-verbose?*
                   (begin (display ";= ")
                          (display r)
@@ -199,25 +193,27 @@
 ;;; But, instead of syntax-case-loading the file, I only load it with 
 ;;; a definition of define-meroonet-macro that defines it for Dybvig.
 
-(syntax-table-define system-global-syntax-table 
-    'define-meroonet-macro
-  (macro (ccall . bbody)
-    (define (meroonet-make-expander call body x g)
-      `(begin
-         ;; define the Dybvig expander as a regular function:
-         (define ,g
-           (lambda (,x)
-             ;; x receives a syntax-object and not a form
-             (define (strip x) (vector-ref x 1))
-             ;; Don't check arity, apply directly
-             (apply (lambda ,(cdr call) . ,body)
-                    (cdr (strip ,x)) ) ) )
-         ;; register the Dybvig macro at load-time:
-         (expand-syntax
-          '(define-syntax ,(car call) ,g) ) ) )
-    (meroonet-make-expander ccall bbody (gensym) (gensym)) ) )
+(define-syntax define-macro
+  (syntax-rules ()
+    ((define-macro (name . args) body ...)
+     (define-syntax name
+       (rsc-macro-transformer
+         (let ((xfmr (lambda args body ...)))
+           (lambda (e r) (apply xfmr (cdr e))) ) ) ) ) ) )
+
+(define-macro (define-meroonet-macro call . body)
+  `(define-macro ,call . ,body) )
 
 (load "meroonet/meroonet.scm")
+
+;;; Since the define-abbreviation is also necessary for the book when
+;;; non high level macros are defined, register define-abbreviation
+;;; for syntax-case. 
+
+(define-syntax define-abbreviation
+   (syntax-rules ()
+     ((define-abbreviation call . body)
+      (define-meroonet-macro call . body) ) ) )
 
 ;;; **IMPORTANT 2**
 ;;; The test-driver should try to catch errors of the underlying Scheme 
@@ -227,19 +223,9 @@
 ;;; (for instance in meroonet/oo-tests.scm) require errors to be caught
 ;;; when signalled by list-tail with a non-numeric second argument.
 
-(set! error-handler
-      (lambda error-msg
-        (error-print error-msg) ) )
-
-;;; Since the define-abbreviation is also necessary for the book when
-;;; non high level macros are defined, register define-abbreviation
-;;; for syntax-case. 
-
-(expand-syntax
- '(define-syntax define-abbreviation
-    (syntax-rules ()
-      ((define-abbreviation call . body)
-       (define-meroonet-macro call . body) ) ) ) )
+;(set! error-handler
+;      (lambda error-msg
+;        (error-print error-msg) ) )
 
 ;;; This function will test a suite of tests. It also allows to test the
 ;;; port of syntax-case.
@@ -250,12 +236,12 @@
    (lambda (read check err)
      (define (the-error . args)
        (apply err args) )
-     (set! error-handler the-error)
      (set! meroonet-error the-error)
      (set! tester-error    the-error)
-     (lambda ()
-       (let ((e (read)))
-         (check (eval (expand-syntax e) user-initial-environment)) ) ) )
+     (bind-condition-handler () the-error
+         (lambda ()
+           (let ((e (read)))
+             (check (eval e user-initial-environment)) ) ) ) )
    equal? ) )
 ;;; Test: 
 ;;;	(test "meroonet/oo-tests.scm")
@@ -283,14 +269,13 @@
 
 ;;; The clone function that performs a shallow copy of a Meroonet object.
 
-(eval (expand-syntax 
-       '(begin
-          (define-generic (show (o) . stream)
-            (let ((stream (if (pair? stream) (car stream)
-                              (current-output-port) )))
-              (bounded-display o stream) ) )
-          (define-generic (clone (o))
-            (list->vector (vector->list o)) ) ) ))
+(define-generic (show (o) . stream)
+  (let ((stream (if (pair? stream) (car stream)
+                    (current-output-port) )))
+    (bounded-display o stream) ) )
+
+(define-generic (clone (o))
+  (list->vector (vector->list o)) )
 
 ;;; Define a new toplevel with syntax-case as macroexpander.
 ;;; A small toplevel loop that uses the syntax-case package of Hieb
@@ -302,16 +287,15 @@
   (display "[C. Queinnec's book] Mit-Scheme+Meroonet+syntax-case...")
   (newline)
   (set! *syntax-case-load-verbose?* #t)
-  (set! load syntax-case-load)
   (interpreter
    "? " "= " #t
    (lambda (read print err)
-     (set! error-handler  err)
      (set! tester-error   err)
      (set! meroonet-error err)
-     (lambda ()
-       (let ((e (read)))
-         (print (eval (expand-syntax e) user-initial-environment)) ) ) ) )
+     (bind-condition-handler () err
+       (lambda ()
+         (let ((e (read)))
+           (print (eval e user-initial-environment)) ) ) ) ) )
   (display " Ite LiSP est.")
   (newline)
   (exit 0) )
