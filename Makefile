@@ -56,6 +56,11 @@ export HOSTTYPE	= $(shell uname -m)
 # SCHEME		= scm -u -l scm/Init.scm
 SCHEME  = 	o/${HOSTTYPE}/book.mit
 
+# # Mit-scheme's EVAL takes a mandatory environment argument.
+ifeq (${SCHEME}, o/${HOSTTYPE}/book.mit)
+    EVAL_ENVIRONMENT = user-initial-environment
+endif
+
 # # This variable allows to measure time.
 # # I personnally use Gnu time but time will do also.
 
@@ -523,7 +528,7 @@ TEST_CHAP4 =	test.chap4
 # # chap4a.scm contains a Scheme interpreter coded with nothing but closures.
 # # 72.25user 2.45system 1:49.86elapsed
 test.chap4 : src/chap4.scm src/chap4a.scm src/chap4.tst
-	echo "						(load \"src/chap4.scm\")				(load \"src/chap4a.scm\")				(define box1 'wait)					(define p1 'wait)					(and 							 (file-test \"src/scheme.tst\")				 (set! evaluate new-evaluate)				 (file-test \"src/chap4a.tst\")				 (suite-test \"src/chap4.tst\" \"?? \" \"== \" #t 	    (lambda (read check err)				      (lambda () 					        (check (eval (read))) ) )	    naive-match )					)"							| ${SCHEME}
+	echo "						(load \"src/chap4.scm\")				(load \"src/chap4a.scm\")				(define box1 'wait)					(define p1 'wait)					(and 							 (file-test \"src/scheme.tst\")				 (set! evaluate new-evaluate)				 (file-test \"src/chap4a.tst\")				 (suite-test \"src/chap4.tst\" \"?? \" \"== \" #t 	    (lambda (read check err)				      (lambda () 					        (check (eval (read) ${EVAL_ENVIRONMENT})) ) )	    naive-match )					)"							| ${SCHEME}
 
 # ##################################### Chap 5 ##############################
 # # Denotational semantics
