@@ -235,8 +235,8 @@
     ((define-macro (name . args) body ...)
      (define-syntax name
        (rsc-macro-transformer
-         (let ((xfmr (lambda args body ...)))
-           (lambda (e r) (apply xfmr (cdr e))) ) ) ) ) ) )
+         (let ((transformer (lambda args body ...)))
+           (lambda (exp env) (apply transformer (cdr exp))) ) ) ) ) ) )
 
 (define-macro (define-meroonet-macro call . body)
   `(define-macro ,call . ,body) )
