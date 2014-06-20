@@ -192,7 +192,7 @@
       (let loop ((e (read in)))
         (if (eof-object? e) 
             file
-            (let ((r (eval e top-level-environment)))
+            (let ((r (eval e user-initial-environment)))
               (if *syntax-case-load-verbose?*
                   (begin (display ";= ")
                          (display r)
