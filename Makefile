@@ -38,7 +38,7 @@ GSC		= gambitc
 # # shell (tcsh does this), at that time, you can leave empty this
 # # definition, it will be automatically inherited from your shell.
 
-export HOSTTYPE	= $(shell uname -m)
+export HOSTTYPE	:= $(shell uname -m)
 
 # # Choose a Scheme interpreter. This interpreter must contain Meroonet,
 # # hygienic macros and a test-suite driver. It is better to build a
@@ -104,6 +104,11 @@ PERL =  perl
 
 # # Absolute path to LiSP source root.
 export LiSP_TOPDIR = ${CURDIR}
+
+# # Set the SHELL explicitly. Mit-scheme's run-shell-command respects this
+# # variable, and some shell commands will fail if using a non-standard shell
+# # (e.g. fish).
+export SHELL := $(shell which sh)
 
 # # end of Site.def
 
