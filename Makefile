@@ -54,7 +54,7 @@ export HOSTTYPE	= $(shell uname -m)
 # # Scm 4e1 is perfect here. This command is intended to be run in the
 # # current directory only.
 # SCHEME		= scm -u -l scm/Init.scm
-SCHEME  = 	o/${HOSTTYPE}/book.gsi
+SCHEME  = 	o/${HOSTTYPE}/book.mit
 
 # # This variable allows to measure time.
 # # I personnally use Gnu time but time will do also.
@@ -193,11 +193,11 @@ o/${HOSTTYPE}/rtbook+.o : bigloo/rtbook+.bgl 			bigloo/others/pp.scm				bigloo/o
 build.interpreter : mkdir
 	@if [ "X${SCHEME}" = X ] ;	then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ;	else : ; fi
 
-	case "${SCHEME}" in *bigloo|*scc|*gsi) ${MAKE} ${SCHEME} ;; *) : ;; esac
+	case "${SCHEME}" in *bigloo|*scc|*gsi|*mit) ${MAKE} ${SCHEME} ;; *) : ;; esac
 
 # ######################################## Test interpreters
 
-test.interpreters :	o/${HOSTTYPE}/book.sci.test				o/${HOSTTYPE}/book.bigloo.test				o/${HOSTTYPE}/book.scm.test
+test.interpreters :	o/${HOSTTYPE}/book.sci.test				o/${HOSTTYPE}/book.bigloo.test				o/${HOSTTYPE}/book.scm.test o/${HOSTTYPE}/book.mit.test
 
 # # Makes a command for SCM similar to the others. This command has to be
 # # run from the current directory.
@@ -212,8 +212,10 @@ o/${HOSTTYPE}/book.elk : mkdir
 	chmod a=rwx o/${HOSTTYPE}/book.elk
 
 # # Makes a command to run mitscheme. Must be run from the current directory.
-o/${HOSTTYPE}/book.mit :
-	echo done.
+o/${HOSTTYPE}/book.mit : mkdir
+	echo "#!/bin/sh" > $@
+	echo "exec mit-scheme --batch-mode --load mitscheme/book.mit" >> $@
+	chmod a=rwx $@
 
 # # Makes a command for Gambit interpreter similar to the others.
 # # This command has to be run from the current directory.
