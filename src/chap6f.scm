@@ -446,7 +446,7 @@ SCM_The_Environment~A->frame.value[~A])"
         '() ) )
 
 (define (SHALLOW-ARGUMENT-SET! j m)
-  (let ((v (gensym6f "V"))
+  (let ((v (gensym6f "v"))
         (mcode (car m))
         (mvars (cdr m)) )
     (cons (format #f "(/* SHALLOW-ARGUMENT-SET! */
@@ -457,7 +457,7 @@ SCM_The_Environment->frame.value[~A]=~A)"
           (cons v mvars) ) ) )
 
 (define (DEEP-ARGUMENT-SET! i j m)
-  (let ((v (gensym6f "V"))
+  (let ((v (gensym6f "v"))
         (mcode (car m))
         (mvars (cdr m)) )
     (cons (format #f "( /* DEEP-ARGUMENT-SET! */
@@ -493,7 +493,7 @@ SCM_The_Environment~A->frame.value[~A]=~A)"
 ;;; Exo: add a C comment with the name of the global variable ?
 
 (define (GLOBAL-SET! i m)
-  (let* ((v (gensym6f "V"))
+  (let* ((v (gensym6f "v"))
          (g (GLOBAL-REF i))
          (gcode (car g))
          (gvars (cdr g))
@@ -513,7 +513,7 @@ SCM_The_Environment~A->frame.value[~A]=~A)"
         '() ) ) )
 
 (define (adjoin-quotation value)
-  (let ((q (gensym6f "Q")))
+  (let ((q (gensym6f "q")))
     (set! *quotations* (cons (list value q) *quotations*))
     q ) )
 ;;; Exo: coalesce constants
@@ -544,7 +544,7 @@ SCM_The_Environment~A->frame.value[~A]=~A)"
           (append mvars m+vars) ) ) )
 
 (define (TR-FIX-LET m* m+)
-  (let ((r (gensym6f "R"))
+  (let ((r (gensym6f "r"))
         (m*code (car m*))
         (m*vars (cdr m*))
         (m+code (car m+))
@@ -561,9 +561,9 @@ SCM_The_Environment=~A,
           (cons r (append m*vars m+vars)) ) ) )
 
 (define (FIX-LET m* m+)
-  (let ((r (gensym6f "R"))
-        (s (gensym6f "S"))
-        (v (gensym6f "V"))
+  (let ((r (gensym6f "r"))
+        (s (gensym6f "s"))
+        (v (gensym6f "v"))
         (m*code (car m*))
         (m*vars (cdr m*))
         (m+code (car m+))
@@ -586,7 +586,7 @@ SCM_The_Environment=~A,
           (cons r (cons s (cons v (append m*vars m+vars)))) ) ) )
 
 (define (TR-NARY-LET m* m+ arity size-2)
-  (let ((r (gensym6f "R"))
+  (let ((r (gensym6f "r"))
         (m*code (car m*))
         (m*vars (cdr m*))
         (m+code (car m+))
@@ -605,9 +605,9 @@ SCM_listify(~A,~A),
           (cons r (append m*vars m+vars)) ) ) )
 
 (define (NARY-LET m* m+ arity size-2)
-  (let ((r (gensym6f "R"))
-        (s (gensym6f "S"))
-        (v (gensym6f "V"))
+  (let ((r (gensym6f "r"))
+        (s (gensym6f "s"))
+        (v (gensym6f "v"))
         (m*code (car m*))
         (m*vars (cdr m*))
         (m+code (car m+))
@@ -636,7 +636,7 @@ SCM_The_Environment=~A,
         '() ) )
 
 (define (CALL1 address m1)
-  (let ((v1 (gensym6f "V"))
+  (let ((v1 (gensym6f "v"))
         (m1code (car m1))
         (m1vars (cdr m1)) )
     (cons (format #f "( /* CALL1 */
@@ -647,8 +647,8 @@ SCM_The_Environment=~A,
           (cons v1 m1vars) ) ) )
 
 (define (CALL2 address m1 m2)
-  (let ((v1 (gensym6f "V"))
-        (v2 (gensym6f "V"))
+  (let ((v1 (gensym6f "v"))
+        (v2 (gensym6f "v"))
         (m1code (car m1))
         (m1vars (cdr m1))
         (m2code (car m2))
@@ -663,9 +663,9 @@ SCM_The_Environment=~A,
           (cons v1 (cons v2 (append m1vars m2vars))) ) ) )
 
 (define (CALL3 address m1 m2 m3)
-  (let ((v1 (gensym6f "V"))
-        (v2 (gensym6f "V"))
-        (v3 (gensym6f "V"))
+  (let ((v1 (gensym6f "v"))
+        (v2 (gensym6f "v"))
+        (v3 (gensym6f "v"))
         (m1code (car m1))
         (m1vars (cdr m1))
         (m2code (car m2))
@@ -701,9 +701,9 @@ SCM_The_Environment=~A,
           fvars ) ) )
 
 (define (adjoin-closure arity m+ nary?)
-  (let ((f (gensym6f "Function"))
-        (v* (gensym6f "Frame"))
-        (r (gensym6f "R"))
+  (let ((f (gensym6f "function"))
+        (v* (gensym6f "frame"))
+        (r (gensym6f "r"))
         (m+code (car m+))
         (m+vars (cdr m+)) )
     (set! *closures*
@@ -738,8 +738,8 @@ SCM
           fvars ) ) )
 
 (define (TR-REGULAR-CALL m m*)
-  (let ((f (gensym6f "F"))
-        (v* (gensym6f "Frame"))
+  (let ((f (gensym6f "f"))
+        (v* (gensym6f "frame"))
         (mcode (car m))
         (mvars (cdr m))
         (m*code (car m*))
@@ -754,10 +754,10 @@ SCM_call(~A,~A) )"
           (cons f (cons v* (append mvars m*vars))) ) ) )
 
 (define (REGULAR-CALL m m*)
-  (let ((f (gensym6f "F"))
-        (v* (gensym6f "Frame"))
-        (r (gensym6f "S"))
-        (v (gensym6f "V"))
+  (let ((f (gensym6f "f"))
+        (v* (gensym6f "frame"))
+        (r (gensym6f "s"))
+        (v (gensym6f "v"))
         (mcode (car m))
         (mvars (cdr m))
         (m*code (car m*))
@@ -778,8 +778,8 @@ SCM_The_Environment=~A,
           (cons f (cons v* (cons r (cons v (append mvars m*vars))))) ) ) )
 
 (define (STORE-ARGUMENT m m* rank)
-  (let ((v (gensym6f "V"))
-        (v* (gensym6f "Frame"))
+  (let ((v (gensym6f "v"))
+        (v* (gensym6f "frame"))
         (mcode (car m))
         (mvars (cdr m))
         (m*code (car m*))
@@ -1233,7 +1233,7 @@ SCM_The_Environment=~A,
       (set! counter (+ counter 1))
       (string->symbol
        (string-append
-        (if (pair? args) (car args) "G")
+        (if (pair? args) (car args) "g")
         (number->string counter) ) ) ) ) )
 
 ;;; DEBUG
