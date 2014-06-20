@@ -72,6 +72,12 @@
                        (else (error 'symbol-append args)) ) )
                args ) ) ) )
 
+
+(load-option 'synchronous-subprocess)
+
+(define (system command)
+  (run-shell-command command))
+
 (define (display-exception v)
   (let ((condition (and (pair? v) (car v))))
     (if (condition? condition)
