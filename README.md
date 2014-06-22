@@ -1,5 +1,5 @@
-Programs from the Book Lisp In Small Pieces
-===========================================
+Programs Lisp In Small Pieces
+=============================
 
 This repository contains source code from the book [Lisp In Small
 Pieces][LiSP] by Christian Queinnec, updated to run on modern versions
@@ -7,9 +7,9 @@ of scheme.
 
 At the time of writing (06/2014), the following scheme's are supported:
 
-[bigloo][bigloo] [4.1a][bigloo41a]
-[gambit][gambit] [4.7.2][gambit47]
-[mit-scheme][mitscheme] [9.2][mitscheme92]
+- [bigloo][bigloo] [4.1a][bigloo41a]
+- [gambit][gambit] [4.7.2][gambit47]
+- [mit-scheme][mitscheme] [9.2][mitscheme92]
 
 
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
