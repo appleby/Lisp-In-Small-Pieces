@@ -22,8 +22,8 @@ Running the code
    variable to the version of scheme you want. The supported values for
    `SCHEME` are `o/${HOSTTYPE}/book.{bigloo,gsi,mit}`. So, e.g., to build the
    Gambit interpreter, set `SCHEME = o/${HOSTTYPE}/book.gsi`. Then run `make` to
-   build the interpreter. If everything goes well, should have an executable in
-   `o/${HOSTTYPE}/book.gsi`.
+   build the interpreter. If everything goes well, you should have an
+   executable in `o/${HOSTTYPE}/book.gsi`.
 
 4. Run `make grand.test` to run the test suite. This will take several minutes,
    but at the end you should see message that says "All tests passed."
