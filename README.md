@@ -1,14 +1,14 @@
-Programs of Lisp In Small Pieces
-================================
+Lisp In Small Pieces, 2014 Edition
+==================================
 
 This repository contains source code from the book [Lisp In Small Pieces][LiSP]
 by Christian Queinnec, updated to work with modern versions of Bigloo, Gambit,
 and Mit-scheme. Specifically, the following versions are known to mostly work,
 with a few exceptions noted below.
 
-- [bigloo][bigloo] 4.1a
-- [gambit][gambit] 4.7.2
-- [mit-scheme][mitscheme] 9.2
+- [bigloo][] 4.1a
+- [gambit][] 4.7.2
+- [mit-scheme][] 9.2
 
 Running the code
 ----------------
@@ -28,17 +28,55 @@ Running the code
 4. Run `make grand.test` to run the test suite. This will take several minutes,
    but at the end you should see message that says "All tests passed."
 
-In addition to [bigloo][bigloo], [gambit][gambit], and [mitscheme][mitscheme]
-the [original sources][LiSP-2ndEdition] also supported [elk][elk],
-[scheme2c][scheme2c], and [scm][scm]. I'm not planning to 
+Failing GRAND_TESTS
+-------------------
+
+The following tests from the `grand.test` target are know to be failing.
+
+| Scheme | Failing Tests             |
+| ------ | ------------------------- |
+| bigloo | test.reflisp, test.chap8j |
+| gambit | test.reflisp              |
+| mit    | test.reflisp              |
+
+Note that test.reflisp was not supported for gambit and mit-scheme even in the
+original sources. Attempting to compile the `monitor` macro in src/chap8k.scm
+would intentionally generate a divide-by-zero error if the scheme version was
+anything other than bigloo, scheme2c, or scm.
+
+The reflective interpreter is doing some interesting things (like redefining
+special forms), and I suspect that it will take some digging to find the
+correct fix. A comment from the top of src/chap8k.scm warns:
+
+```
+;;; Adaptation of the reflective interpreter to Scheme->C, Bigloo or
+;;; SCM.  This is very messy, very hacky and poses a lot of problems
+;;; with hygienic macros so expansion is done by hand...
+```
+
+I plan to revisit these failing tests when I get to the corresponding chapter
+in the book.
+
+Other Schemes
+-------------
+
+In addition to [bigloo][], [gambit][], and [mit-scheme][] the [original
+sources][LiSP-2ndEdition] also supported [elk][], [scheme2c][], and [scm][].
+I'm not planning to get those working myself, but pull requests are welcome.
+
+More Info
+---------
+
+For more info, see the [original README][README] file.
 
 
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
 [LiSP-2ndEdition]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz
+[README]: https://github.com/appleby/LiSP-2ndEdition/blob/master/README.orig
 
 [bigloo]: http://www-sop.inria.fr/indes/fp/Bigloo
 [elk]: http://sam.zoy.org/elk/
 [gambit]: http://dynamo.iro.umontreal.ca/wiki/index.php/Main_Page
-[mitscheme]: http://www.gnu.org/software/mit-scheme/
+[mit-scheme]: http://www.gnu.org/software/mit-scheme/
 [scheme2c]: https://github.com/barak/scheme2c
 [scm]: http://people.csail.mit.edu/jaffer/SCM
