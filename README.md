@@ -16,7 +16,7 @@ Running the code
 1. Install one of the above mentioned schemes
 
 2. Clone this repo.
-    `git clone https://github.com/appleby/LiSP-2ndEdition.git`
+    `git clone https://github.com/appleby/Lisp-In-Small-Pieces.git`
 
 3. Build the interpreter for the book. Edit the Makefile and set the `SCHEME`
    variable to the version of scheme you want. The supported values for
@@ -86,8 +86,8 @@ TODO
 * Maybe: Move common code out of `<interpreter>/book.scm`.
 
 
-[README]: https://raw.githubusercontent.com/appleby/LiSP-2ndEdition/master/README.orig
-[failing-tests]: https://github.com/appleby/LiSP-2ndEdition#failing-grand_tests
+[README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
+[failing-tests]: https://github.com/appleby/Lisp-In-Small-Pieces#failing-grand_tests
 
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
 [LiSP-2ndEdition]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz
