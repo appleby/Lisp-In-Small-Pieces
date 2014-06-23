@@ -196,7 +196,7 @@ expression () { " )
   ;; generate header
   (format out "
 /* Entry point:  */
-void main(int argc, char *argv[]) { ")
+int main(int argc, char *argv[]) { ")
   (format out "
 /* Mark the (approximate) bottom of the stack */
 char *current_stack_ptr ;

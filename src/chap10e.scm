@@ -561,7 +561,7 @@
 ;;; Main procedure. We choose to print the result.
 
 (define (generate-main out form)
-  (format out "~%/* Expression: */~%void main(void) {~%")
+  (format out "~%/* Expression: */~%int main(void) {~%")
   (format out "  SCM_print")
   (between-parentheses out
     (->C form out) )

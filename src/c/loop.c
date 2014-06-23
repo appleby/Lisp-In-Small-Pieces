@@ -5,7 +5,7 @@
 #define LOOP(x) (x+LOOP(x+1))
 #define BAR(x) (x+LOOP(x+1))
 
-void main () {
+int main () {
   int i = 0;
   return BAR(i);
 }

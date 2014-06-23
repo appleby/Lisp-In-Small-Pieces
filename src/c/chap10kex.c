@@ -125,7 +125,7 @@ SCM_DeclareFunction(function_6) {
 
 
 /* Expression: */
-void main(void) {
+int main(void) {
   SCM_print(SCM_invoke0(SCM_close(SCM_CfunctionAddress
                                   (function_6),0,0)));
   exit(0);

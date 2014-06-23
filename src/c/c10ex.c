@@ -67,7 +67,7 @@ SCM_DeclareFunction(function_3) {
 
 
 /* Expression: */
-void main(argc,argv) {
+int main(argc,argv) {
   SCM r;
   int i;
   for ( i=0; i<=10000; i++ ) r = (SCM_invoke0(SCM_close(function_3,0,0)));
