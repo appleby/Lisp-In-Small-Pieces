@@ -82,7 +82,7 @@ TODO
 * Fix issues where make complains about not finding `time` for benchmarks.
 
 
-[README]: https://github.com/appleby/LiSP-2ndEdition/blob/master/README.orig
+[README]: https://raw.githubusercontent.com/appleby/LiSP-2ndEdition/master/README.orig
 [failing-tests]: https://github.com/appleby/LiSP-2ndEdition#failing-grand_tests
 
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
