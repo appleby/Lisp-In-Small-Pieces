@@ -49,6 +49,20 @@ special forms), and I suspect that it will take some digging to find the
 correct fix. I plan to revisit these failing tests when I get to the
 corresponding chapter in the book.
 
+Other Failing Tests
+-------------------
+
+- test.chap10i
+- test.chap10e.c
+
+Note that for test.chap10i, a comment in the Makefile warns that it's an
+untested variant. Not sure if it's worth trying to get it working...
+
+```
+# # chap10i.scm : *Untested* variants for function invokation since
+# # it requires a change in SCM_invoke (in scheme.c).
+```
+
 Other Schemes
 -------------
 
@@ -60,6 +74,12 @@ More Info
 ---------
 
 For more info, see the [original README][README] file.
+
+TODO
+----
+
+* Handle easy-to-fix compiler warnings, like return type of `main` being void.
+* Fix issues where make complains about not finding `time` for benchmarks.
 
 
 [README]: https://github.com/appleby/LiSP-2ndEdition/blob/master/README.orig
