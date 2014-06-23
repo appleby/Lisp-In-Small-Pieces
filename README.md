@@ -78,7 +78,6 @@ TODO
 ----
 
 * Handle easy-to-fix compiler warnings, like return type of `main` being void.
-* Fix issues where make complains about not finding `time` for benchmarks.
 * Maybe: Remove unused code, like the included syntax-case files.
 * Maybe: Remove unused/unsupported/deprecated targets from the Makefile. 
 * Maybe: Get C files to compile without warnings
