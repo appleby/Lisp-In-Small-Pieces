@@ -1,5 +1,5 @@
-Lisp In Small Pieces, 2014 Edition
-==================================
+Lisp In Small Pieces for Modern Schemes
+=======================================
 
 This repository contains source code from the book [Lisp In Small Pieces][LiSP]
 by Christian Queinnec, updated to work with modern versions of Bigloo, Gambit,
@@ -39,23 +39,15 @@ The following tests from the `grand.test` target are know to be failing.
 | gambit | test.reflisp              |
 | mit    | test.reflisp              |
 
-Note that test.reflisp was not supported for gambit and mit-scheme even in the
-original sources. Attempting to compile the `monitor` macro in src/chap8k.scm
-would intentionally generate a divide-by-zero error if the scheme version was
-anything other than bigloo, scheme2c, or scm.
+Note that `test.reflisp` was not supported for gambit and mit-scheme even in
+the original sources. Attempting to compile the `monitor` macro in
+`src/chap8k.scm` would intentionally generate a divide-by-zero error if the
+scheme version was anything other than bigloo, scheme2c, or scm.
 
 The reflective interpreter is doing some interesting things (like redefining
 special forms), and I suspect that it will take some digging to find the
-correct fix. A comment from the top of src/chap8k.scm warns:
-
-```
-;;; Adaptation of the reflective interpreter to Scheme->C, Bigloo or
-;;; SCM.  This is very messy, very hacky and poses a lot of problems
-;;; with hygienic macros so expansion is done by hand...
-```
-
-I plan to revisit these failing tests when I get to the corresponding chapter
-in the book.
+correct fix. I plan to revisit these failing tests when I get to the
+corresponding chapter in the book.
 
 Other Schemes
 -------------
