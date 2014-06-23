@@ -3,8 +3,8 @@ Lisp In Small Pieces for Modern Schemes
 
 This repository contains source code from the book [Lisp In Small Pieces][LiSP]
 by Christian Queinnec, updated to work with modern versions of Bigloo, Gambit,
-and Mit-scheme. Specifically, the following versions are known to mostly work,
-with a few exceptions noted below.
+and Mit-scheme. Specifically, the following versions are known to pass the
+included test suite, with a [few exceptions][failing-tests] noted below.
 
 - [bigloo][] 4.1a
 - [gambit][] 4.7.2
@@ -62,9 +62,11 @@ More Info
 For more info, see the [original README][README] file.
 
 
+[README]: https://github.com/appleby/LiSP-2ndEdition/blob/master/README.orig
+[failing-tests]: https://github.com/appleby/LiSP-2ndEdition#failing-grand_tests
+
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
 [LiSP-2ndEdition]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz
-[README]: https://github.com/appleby/LiSP-2ndEdition/blob/master/README.orig
 
 [bigloo]: http://www-sop.inria.fr/indes/fp/Bigloo
 [elk]: http://sam.zoy.org/elk/
