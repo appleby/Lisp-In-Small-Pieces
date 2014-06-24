@@ -214,11 +214,11 @@ o/${HOSTTYPE}/rtbook+.o : bigloo/rtbook+.bgl 			bigloo/others/pp.scm				bigloo/o
 build.interpreter : mkdir
 	@if [ "X${SCHEME}" = X ] ;	then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ;	else : ; fi
 
-	case "${SCHEME}" in *bigloo|*scc|*gsi|*mit) ${MAKE} ${SCHEME} ;; *) : ;; esac
+	case "${SCHEME}" in *bigloo|*gsi|*mit) ${MAKE} ${SCHEME} ;; *) : ;; esac
 
 # ######################################## Test interpreters
 
-test.interpreters :	o/${HOSTTYPE}/book.sci.test				o/${HOSTTYPE}/book.bigloo.test				o/${HOSTTYPE}/book.scm.test o/${HOSTTYPE}/book.mit.test
+test.interpreters :	o/${HOSTTYPE}/book.bigloo.test	o/${HOSTTYPE}/book.mit.test o/${HOSTTYPE}/book.gsi.test
 
 # # Makes a command for SCM similar to the others. This command has to be
 # # run from the current directory.
