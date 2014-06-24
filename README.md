@@ -31,7 +31,7 @@ Running the code
 Failing GRAND_TESTS
 -------------------
 
-The following tests from the `grand.test` target are know to fail.
+The following tests from the `grand.test` target are known to fail.
 
 | Scheme | Failing Tests             |
 | ------ | ------------------------- |
@@ -48,8 +48,11 @@ The reflective interpreter is doing some interesting things, and I suspect that
 it will take some digging to find the correct fix. I plan to revisit these
 failing tests when I get to the corresponding chapter in the book.
 
-Other Failing Tests
--------------------
+Other Known Failing Tests
+-------------------------
+
+The Makefile includes quite a few tests and targets which aren't run by the
+grand.test target. Here are some that I know are failing, there may be others:
 
 - test.chap10i
 - test.chap10e.c
