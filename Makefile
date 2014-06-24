@@ -52,8 +52,9 @@ export HOSTTYPE	:= $(shell uname -m)
 # # fixes to get them working again. Author's original comment suggested that
 # # Scm 4e1 was a known good vesion. At time of writing (06/2014) the current
 # # version of Scm is 5f1.
-# #SCHEME	= scm -u -l scm/Init.scm
+# #SCHEME	= o/${HOSTTYPE}/book.elk
 # #SCHEME	= o/${HOSTTYPE}/book.sci
+# #SCHEME	= o/${HOSTTYPE}/book.scm
 
 # # 2014 Note: book.gsc, the pre-compiled version of Gambit is not supported
 # # due to issues compiling scheme files with gsc when passing the -:s flag.
