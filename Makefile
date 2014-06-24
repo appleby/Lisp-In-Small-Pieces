@@ -415,7 +415,7 @@ TAGS :
 # # long. That means that it is a very long long test (hours!) so it is
 # # only run if the variable YOU_HAVE_TIME is true (not false).
 
-YOU_HAVE_TIME	=	false
+YOU_HAVE_TIME	=	true
 
 ALL_GRAND_TESTS =	${TEST_CHAP1}			${TEST_CHAP2}			${TEST_CHAP3}			${TEST_CHAP4}			${TEST_CHAP5}			${TEST_CHAP6}			${TEST_CHAP7}			${TEST_CHAP8}			${TEST_CHAP9}			${TEST_CHAP10}
 
