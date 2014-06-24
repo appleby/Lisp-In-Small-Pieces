@@ -51,8 +51,8 @@ failing tests when I get to the corresponding chapter in the book.
 Other Known Failing Tests
 -------------------------
 
-The Makefile includes quite a few tests and targets which aren't run by the
-grand.test target. Here are some that I know are failing, there may be others:
+The Makefile includes quite a few tests which aren't run by the grand.test
+target. Here are some that I know are failing; there may be others:
 
 - test.chap10i
 - test.chap10e.c
