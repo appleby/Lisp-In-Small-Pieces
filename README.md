@@ -77,7 +77,6 @@ For more info, see the [original README][README] file.
 TODO
 ----
 
-* Handle easy-to-fix compiler warnings, like return type of `main` being void.
 * Maybe: Remove unused code, like the included syntax-case files.
 * Maybe: Remove unused/unsupported/deprecated targets from the Makefile. 
 * Maybe: Get C files to compile without warnings
