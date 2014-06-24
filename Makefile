@@ -48,13 +48,23 @@ export HOSTTYPE	:= $(shell uname -m)
 # # macros and the like every time. This is what the SCM-based definition
 # # or the Gambit (gsi) based definition does.
 
-# #SCHEME	=	o/${HOSTTYPE}/book.sci
-# #SCHEME	=	o/${HOSTTYPE}/book.bigloo
+# # 2014 Note: These schemes have not been tested, and probably require some
+# # fixes to get them working again. Author's original comment suggested that
+# # Scm 4e1 was a known good vesion. At time of writing (06/2014) the current
+# # version of Scm is 5f1.
+# #SCHEME	= scm -u -l scm/Init.scm
+# #SCHEME	= o/${HOSTTYPE}/book.sci
 
-# # Scm 4e1 is perfect here. This command is intended to be run in the
-# # current directory only.
-# SCHEME		= scm -u -l scm/Init.scm
-SCHEME  = 	o/${HOSTTYPE}/book.mit
+# # 2014 Note: book.gsc, the pre-compiled version of Gambit is not supported
+# # due to issues compiling scheme files with gsc when passing the -:s flag.
+# # See the comment for the book.gsc target below.
+# #SCHEME	= o/${HOSTTYPE}/book.gsc
+
+# # 2014 Note: These schemes are the only known-working options. See the
+# # README.md file for more info.
+# #SCHEME	= o/${HOSTTYPE}/book.bigloo
+# #SCHEME       = o/${HOSTTYPE}/book.gsi
+SCHEME       = o/${HOSTTYPE}/book.mit
 
 # # Mit-scheme's EVAL takes a mandatory environment argument.
 ifeq (${SCHEME}, o/${HOSTTYPE}/book.mit)
