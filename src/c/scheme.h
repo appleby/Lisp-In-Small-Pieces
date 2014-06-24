@@ -222,6 +222,15 @@ typedef union SCM_object           *SCM;
     long arity;			\
     fields }
 
+/* This is a hack to silence gcc warnings about empty macro args when compiling
+ * with the -ansi and -pedantic flags. The seconds argument of SCM_DefineClosure
+ * is often empty. Rather than omit the arg altogether, we can instead use
+ * SCM_Empty to avoid the compiler warnings. See the following link for info:
+ * 
+ * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=33305
+ */
+#define SCM_Empty
+
 /* Define a primitive. Its definition is written in C directly.  arity
  * is a long integer. If arity>0, it represents a fixed arity (eg:
  * arity of cons is 2); if negative it represents the opposite of the

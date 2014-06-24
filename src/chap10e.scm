@@ -522,8 +522,10 @@
 (define (generate-closure-structure out definition)
   (format out "SCM_DefineClosure(function_~A, "
           (Function-Definition-index definition) )
-  (generate-local-temporaries (Function-Definition-free definition) 
-                              out )
+  (let ((temporaries (Function-Definition-free definition))) 
+    (if (pair? temporaries)
+      (generate-local-temporaries temporaries out )
+      (format out "SCM_Empty")))
   (format out ");~%") )
 
 (define (generate-possibly-dotted-definition out definition)

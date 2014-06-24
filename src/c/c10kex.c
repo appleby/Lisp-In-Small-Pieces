@@ -36,7 +36,7 @@ SCM_DeclareFunction(function_0) {
                                 v_27))));
 }
 
-SCM_DefineClosure(function_1, );
+SCM_DefineClosure(function_1, SCM_Empty);
 
 SCM_DeclareFunction(function_1) {
   SCM_DeclareLocalVariable(v_24,0);
@@ -62,7 +62,7 @@ SCM_DeclareFunction(function_2) {
                           SCM_CheckedGlobal(INDEX)))));
 }
 
-SCM_DefineClosure(function_3, );
+SCM_DefineClosure(function_3, SCM_Empty);
 
 SCM_DeclareFunction(function_3) {
   SCM_DeclareLocalVariable(v_15,0);
@@ -77,7 +77,7 @@ SCM_DeclareFunction(function_3) {
                         v_23))));
 }
 
-SCM_DefineClosure(function_4, );
+SCM_DefineClosure(function_4, SCM_Empty);
 
 SCM_DeclareFunction(function_4) {
   SCM_DeclareLocalVariable(v_8,0);
@@ -95,14 +95,14 @@ SCM_DeclareFunction(function_4) {
                            v_11)))))));
 }
 
-SCM_DefineClosure(function_5, );
+SCM_DefineClosure(function_5, SCM_Empty);
 
 SCM_DeclareFunction(function_5) {
   SCM_DeclareLocalVariable(v_1,0);
   return v_1;
 }
 
-SCM_DefineClosure(function_6, );
+SCM_DefineClosure(function_6, SCM_Empty);
 
 SCM_DeclareFunction(function_6) {
   SCM v_5; SCM v_7; SCM v_6; SCM v_4; SCM v_3; SCM v_2; SCM v_28; 

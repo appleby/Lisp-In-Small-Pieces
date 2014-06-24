@@ -23,7 +23,7 @@ SCM_DefineSymbol(thing2_object,thing4);       /* FOO */
 #define thing0 thing1	/* 1 */
 
 /* Functions: */
-SCM_DefineClosure(function_0, );
+SCM_DefineClosure(function_0, SCM_Empty);
 
 SCM_DeclareFunction(function_0) {
   SCM_DeclareLocalVariable(F,0);
@@ -41,14 +41,14 @@ SCM_DeclareFunction(function_1) {
                   X);
 }
 
-SCM_DefineClosure(function_2, );
+SCM_DefineClosure(function_2, SCM_Empty);
 
 SCM_DeclareFunction(function_2) {
   SCM_DeclareLocalVariable(I,0);
   return SCM_close(function_1,-1,1,I);
 }
 
-SCM_DefineClosure(function_3, );
+SCM_DefineClosure(function_3, SCM_Empty);
 
 SCM_DeclareFunction(function_3) {
   SCM TMP_2; SCM CNTER_1; 
