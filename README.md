@@ -65,6 +65,17 @@ untested variant. Not sure if it's worth trying to get it working...
 # # it requires a change in SCM_invoke (in scheme.c).
 ```
 
+Unknown Failing Tests?
+----------------------
+
+I've only tested the changes in this repo on my personal laptop (Archlinux /
+x86_64), and only with the scheme versions mentioned in the first section of
+this README. If you're using a recent-ish version of bigloo, gambit, or
+mit-scheme and you notice failures not mentioned above, please open a GitHub
+issue, or (even better) send a pull request.
+
+I'd also happily accept pull requests adding support for other schemes.
+
 Other Schemes
 -------------
 
