@@ -68,6 +68,8 @@ untested variant. Not sure if it's worth trying to get it working...
 Unknown Failing Tests?
 ----------------------
 
+![Works On My Machine](http://blog.codinghorror.com/content/images/uploads/2007/03/6a0120a85dcdae970b0128776ff992970c-pi.png)
+
 I've only tested the changes in this repo on my personal laptop (Archlinux /
 x86_64), and only with the scheme versions mentioned in the first section of
 this README. If you're using a recent-ish version of bigloo, gambit, or
