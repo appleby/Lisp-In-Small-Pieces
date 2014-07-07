@@ -14,14 +14,14 @@
 
 ;;; The version that will be included in the book
 
-(define (d.evaluate e env)
-  (if (atom? e) \ldots
-      (case (car e)
-        \ldots
-        ((lambda) (d.make-function (cadr e) (cddr e) env))
-        (else (d.invoke (d.evaluate (car e) env)
-                        (evlis (cdr e) env)
-                        env )) ) ) )           ; current environment
+;(define (d.evaluate e env)
+;  (if (atom? e) \ldots
+;      (case (car e)
+;        \ldots
+;        ((lambda) (d.make-function (cadr e) (cddr e) env))
+;        (else (d.invoke (d.evaluate (car e) env)
+;                        (evlis (cdr e) env)
+;                        env )) ) ) )           ; current environment
 
 ;;; The complete one.
 

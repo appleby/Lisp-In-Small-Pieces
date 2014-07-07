@@ -11,17 +11,17 @@
 
 ;;;                Variants of exercises for chapter 1.
 
-(define (tracing.evaluate exp env)
-  (if \ldots \ldots
-      (case (car exp) \ldots
-        (else (let ((fn (evaluate (car e) env))
-                    (arguments (evlis (cdr e) env)) )
-                (display `(calling ,(car e) with . ,arguments) 
-                         *trace-port* )
-                (let ((result (invoke fn arguments)))
-                  (display `(returning from ,(car e) with ,result)
-                           *trace-port* )
-                  result ) )) ) ) ) 
+;(define (tracing.evaluate exp env)
+;  (if \ldots \ldots
+;      (case (car exp) \ldots
+;        (else (let ((fn (evaluate (car e) env))
+;                    (arguments (evlis (cdr e) env)) )
+;                (display `(calling ,(car e) with . ,arguments) 
+;                         *trace-port* )
+;                (let ((result (invoke fn arguments)))
+;                  (display `(returning from ,(car e) with ,result)
+;                           *trace-port* )
+;                  result ) )) ) ) ) 
 
 (define (evlis exps env)
   (define (evlis exps)
