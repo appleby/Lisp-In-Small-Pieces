@@ -52,7 +52,6 @@ export HOSTTYPE	:= $(shell uname -m)
 # # fixes to get them working again. Author's original comment suggested that
 # # Scm 4e1 was a known good vesion. At time of writing (06/2014) the current
 # # version of Scm is 5f1.
-# #SCHEME	= o/${HOSTTYPE}/book.elk
 # #SCHEME	= o/${HOSTTYPE}/book.sci
 # #SCHEME	= o/${HOSTTYPE}/book.scm
 
@@ -226,12 +225,6 @@ o/${HOSTTYPE}/book.scm : mkdir
 	echo "exec scm -u -l scm/Init.scm" > o/${HOSTTYPE}/book.scm
 	chmod a=rwx o/${HOSTTYPE}/book.scm
 
-# # Makes a command for Elk. Must be run from the current directory.
-# # You must load elk/book.elk by hand.
-o/${HOSTTYPE}/book.elk : mkdir
-	echo "(echo '(load \"elk/book.elk\")' ; tee ) | exec elk -i -h 5000" > o/${HOSTTYPE}/book.elk
-	chmod a=rwx o/${HOSTTYPE}/book.elk
-
 # # Makes a command to run mitscheme. Must be run from the current directory.
 o/${HOSTTYPE}/book.mit : mkdir
 	echo "#!/bin/sh" > $@
@@ -330,25 +323,6 @@ o/${HOSTTYPE}/book.scm.test3 :
 	${MAKE} check.results
 o/${HOSTTYPE}/book.scm.test4 :
 	${MAKE} SCHEME=o/${HOSTTYPE}/book.scm test.chap2a | tee ${RESULTS}
-	${MAKE} check.results
-
-o/${HOSTTYPE}/book.elk.test : o/${HOSTTYPE}/book.elk.test1
-o/${HOSTTYPE}/book.elk.test : o/${HOSTTYPE}/book.elk.test2
-o/${HOSTTYPE}/book.elk.test : o/${HOSTTYPE}/book.elk.test3
-o/${HOSTTYPE}/book.elk.test : o/${HOSTTYPE}/book.elk.test4
-o/${HOSTTYPE}/book.elk.test1 : o/${HOSTTYPE}/book.elk
-	echo "(test \"bigloo/others/syntax.tst\")" | o/${HOSTTYPE}/book.elk	\
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.elk.test2 : o/${HOSTTYPE}/book.elk
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.elk		\
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.elk.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.elk test.chap1 | tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.elk.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.elk test.chap2a | tee ${RESULTS}
 	${MAKE} check.results
 
 o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test1

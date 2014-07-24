@@ -13,7 +13,7 @@
 # examples of how to define the define-meroonet-macro macro for various 
 # implementations.
 
-work : test.elk
+work : test.bigloo
 
 clean :: cleanMakefile
 	-rm TAGS
@@ -31,44 +31,11 @@ tar.Z : ${SOURCES}
 	compress meroonet.tar
 	mv meroonet.tar.Z `date +meroonet%y%h%d.tar.Z`
 
-tests : 	test.elk 	\
-		test.sci 	\
+tests : 	test.sci 	\
 		test.bigloo 	\
 		test.scc 	\
 		meroonet.tar.Z	\
 		variantes
-
-########################################################################## Elk
-# Redefined list-tail since (list-tail '(a b) 11) -> () in Elk 2.0
-test.elk :
-	echo "						\
-(define-macro (define-meroonet-macro call . body)	\
-  \`(define-macro ,call . ,body) )			\
-(define gensym						\
-  (let ((counter 99))					\
-    (lambda () 						\
-      (set! counter (+ 1 counter))			\
-      (string->symbol 					\
-       (string-append \"G\" 				\
-                      (number->string counter) ) ) ) ) )\
-(load \"../tester.scm\")				\
-(load \"meroonet.scm\")					\
-(define (list-tail l n)					\
-  (if (> n 0)						\
-      (if (pair? l)					\
-          (list-tail (cdr l) (- n 1))			\
-          (error-handler 'list-tail) )			\
-      l ) )						\
-(define (test-oo file)					\
-  (suite-test 						\
-   file \"?? \" \"== \" #t				\
-   (lambda (read check err)				\
-     (set! error-handler err)				\
-     (lambda ()						\
-       (check (eval (read) top-level-environment)) ) )	\
-   equal? ) )						\
-(define the-Point 'wait)				\
-(test-oo \"oo-tests.scm\")"			| ${TIME} elk -h 2000
 
 ######################################################################### sci
 test.sci :
@@ -389,7 +356,7 @@ test.siod :
 
 ################################################## short comparison of times
 timing : 
-	${MAKE} ${MAKEFLAGS} test.elk test.sci test.bigloo.i \
+	${MAKE} ${MAKEFLAGS} test.sci test.bigloo.i \
 		2>timing
 	cat timing
 	
@@ -463,7 +430,7 @@ name : name.scm						@@\
    equal? ) )						\@@\
 (define the-Point 'wait)				\@@\
 (load \"name.scm\")					\@@\
-(test-oo \"oo-tests.scm\")"		| elk -h 2000	@@\
+(test-oo \"oo-tests.scm\")"		| bigloo	@@\
 	sleep 2
 
 Variant(variante1)
