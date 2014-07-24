@@ -93,8 +93,8 @@ For more info, see the [original README][README] file.
 TODO
 ----
 
-* Maybe: Remove unused code, like the included syntax-case files.
-* Maybe: Remove unused/unsupported/deprecated targets from the Makefile. 
+* ~~Maybe: Remove unused code, like the included syntax-case files.~~
+* Maybe: Remove unused/unsupported/deprecated targets from the Makefile.
 * Maybe: Get C files to compile without warnings
 * Maybe: Clean up formatting of the Makefile
 * Maybe: Move common code out of `<interpreter>/book.scm`.
