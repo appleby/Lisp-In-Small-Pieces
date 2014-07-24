@@ -192,7 +192,11 @@
     ((when condition form ...)
      (if condition (begin form ...)) ) ) )
 
-;;; This function loads a file
+;;; This function loads a file expanded with syntax-expand.
+;;;
+;;; 2014 Note: This function is not needed anymore, since the built-in load can
+;;; now do syntax-case expansion. Leaving this here for now since the verbose
+;;; loading might prove useful for debugging.
 
 (define *syntax-case-load-verbose?* #f)
 
@@ -228,8 +232,7 @@
 
 (load "mitscheme/format.scm")
 
-;;; Load the test-driver (fortunately it does not need macros, so use
-;;; load instead of syntax-case-load).
+;;; Load the test-driver.
 
 (load "src/tester.scm")
 
@@ -274,8 +277,7 @@
 ;      (lambda error-msg
 ;        (error-print error-msg) ) )
 
-;;; This function will test a suite of tests. It also allows to test the
-;;; port of syntax-case.
+;;; This function will test a suite of tests.
 
 (define (test file)
   (suite-test
@@ -325,12 +327,7 @@
 (define-generic (clone (o))
   (list->vector (vector->list o)) )
 
-;;; Define a new toplevel with syntax-case as macroexpander.
-;;; A small toplevel loop that uses the syntax-case package of Hieb
-;;; and Dybvig (define-syntax is used throughout the book). Since many
-;;; of the tests of the book also use the load function, this one
-;;; should be redefined to expand with syntax-case first.
-
+;;; A small toplevel loop.
 (define (start)
   (display "[C. Queinnec's book] Mit-Scheme+Meroonet+syntax-case...")
   (newline)
