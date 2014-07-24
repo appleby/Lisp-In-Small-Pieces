@@ -110,11 +110,6 @@
          (display `(error**** ,a ,b ,c))(newline)
          (handler #f `(list ,a ,b ,c)) ) ) )
 
-(define (scm-monitor handler body)
-  (let ((result (catch-error (body))))
-    (if (pair? result) (car result)
-        (handler #f result) ) ) )
-
 (define (gsi-monitor handler body)
   (with-exception-handler
     (lambda (e)
@@ -128,10 +123,6 @@
      (syntax-rules ()
        ((monitor handler . body)
         (bigloo-monitor handler (lambda () . body)) ) )  )
-    ((scm)
-     (syntax-rules ()
-       ((monitor handler . body)
-        (scm-monitor handler (lambda () . body)) ) ) )
     ((gsi)
      (syntax-rules ()
        ((monitor handler . body)

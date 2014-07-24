@@ -40,14 +40,8 @@ export HOSTTYPE	:= $(shell uname -m)
 # # specialized interpreter with these facilities compiled in, see entries
 # # o/${HOSTTYPE}/book.{bigloo,gsc} below to regenerate them. You can
 # # also directly use an interpreter and load on the fly Meroonet, hygienic
-# # macros and the like every time. This is what the SCM-based definition
+# # macros and the like every time. This is what the MIT-based definition
 # # or the Gambit (gsi) based definition does.
-
-# # 2014 Note: These schemes have not been tested, and probably require some
-# # fixes to get them working again. Author's original comment suggested that
-# # Scm 4e1 was a known good vesion. At time of writing (06/2014) the current
-# # version of Scm is 5f1.
-# #SCHEME	= o/${HOSTTYPE}/book.scm
 
 # # 2014 Note: book.gsc, the pre-compiled version of Gambit is not supported
 # # due to issues compiling scheme files with gsc when passing the -:s flag.
@@ -150,12 +144,7 @@ export SHELL := $(shell which sh)
 # # a few seconds to a few hours!
 
 # ##################################### Build specialized interpreters.
-# # Rebuild a Bigloo interpreter with Meroonet, tester and syntax-case in it.
-# # This takes roughly 7 minutes (elapsed time) on my machine.
-# # expand.bb and macro-defs.bb files are taken from ~/scm/syntax-caseV2.0
-# # except that the two last functions (make-promise and force) from
-# # macro-defs.bb are commented by hand not to redefine those of Bigloo.
-
+# # Rebuild a Bigloo interpreter with Meroonet and tester in it.
 # # Adapted to Bigloo 1.9d (no need to compile with -hygien but must
 # # run with hygien? set to true). Due to name conflicts, the compilation
 # # of rtbook.bgl emits much warnings: ignore them!
@@ -202,12 +191,6 @@ build.interpreter : mkdir
 # ######################################## Test interpreters
 
 test.interpreters :	o/${HOSTTYPE}/book.bigloo.test	o/${HOSTTYPE}/book.mit.test o/${HOSTTYPE}/book.gsi.test
-
-# # Makes a command for SCM similar to the others. This command has to be
-# # run from the current directory.
-o/${HOSTTYPE}/book.scm : mkdir
-	echo "exec scm -u -l scm/Init.scm" > o/${HOSTTYPE}/book.scm
-	chmod a=rwx o/${HOSTTYPE}/book.scm
 
 # # Makes a command to run mitscheme. Must be run from the current directory.
 o/${HOSTTYPE}/book.mit : mkdir
@@ -269,25 +252,6 @@ o/${HOSTTYPE}/book.bigloo.test3 :
 	${MAKE} check.results
 o/${HOSTTYPE}/book.bigloo.test4 :
 	${MAKE} SCHEME=o/${HOSTTYPE}/book.bigloo test.chap2a | tee ${RESULTS}
-	${MAKE} check.results
-
-o/${HOSTTYPE}/book.scm.test : o/${HOSTTYPE}/book.scm.test1
-o/${HOSTTYPE}/book.scm.test : o/${HOSTTYPE}/book.scm.test2
-o/${HOSTTYPE}/book.scm.test : o/${HOSTTYPE}/book.scm.test3
-o/${HOSTTYPE}/book.scm.test : o/${HOSTTYPE}/book.scm.test4
-o/${HOSTTYPE}/book.scm.test1 : o/${HOSTTYPE}/book.scm
-	echo "(test \"bigloo/others/syntax.tst\")" | o/${HOSTTYPE}/book.scm	\
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.scm.test2 : o/${HOSTTYPE}/book.scm
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.scm		\
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.scm.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.scm test.chap1 | tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.scm.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.scm test.chap2a | tee ${RESULTS}
 	${MAKE} check.results
 
 o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test1
@@ -375,9 +339,8 @@ GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 # otherwise been "fixed" (Bigloo, Gambit, and MIT). These are test for which I
 # was not able to find a quick fix, and may require a non-trivial effort to get
 # them working.  In the case of test.reflisp, this test was previously only
-# supported in Bigloo, Scheme2c, and SCM (src/chap8k.scm generated a
-# divide-by-zero error when attempting to compile with anyting other than
-# bigloo or scm).
+# supported in Bigloo, (src/chap8k.scm generated a divide-by-zero error when
+# attempting to compile with anyting other than bigloo).
 BROKEN_TESTS = test.reflisp
 
 ifeq (${SCHEME}, o/${HOSTTYPE}/book.bigloo)
@@ -397,8 +360,6 @@ do.grand.test :
 
 grand.test.with.bigloo : o/${HOSTTYPE}/book.bigloo
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo TIME=time
-grand.test.with.scm : o/${HOSTTYPE}/book.scm
-	${MAKE} grand.test SCHEME="scm -u -l scm/Init.scm"
 
 # # Test only parts of the grand tour of tests.
 TMP_ALL_TESTS =	${TEST_CHAP9}				${TEST_CHAP10}
