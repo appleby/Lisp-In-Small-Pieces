@@ -110,17 +110,6 @@
          (display `(error**** ,a ,b ,c))(newline)
          (handler #f `(list ,a ,b ,c)) ) ) )
 
-(define (scheme2c-monitor handler body)
-  (letrec ((old-handler *error-handler*)
-           (new-handler (lambda args
-                          (display `(error**** . ,args))(newline)
-                          (set! *error-handler* old-handler)
-                          (handler #f args) )) )
-    (set! *error-handler* new-handler)
-    (let ((result (body)))
-      (set! *error-handler* old-handler)
-      result ) ) )
-
 (define (scm-monitor handler body)
   (let ((result (catch-error (body))))
     (if (pair? result) (car result)
@@ -139,10 +128,6 @@
      (syntax-rules ()
        ((monitor handler . body)
         (bigloo-monitor handler (lambda () . body)) ) )  )
-    ((scheme2c)
-     (syntax-rules ()
-       ((monitor handler . body)
-        (scheme2c-monitor handler (lambda () . body)) ) )  )
     ((scm)
      (syntax-rules ()
        ((monitor handler . body)

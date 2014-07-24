@@ -19,11 +19,6 @@ default.work : build.interpreter
 
 BIGLOO		= bigloo
 
-# # If you decide to build a specialized interpreter on top of Scheme->C
-# # then indicate the correct command to invoke the Scheme->C compiler
-
-SCC		= scc
-
 # # If you decide to build a specialized interpreter on top of Gambit
 # # then indicate the correct command to invoke the Gambit compiler.
 # # Note that the default binary name is ``gsc'', but that name conflicts with
@@ -43,7 +38,7 @@ export HOSTTYPE	:= $(shell uname -m)
 # # Choose a Scheme interpreter. This interpreter must contain Meroonet,
 # # hygienic macros and a test-suite driver. It is better to build a
 # # specialized interpreter with these facilities compiled in, see entries
-# # o/${HOSTTYPE}/book.{bigloo,sci} below to regenerate them. You can
+# # o/${HOSTTYPE}/book.{bigloo,gsc} below to regenerate them. You can
 # # also directly use an interpreter and load on the fly Meroonet, hygienic
 # # macros and the like every time. This is what the SCM-based definition
 # # or the Gambit (gsi) based definition does.
@@ -52,7 +47,6 @@ export HOSTTYPE	:= $(shell uname -m)
 # # fixes to get them working again. Author's original comment suggested that
 # # Scm 4e1 was a known good vesion. At time of writing (06/2014) the current
 # # version of Scm is 5f1.
-# #SCHEME	= o/${HOSTTYPE}/book.sci
 # #SCHEME	= o/${HOSTTYPE}/book.scm
 
 # # 2014 Note: book.gsc, the pre-compiled version of Gambit is not supported
@@ -156,16 +150,6 @@ export SHELL := $(shell which sh)
 # # a few seconds to a few hours!
 
 # ##################################### Build specialized interpreters.
-# # Rebuild a Scheme->C interpreter with a compiled Meroonet in it. It also
-# # contains tester and syntax-case. This takes roughly 8 minutes on my
-# # machine.
-
-o/${HOSTTYPE}/book.sci : scheme2c/book.sc 		scheme2c/others/compat.ss 			scheme2c/others/expand.sc			scheme2c/others/hooks.sc			scheme2c/others/init.ss				scheme2c/others/macro-defs.sc			scheme2c/others/output.ss
-
-	-[ -d o/${HOSTTYPE} ] || ${MAKE} mkdir
-	${SCC} -o o/${HOSTTYPE}/book.sci scheme2c/book.sc
-	-rm scheme2c/book.[co] scheme2c/book.S2C
-
 # # Rebuild a Bigloo interpreter with Meroonet, tester and syntax-case in it.
 # # This takes roughly 7 minutes (elapsed time) on my machine.
 # # expand.bb and macro-defs.bb files are taken from ~/scm/syntax-caseV2.0
@@ -267,25 +251,6 @@ o/${HOSTTYPE}/book.gsc : o/${HOSTTYPE}/book-gsc_.o
 
 check.results :
 	@if grep -i '= done' ${RESULTS} ; 					then echo '*** Tests successfully passed ***' ;				else echo '*** *** Abnormal results **** ***' ; exit 1 ; fi
-
-o/${HOSTTYPE}/book.sci.test : o/${HOSTTYPE}/book.sci.test1
-o/${HOSTTYPE}/book.sci.test : o/${HOSTTYPE}/book.sci.test2
-o/${HOSTTYPE}/book.sci.test : o/${HOSTTYPE}/book.sci.test3
-o/${HOSTTYPE}/book.sci.test : o/${HOSTTYPE}/book.sci.test4
-o/${HOSTTYPE}/book.sci.test1 : o/${HOSTTYPE}/book.sci
-	echo "(test \"bigloo/others/syntax.tst\")" | o/${HOSTTYPE}/book.sci	\
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.sci.test2 : o/${HOSTTYPE}/book.sci
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.sci		\
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.sci.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.sci test.chap1 | tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.sci.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.sci test.chap2a | tee ${RESULTS}
-	${MAKE} check.results
 
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test1
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test2
@@ -412,7 +377,7 @@ GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 # them working.  In the case of test.reflisp, this test was previously only
 # supported in Bigloo, Scheme2c, and SCM (src/chap8k.scm generated a
 # divide-by-zero error when attempting to compile with anyting other than
-# bigloo, scheme2c, or scm).
+# bigloo or scm).
 BROKEN_TESTS = test.reflisp
 
 ifeq (${SCHEME}, o/${HOSTTYPE}/book.bigloo)
@@ -432,8 +397,6 @@ do.grand.test :
 
 grand.test.with.bigloo : o/${HOSTTYPE}/book.bigloo
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo TIME=time
-grand.test.with.sci : o/${HOSTTYPE}/book.sci
-	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.sci
 grand.test.with.scm : o/${HOSTTYPE}/book.scm
 	${MAKE} grand.test SCHEME="scm -u -l scm/Init.scm"
 
@@ -536,16 +499,6 @@ test.chap5a : src/chap5a.scm
 bench.chap5a : src/chap5a.scm
 	echo "							(load \"src/chap5a.scm\")					(bench \"src/chap5-bench.scm\")"				| ${SCHEME}
 
-# # Obsolete entry
-test.chap5a.scc : o/${HOSTTYPE}/chap5a
-o/${HOSTTYPE}/chap5a : src/chap5a.scm
-	${MAKE} ${MAKEFLAGS} mkdir
-	echo "							(module chap5a (main start)(with s2cfun tester meroon))		(include \"s2c+meroonV2.scm\")					(define (start args)						  (test-denScheme \"src/scheme.tst\")				  (bench \"src/chap5-bench.scm\") )				(macroexpand-time-eval						 (define-abbreviation (define call . body)			   (if (pair? call)						       \`(define ,(car call) (lambda ,(cdr call) . ,body))	       \`(set! ,call . ,body) ) ) )				(include \"src/chap5a.scm\")"		> o/${HOSTTYPE}/chap5a.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap5a ${SCCFLAGS} o/${HOSTTYPE}/chap5a.sc 		${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	${TIME} o/${HOSTTYPE}/chap5a
-
 # # Lambda calculus denotation
 # # The last tests loop due to applicative order.
 loop.test.chap5b :
@@ -565,16 +518,6 @@ test.chap5d : src/chap5d.scm src/chap5-bench.scm
 # # 39.59user 1.92system 0:54.78elapsed
 bench.chap5d : src/chap5d.scm src/chap5-bench.scm
 	echo "							(load \"src/chap5d.scm\")					(bench \"src/chap5-bench.scm\")"				| ${SCHEME}
-
-# # 						(obsolete)
-test.chap5d.scc : o/${HOSTTYPE}/chap5d
-o/${HOSTTYPE}/chap5d : src/chap5d.scm
-	${MAKE} ${MAKEFLAGS} mkdir
-	echo "							(module chap5d (main start)(with s2cfun tester meroon))		(include \"s2c+meroonV2.scm\")					(define (start args)						  (test-denScheme \"src/scheme.tst\")				  (bench \"src/chap5-bench.scm\") )				(include \"src/chap5d.scm\")"		> o/${HOSTTYPE}/chap5d.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap5d ${SCCFLAGS} o/${HOSTTYPE}/chap5d.sc 		${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	o/${HOSTTYPE}/chap5d
 
 # # Modify the denotational interpreter chap5d to specify that
 # # the evaluation order is unspecified.
@@ -621,13 +564,6 @@ test.chap6a.bgl : o/${HOSTTYPE}/rtbook.a o/${HOSTTYPE}/bglchap6a
 o/${HOSTTYPE}/bglchap6a : src/chap6a.scm bigloo/compapp.scm
 	echo "								(load \"bigloo/compapp.scm\")						(define the-bench (call-with-input-file \"src/chap5-bench.scm\" read))	(compile-bigloo-application 						  \"${BIGLOO}\" \"o/${HOSTTYPE}/\"					  \"bglchap6a\" 							  \`(bench6a (string->number (cadr command-options))			             ',the-bench )						  \"src/chap6a.scm\" )"						| ${SCHEME}
 
-# # Compiled bench with Scheme->C	(obsolete)
-test.chap6a.scc : src/chap6a.scm
-	echo "								(module chap6a (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-scheme6a \"src/scheme.tst\")					  (bench6a (string->number (cadr args))					           (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6a.scm\")"		> o/${HOSTTYPE}/chap6a.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap6a ${SCCFLAGS} o/${HOSTTYPE}/chap6a.sc 		${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	${TIME} o/${HOSTTYPE}/chap6a -sch 4 10
 # # With chap6a.scm 1.1 -sch 4 10
 # #7.54user 0.64system 0:08.28elapsed 98%CPU (844text+5508data 4268max)k
 # # With chap6a.scm 1.1 -sch 8 10
@@ -678,15 +614,6 @@ test.chap6.bgl :
 # # (bench 100)
 # #4.48user 0.41system 0:06.38elapsed 76%CPU (1392text+2377data 2704max)k
 
-# # Compare on the fast interpreter the speed of Bigloo wrt Scheme->C.
-test.chap6 :
-	echo "								(define primes								  (lambda (n f max)							    ((lambda (filter)							       (begin								         (set! filter (lambda (p)					                        (lambda (n) (= 0 (remainder n p))) ))		         (if (> n max)							             '()							             (if (f n)							                 (primes (+ n 1) f max)					                 (cons n						                       ((lambda (ff)					                          (primes (+ n 1)				                                  (lambda (p) (if (f p) #t (ff p)))	                                  max ) )				                        (filter n) ) ) ) ) ) )				     'wait ) ) )							(define (bench factor)							  (let loop ((factor factor))						    (let ((v (eval '(primes 2 (lambda (x) #f) 50))))			      (if (> factor 1)							          (loop (- factor 1))						          (display v) ) ) ) )						(bench 100)" 	| ${TIME} sci
-
-# # (bench 10)
-# #0.75user 0.21system 0:03.79elapsed 25%CPU (1290text+716data 1328max)k
-# # (bench 100)
-# #6.86user 0.69system 0:08.87elapsed 85%CPU (1429text+3266data 3840max)k
-
 # # Compare also with CAML light
 test.chap6.ml :
 	echo "								let rec primes n f max =						 let filter p n = ( 0 = n mod p)					 in if ( n > max) then []						    else if (f n) then primes (n+1) f max				         else n :: let ff = (filter n)					                   in primes (n+1) 					                             (function p -> if (f p) then true 		                                            else (ff p)) 		                             max;;					let bench factor =							  let rec loop factor =							    let v = primes 2 (fun x -> false) 50 				    in if (factor > 1) then loop (factor-1)				       else v								  in loop factor;;							bench 100;;"		| ${TIME} camllight
@@ -716,14 +643,6 @@ test.chap6c : src/chap6c.scm
 bench.chap6c : src/chap6c.scm
 	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6c.scm\")					(bench6c 1 (call-with-input-file \"src/chap5-bench.scm\" read))	"								| ${SCHEME}
 
-# # Compile it with scc.			(obsolete)
-test.chap6c.scc : src/chap6c.scm
-	${MAKE} ${MAKEFLAGS} mkdir
-	echo "								(module chap6c (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-scheme6c \"src/scheme.tst\")					  (bench6c (string->number (cadr args))					           (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6a.scm\")						(include \"src/chap6c.scm\")"		> o/${HOSTTYPE}/chap6c.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap6c ${SCCFLAGS} o/${HOSTTYPE}/chap6c.sc 		${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	${TIME} o/${HOSTTYPE}/chap6c -sch 4 10
 # # chap6c.scm 1.2 -sch 4 10 (same as chap6a.scm: No gain !)
 # #2.40user 0.48system 0:03.02elapsed 95%CPU (843text+3152data 2984max)k
 # # chap6c -sch 16 100 [1 gc]
@@ -748,14 +667,6 @@ shared.test.chap6dd : test.chap6dd
 test.chap6dd : src/chap6d.scm src/chap6dd.scm
 	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6dd.scm\")					(and (test-scheme6d \"src/chap6dd.tst\")			     (test-scheme6d \"src/scheme.tst\") )"  			| ${SCHEME}
 
-# # Compile with scc				(obsolete)
-test.chap6d.scc : src/chap6d.scm
-	${MAKE} ${MAKEFLAGS} mkdir
-	echo "								(module chap6d (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-Scheme \"src/scheme.tst\")					  (bench (string->number (cadr args))					         (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6d.scm\")"		> o/${HOSTTYPE}/chap6d.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap6d ${SCCFLAGS} 		o/${HOSTTYPE}/chap6d.sc ${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	${TIME} o/${HOSTTYPE}/chap6d -sch 4 10
 # # chap6d.scm 1.1 -sch 4 10 (similar to Bigloo)
 # #0.86user 0.15system 0:01.16elapsed 87%CPU (786text+646data 908max)k
 # # chap6d.scm 1.1 -sch 16 100 [No GC] (slower than Bigloo)
@@ -781,14 +692,6 @@ test.chap6e : src/chap6e.scm
 bench.chap6e : src/chap6e.scm
 	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6e.scm\")					(bench6e 1 (call-with-input-file \"src/chap5-bench.scm\" read))	"								| ${SCHEME}
 
-# # Same compiled with scc.			(obsolete)
-test.chap6e.scc : src/chap6e.scm
-	${MAKE} ${MAKEFLAGS} mkdir
-	echo "								(module chap6e (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-Scheme \"src/scheme.tst\")					  (bench (string->number (cadr args))					         (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6e.scm\")"		> o/${HOSTTYPE}/chap6e.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap6e ${SCCFLAGS} -Ob -Og -Ot 		o/${HOSTTYPE}/chap6e.sc ${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	${TIME} o/${HOSTTYPE}/chap6e -sch 4 10
 # # chap6e 1.2 -sch 4 10  (slower than chap6d)
 # #1.32user 0.12system 0:01.72elapsed 83%CPU (991text+690data 1028max)k
 # # -sch 16 100
@@ -822,15 +725,6 @@ test.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
 start.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
 	@( echo  "						(load \"src/chap6f.scm\")					(scheme)" ; tee ) | ${SCHEME}
 
-# # Compile the compiler.				(obsolete)
-test.chap6f.scc : o/${HOSTTYPE}/rt.o src/chap6f.scm
-	${MAKE} ${MAKEFLAGS} mkdir
-	echo "								(module chap6f (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)                                                      (if (pair? (cdr args))(test-scheme (cadr args))(scheme)) )            (include \"src/chap6f.scm\")"		> o/${HOSTTYPE}/chap6f.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap6f ${SCCFLAGS} -Ob -Og -Ot 		o/${HOSTTYPE}/chap6f.sc ${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	${TIME} o/${HOSTTYPE}/chap6f -sch 8 src/scheme.tst
-
 # # A little bench to appreciate the compiler speed.	(obsolete)
 bench.chap6f : o/${HOSTTYPE}/chap6f-bench
 	${TIME} o/${HOSTTYPE}/chap6f-bench
@@ -851,13 +745,6 @@ o/${HOSTTYPE}/chap6f-bench : o/${HOSTTYPE}/chap6f-bench.c
 o/${HOSTTYPE}/chap6f-bench : src/c/rt.h o/${HOSTTYPE}/rt.o
 	cd o/${HOSTTYPE} ; ${CC} -o tt ${CaFLAGS} chap6f-bench.c rt.o
 
-# # Compile the compiler				(obsolete)
-test.chap6f.scc : src/chap6f.scm
-	echo "								(module chap6f (main start)(with s2cfun tester meroon syntax-rules))	(include \"s2c+meroonV2.scm\")						(macroexpand-time-eval							  (loadq \"${HOME}/s2c/s2cfun.scm\") )					(include \"src/showGC.s2c\")						(define (start args)							  '(test-Scheme \"src/scheme.tst\")					  (bench (string->number (cadr args))					         (call-with-input-file \"src/chap5-bench.scm\" read) ) )  	(include \"src/chap6f.scm\")"		> o/${HOSTTYPE}/chap6f.sc
-
-	${SCC} -o o/${HOSTTYPE}/chap6f ${SCCFLAGS}  		o/${HOSTTYPE}/chap6f.sc ${HOME}/s2c/o/${HOSTTYPE}/libqnc.a
-
-	${TIME} o/${HOSTTYPE}/chap6f -sch 4 10
 # ########### end of chap6f which was superseded by chap10.	(obsolete)
 
 # # Handling the define special form.
