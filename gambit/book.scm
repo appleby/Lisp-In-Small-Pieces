@@ -218,6 +218,10 @@
      (if condition (begin form ...)) ) ) )
 
 ;;; This function loads a file expanded with syntax-expand.
+;;;
+;;; 2014 Note: This function is not needed anymore, since the built-in load can
+;;; now do syntax-case expansion. Leaving this here for now since the verbose
+;;; loading might prove useful for debugging.
 
 (define *syntax-case-load-verbose?* #f)
 
@@ -255,8 +259,7 @@
 (include "gambit/format.scm")
 
 
-;;; Load the test-driver (fortunately it does not need macros, so use
-;;; load instead of syntax-case-load).
+;;; Load the test-driver.
 
 (include "src/tester.scm")
 
@@ -308,8 +311,7 @@
     ((define-abbreviation call . body)
      (define-meroonet-macro call . body) ) ) )
 
-;;; This function will test a suite of tests. It also allows to test the
-;;; port of syntax-case.
+;;; This function will test a suite of tests.
 
 (define (test file)
   (suite-test
@@ -359,14 +361,9 @@
           (define-generic (clone (o))
             (list->vector (vector->list o)) ) ) )
 
-;;; Define a new toplevel with syntax-case as macroexpander.
-;;; A small toplevel loop that uses the syntax-case package of Hieb
-;;; and Dybvig (define-syntax is used throughout the book). Since many
-;;; of the tests of the book also use the load function, this one
-;;; should be redefined to expand with syntax-case first.
-
+;;; A small toplevel loop.
 (define (start)
-  (display "[C. Queinnec's book] Gambit+Meroonet+syntax-case...")
+  (display "[C. Queinnec's book] Gambit+Meroonet...")
   (newline)
   (set! *syntax-case-load-verbose?* #t)
   (set! load syntax-case-load)
