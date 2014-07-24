@@ -14,13 +14,6 @@
 
 (module rtbook
         (eval (export-all))
-        ;; first, syntax-case is loaded    NO LONGER USEFUL FOR BIGLOO1.9c
-        ;(include "bigloo/others/compat.ss")
-        ;(include "bigloo/others/hooks.bgl")
-        ;(include "bigloo/others/output.ss")
-        ;(include "bigloo/others/init.ss")
-        ;(include "bigloo/others/expand.bb")
-        ;(include "bigloo/others/macro-defs.bb")
         ;; second, meroonet (preceded by a small hack that also 
         ;; defines the define-abbreviation macro)
         (include "bigloo/hack.bgl")
@@ -35,13 +28,8 @@
                 wrong
                 static-wrong
                 (list* . args)
-                (syntax-case-load file)
+                ;(syntax-case-load file)
                 (start options) )
-        ;; exported from syntax-case but no longer exported since 
-        ;; expand-syntax is already present in Bigloo1.9d
-        ;(export expand-syntax
-        ;        void
-        ;        )
         ;; exported from tester.scm
         (export (interpreter a b c d)
                 (suite-test a b c d e f) )
@@ -130,10 +118,7 @@
 ;      (lambda (f)
 ;        (bind-exit (k) (f k)) ) )
 
-;;; This function will test meroonet on its test suite. It will also
-;;; test the port of syntax-case. Note that expressions are read then
-;;; expanded with the syntax-case package then submitted to eval (and
-;;; therefore again expanded but this time by Bigloo).
+;;; This function will test meroonet on its test suite.
 
 (define (test file)
   (suite-test
@@ -142,9 +127,7 @@
      (set! meroonet-error err)
      (set! tester-error err)
      (lambda ()
-       (try ;(check (eval (expand-syntax (read))))
-            ;; No longer useful to call explicitly expand-syntax in Bigloo1.9d
-            (check (eval (read)))
+       (try (check (eval (read)))
             (lambda (k a b c) (err a b c) ) ) ) )
    equal? ) )
 
@@ -173,28 +156,23 @@
       (quote ()) ) )
 
 ;;;ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-;;; A small toplevel loop that uses the syntax-case package of Hieb
-;;; and Dybvig (define-syntax is used throughout the book). Since many
-;;; of the tests of the book also use the load function, this one
-;;; should be redefined to expand with syntax-case first.
+;;; A small toplevel loop.
 
-(define (syntax-case-load file)
-  (call-with-input-file file
-    (lambda (in)
-      (newline)
-      (display ";;; Loading ")
-      (display file)
-      (newline)
-      (let loop ((e (read in)))
-        (if (eof-object? e) 
-            file
-            (let ;((r (eval (expand-syntax e))))
-                ;; no longer needed in Bigloo1.9d
-                ((r (eval e)))
-              (display ";= ")
-              (display r)
-              (newline)
-              (loop (read in)) ) ) ) ) ) )
+;(define (syntax-case-load file)
+;  (call-with-input-file file
+;    (lambda (in)
+;      (newline)
+;      (display ";;; Loading ")
+;      (display file)
+;      (newline)
+;      (let loop ((e (read in)))
+;        (if (eof-object? e) 
+;            file
+;            (let ((r (eval e)))
+;              (display ";= ")
+;              (display r)
+;              (newline)
+;              (loop (read in)) ) ) ) ) ) )
 
 (define (start options)
   (display "[C. Queinnec's book] Bigloo+Meroonet...")
@@ -205,9 +183,7 @@
      (set! tester-error   error)
      (set! meroonet-error error)
      (lambda ()
-       (try ;(print (eval (expand-syntax (read))))
-            ;; no longer needed in Bigloo1.9d
-            (print (eval (read)))
+       (try (print (eval (read)))
             (lambda (k a b c) (error a b c)) ) ) ) )
   (display " Ite LiSP est.")
   (newline) )

@@ -167,7 +167,7 @@ o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook+.o
 	cd o/${HOSTTYPE} ; ${AR} cvr rtbook.a rtbook.o rtbook+.o
 	-${RANLIB} o/${HOSTTYPE}/rtbook.a
 
-o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl 			bigloo/others/compat.ss 			bigloo/others/hooks.bgl				bigloo/others/output.ss				bigloo/others/init.ss				bigloo/others/expand.bb				bigloo/others/macro-defs.bb			bigloo/hack.bgl 				src/tester.scm
+o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl 			bigloo/hack.bgl 				src/tester.scm
 
 	-[ -d o/${HOSTTYPE} ] || ${MAKE} mkdir
 	${BIGLOO} -c -v -call/cc -cg -w                 -o o/${HOSTTYPE}/rtbook.o bigloo/rtbook.bgl
