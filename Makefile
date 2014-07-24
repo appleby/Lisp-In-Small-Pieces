@@ -360,6 +360,10 @@ do.grand.test :
 
 grand.test.with.bigloo : o/${HOSTTYPE}/book.bigloo
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo TIME=time
+grand.test.with.gsi : o/${HOSTTYPE}/book.gsi
+	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.gsi TIME=time
+grand.test.with.mit : o/${HOSTTYPE}/book.mit
+	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.mit TIME=time
 
 # # Test only parts of the grand tour of tests.
 TMP_ALL_TESTS =	${TEST_CHAP9}				${TEST_CHAP10}
