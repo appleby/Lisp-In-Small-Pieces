@@ -174,7 +174,7 @@ o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl 			bigloo/hack.bgl 				src/tester.scm
 
 	-rm bigloo/rtbook.[co] o/${HOSTTYPE}/rtbook.c
 
-o/${HOSTTYPE}/rtbook+.o : bigloo/rtbook+.bgl 			bigloo/others/pp.scm				bigloo/others/format.scm
+o/${HOSTTYPE}/rtbook+.o : bigloo/rtbook+.bgl 			common/pp.scm				common/format.scm
 
 	-[ -d o/${HOSTTYPE} ] || ${MAKE} mkdir
 	${BIGLOO} -c -v -call/cc -cg                 -o o/${HOSTTYPE}/rtbook+.o bigloo/rtbook+.bgl
@@ -240,7 +240,7 @@ o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test2
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test3
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test4
 o/${HOSTTYPE}/book.bigloo.test1 : o/${HOSTTYPE}/book.bigloo
-	echo "(test \"bigloo/others/syntax.tst\")" | o/${HOSTTYPE}/book.bigloo	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.bigloo	\
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.bigloo.test2 : o/${HOSTTYPE}/book.bigloo
@@ -259,7 +259,7 @@ o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test2
 o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test3
 o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test4
 o/${HOSTTYPE}/book.gsi.test1 : o/${HOSTTYPE}/book.gsi
-	echo "(test \"bigloo/others/syntax.tst\")" | o/${HOSTTYPE}/book.gsi	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsi	\
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.gsi.test2 : o/${HOSTTYPE}/book.gsi
@@ -278,7 +278,7 @@ o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test2
 o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test3
 o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test4
 o/${HOSTTYPE}/book.gsc.test1 : o/${HOSTTYPE}/book.gsc
-	echo "(test \"bigloo/others/syntax.tst\")" | o/${HOSTTYPE}/book.gsc	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsc	\
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.gsc.test2 : o/${HOSTTYPE}/book.gsc
@@ -297,7 +297,7 @@ o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test2
 o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test3
 o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test4
 o/${HOSTTYPE}/book.mit.test1 : o/${HOSTTYPE}/book.mit
-	echo "(test \"bigloo/others/syntax.tst\")" | o/${HOSTTYPE}/book.mit	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.mit	\
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.mit.test2 : o/${HOSTTYPE}/book.mit

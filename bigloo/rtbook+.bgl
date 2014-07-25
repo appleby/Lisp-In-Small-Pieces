@@ -16,8 +16,8 @@
 (module rtbookp
         (eval (export-all))
         ;; additional utilities
-        (include "bigloo/others/pp.scm")
-        (include "bigloo/others/format.scm")
+        (include "common/pp.scm")
+        (include "common/format.scm")
         ;; Time utility
         (foreign (int time (string) "time"))
         ;; Exported from this very file

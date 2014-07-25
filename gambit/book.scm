@@ -254,9 +254,9 @@
 ;;; pp is already present but not format. but format needs internal functions
 ;;; of pp so redefine pp.
 
-(include "gambit/pp.scm")
+(include "common/pp.scm")
 
-(include "gambit/format.scm")
+(include "common/format.scm")
 
 
 ;;; Load the test-driver.
@@ -332,7 +332,7 @@
    equal? ) )
 ;;; Test: 
 ;;;	(test "meroonet/oo-tests.scm")
-;;;	(test "bigloo/others/syntax.tst")
+;;;	(test "src/syntax.tst")
 
 ;;; This variable is needed by meroonet/oo-tests.scm test suite.
 

@@ -228,9 +228,9 @@
 ;;; pp is already present but not format. but format needs internal functions
 ;;; of pp so redefine pp.
 
-(load "mitscheme/pp.scm")
+(load "common/pp.scm")
 
-(load "mitscheme/format.scm")
+(load "common/format.scm")
 
 ;;; Load the test-driver.
 
@@ -295,10 +295,10 @@
    equal? ) )
 ;;; Test: 
 ;;;	(test "meroonet/oo-tests.scm")
-;;;	(test "bigloo/others/syntax.tst")
+;;;	(test "src/syntax.tst")
 
 (define (get-internal-run-time) 
-  (real-time-clock) ) ; needed by (test "bigloo/others/syntax.tst")
+  (real-time-clock) ) ; needed by (test "src/syntax.tst")
 
 ;;; This variable is needed by meroonet/oo-tests.scm test suite.
 
