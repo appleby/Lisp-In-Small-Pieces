@@ -92,6 +92,10 @@
 
 (define flush-buffer flush-output)
 
+(define (get-internal-run-time)
+  (real-time-clock) ) ; needed by (test "src/syntax.tst")
+
+
 ;;; Quick and dirty: sometimes very big objects are printed, limit
 ;;; them to something affordable.
 
@@ -296,9 +300,6 @@
 ;;; Test: 
 ;;;	(test "meroonet/oo-tests.scm")
 ;;;	(test "src/syntax.tst")
-
-(define (get-internal-run-time) 
-  (real-time-clock) ) ; needed by (test "src/syntax.tst")
 
 ;;; This variable is needed by meroonet/oo-tests.scm test suite.
 
