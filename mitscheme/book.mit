@@ -8,4 +8,3 @@
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 (load "mitscheme/mit-book.mit")
 (load "common/book.scm")
-(load "mitscheme/toplevel.mit")

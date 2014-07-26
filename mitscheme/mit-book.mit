@@ -7,45 +7,19 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
-;;; This file is used to customize Mit-Scheme in order to run the source
-;;; files of the book. It preloads Meroonet, and the test-driver. It
-;;; may serve as a basis for other ports to other Scheme
-;;; interpreters. Look for the IMPORTANT notes below.
+;;; This file is used to customize Mit-Scheme in order to run the source files
+;;; of the book. It may serve as a basis for other ports to other Scheme
+;;; interpreters.
 
-;;; This variable is used in chap8k.scm to determine the underlying
-;;; Scheme interpreter.
-
-(define book-interpreter-support 'mit)
+;;; Mit-Scheme-specific code.
+;;; 
+;;; Definitions in this section are specific to Mit-Scheme, and are unlikely to
+;;; be needed if you're porting this file to another scheme.
 
 (load-option 'synchronous-subprocess)
 
-(define (system command)
-  (run-shell-command command))
-
-(define (display-exception v)
-  (let ((condition (and (pair? v) (car v))))
-    (if (condition? condition)
-      (write-condition-report condition stdout-port)
-      (display v) ) ) )
-
-;;; Name the Un*x ports and flush them.
-;;; Seems that there is no stderr?
-
-(define current-error-port notification-output-port)                                          
-
-(define flush-buffer flush-output)
-
-(define (get-internal-run-time)
-  (real-time-clock) ) ; needed by (test "src/syntax.tst")
-
-;;; Attention Mit-Scheme confuses #f and () as Scheme->C.
-
-(define-syntax s2c-if
-  (syntax-rules ()
-      ((s2c-if condition . rest)
-	(if (let ((c condition))
-	       (or c (null? c)) )
-	     . rest ) ) ) )
+;;; Mit-Scheme does not provide current-error-port.
+(define current-error-port notification-output-port)
 
 ;;; Mit-scheme's eval requires a second argument, the environment. Redefine
 ;;; eval to make the second argument optional, so as not to break code that
@@ -53,8 +27,10 @@
 (define native-eval eval)
 
 (define (eval exp . env)
-  (native-eval exp (if (null? env) user-initial-environment (car env))) ) 
+  (native-eval exp (if (null? env) user-initial-environment (car env))) )
 
+;;; Mit-scheme does not provide define-macro, which is used (indirectly) in
+;;; Meroonet.  Simulate it via define-syntax.
 (define-syntax define-macro
   (syntax-rules ()
     ((define-macro (name . args) body ...)
@@ -64,5 +40,53 @@
            (lambda (exp env)
              (apply transformer (cdr exp))) ) ) ) ) ) )
 
+;;; End of Mit-Scheme-specific code.
 
-;;; end of book.mit
+
+;;; General definitions.
+;;;
+;;; All the definitions below are needed to run the source files of the book.
+;;; When porting to another scheme, you'll need to provide equivalents for
+;;; these.
+
+;;; This variable is used in chap8k.scm to determine the underlying
+;;; Scheme interpreter.
+(define book-interpreter-support 'mit)
+
+;;; Printed when the toplevel loop is started. See START in
+;;; ../common/book.scm.
+(define book-interpreter-name "Mit-Scheme")
+
+(define (system command)
+  (run-shell-command command))
+
+(define flush-buffer flush-output)
+
+;;; Needed by (test "src/syntax.tst")
+(define (get-internal-run-time)
+  (real-time-clock) )
+
+;;; Called from internal DISPALY-STATUS definition in both INTERPRETER and
+;;; SUITE-TEST in src/tester.scm.
+(define (display-exception v)
+  (let ((condition (and (pair? v) (car v))))
+    (if (condition? condition)
+      (write-condition-report condition stdout-port)
+      (display v) ) ) )
+
+;;; Returns a toplevel that handles exceptions.
+;;;
+;;; Used in:
+;;;     START and TEST in ../common/book.scm
+;;;     INTERPRETER and SUITE-TEST in ../src/tester.scm
+;;;
+(define (make-toplevel read print-or-check err)
+  (set! tester-error   err)
+  (set! meroonet-error err)
+  (lambda ()
+    (bind-condition-handler () err
+        (lambda ()
+          (let ((e (read)))
+            (print-or-check (eval e user-initial-environment)) ) ) ) ) )
+
+;;; End of General definitions.

@@ -245,30 +245,6 @@
 		 thunk ) )) )
 ;;; Test: (protected-eval (lambda () (car #t)))
 
-;;; This function will test a suite of tests.
-
-;(define (test file)
-;  (suite-test
-;   file "?? " "== " #t
-;   (lambda (read check err)
-;     (set! meroonet-error err)
-;     (set! tester-error   err)
-;     (set! error-hook     err)
-;     (set! support-error  err)
-;     ;;; TODO extract lambda into procedure
-;     (lambda ()
-;       ;(gc-report-set! #t)
-;       (with-exception-catcher err
-;          (lambda ()
-;            (let* ((e (read))
-;                   (r (eval e))
-;                   )
-;              (check r) ) ) ) ) )
-;   equal? ) )
-;;; Test: 
-;;;	(test "meroonet/oo-tests.scm")
-;;;	(test "src/syntax.tst")
-
 ;;; Generally, when an error is detected in one of my programs, a
 ;;; <something>-error function is called which calls itself wrong. The
 ;;; wrong function allows the test-driver to be aware that something
@@ -293,38 +269,43 @@
           (define-generic (clone (o))
             (list->vector (vector->list o)) ) ) )
 
+;;; The test-driver should try to catch errors of the underlying Scheme system.
+;;; This is non-portable and difficult in many implementations. If do not
+;;; succeed writing it, you can still run the programs of the book but you will
+;;; not be able to run all the test-suites since some tests (for instance in
+;;; meroonet/oo-tests.scm) require errors to be caught when signalled by
+;;; list-tail with a non-numeric second argument.
+
+;(set! error-handler
+;      (lambda error-msg
+;        (error-print error-msg) ) )
+
+;;; This function will test a suite of tests.
+
+(define (test file)
+  (suite-test
+   file "?? " "== " #t
+   make-toplevel
+   equal? ) )
+;;; Test: 
+;;;	(test "meroonet/oo-tests.scm")
+;;;	(test "src/syntax.tst")
+
 ;;; A small toplevel loop.
-;(define (start)
-;  ;;; TODO make this a variable
-;  (display "[C. Queinnec's book] Gambit+Meroonet...")
-;  (newline)
-;  (set! *syntax-case-load-verbose?* #t)
-;  (set! load syntax-case-load)
-;  (interpreter
-;   "? " "= " #t
-;   (lambda (read print err)
-;     (set! tester-error   err)
-;     (set! meroonet-error err)
-;     (set! error-hook     err)
-;     (set! support-error  err)
-;     (current-user-interrupt-handler
-;           (lambda ()
-;             (newline stderr-port)
-;             (display "*** INTERRUPT" stderr-port)
-;             (newline stderr-port)
-;             (err '***) ) )
-;     ;;; TODO extract lambda into procedure
-;     (lambda ()
-;       (with-exception-catcher err
-;          (lambda ()
-;            (let* ((e (read))
-;                   (r (eval e)) )
-;              (print r) ) ) ) ) ) )
-;  (display " Ite LiSP est.")
-;  (newline)
-;  (exit) )
+(define (start)
+  (display "[C. Queinnec's book] ")
+  (display book-interpreter-name)
+  (display "+Meroonet...")
+  (newline)
+  (set! *syntax-case-load-verbose?* #t)
+  (set! load syntax-case-load)
+  (interpreter
+   "? " "= " #t
+   make-toplevel )
+  (display " Ite LiSP est.")
+  (newline)
+  (exit 0) )
 
-;;;; Warp into the new toplevel.
-;(start)
-
+;;; Warp into the new toplevel.
+(start)
 ;;; end of book.scm
