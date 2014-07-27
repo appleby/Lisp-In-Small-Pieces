@@ -60,14 +60,12 @@
                        (else (error 'symbol-append args)) ) )
                args ) ) ) )
 
-;;; Name the Un*x ports and flush them.
-
+;;; Name the Un*x ports
 (define stdout-port (current-output-port))
 (define stderr-port (current-error-port))
 
 ;;; Quick and dirty: sometimes very big objects are printed, limit
 ;;; them to something affordable.
-
 (define *bounded-length* 4)
 (define *bounded-depth* 3)
 
@@ -253,21 +251,16 @@
 (define wrong 'wait)
 (define static-wrong 'wait)
 
-;;; The `show' and `clone' generic functions are predefined in Meroon
-;;; not in Meroonet.  The problem is to define a generic function with
-;;; Meroonet macros while these macros are only compiled and not yet
-;;; present.
+;;; The `show' and `clone' generic functions are predefined in Meroon not in
+;;; Meroonet.  The clone function that performs a shallow copy of a Meroonet
+;;; object.
+(define-generic (show (o) . stream)
+  (let ((stream (if (pair? stream) (car stream)
+                    (current-output-port) )))
+    (bounded-display o stream) ) )
 
-;;; The clone function that performs a shallow copy of a Meroonet object.
-
-;;; TODO is eval needed?
-(eval '(begin
-          (define-generic (show (o) . stream)
-            (let ((stream (if (pair? stream) (car stream)
-                              (current-output-port) )))
-              (bounded-display o stream) ) )
-          (define-generic (clone (o))
-            (list->vector (vector->list o)) ) ) )
+(define-generic (clone (o))
+  (list->vector (vector->list o)) )
 
 ;;; The test-driver should try to catch errors of the underlying Scheme system.
 ;;; This is non-portable and difficult in many implementations. If do not
