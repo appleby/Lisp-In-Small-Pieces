@@ -74,6 +74,13 @@
       (write-condition-report condition stdout-port)
       (display v) ) ) )
 
+;;; The test-driver should try to catch errors of the underlying Scheme system.
+;;; This is non-portable and difficult in many implementations. If do not
+;;; succeed writing it, you can still run the programs of the book but you will
+;;; not be able to run all the test-suites since some tests (for instance in
+;;; meroonet/oo-tests.scm) require errors to be caught when signalled by
+;;; list-tail with a non-numeric second argument.
+
 ;;; Returns a toplevel that handles exceptions.
 ;;;
 ;;; Used in:

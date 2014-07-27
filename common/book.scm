@@ -173,16 +173,12 @@
 ;;; tester.scm. They will be filled later.
 
 (define meroonet-error 'wait)
-
 (define tester-error 'wait)
-(define support-error 'wait)
-(define error-hook error)
 
 ;;; pp is already present but not format. but format needs internal functions
 ;;; of pp so redefine pp.
 
 (load "common/pp.scm")
-
 (load "common/format.scm")
 
 ;;; Load the test-driver.
@@ -191,10 +187,6 @@
 
 ;;; Load Meroonet. Meroonet defines three macros with
 ;;; define-meroonet-macro.
-;;; TODO: is eval needed?
-;(define-macro (define-meroonet-macro call . body)
-;  `(begin (eval '(define-macro ,call . ,body))
-;          (define-macro ,call . ,body) ) )
 (define-macro (define-meroonet-macro call . body)
   `(define-macro ,call . ,body) )
 
@@ -211,49 +203,10 @@
     ((define-abbreviation call . body)
      (define-meroonet-macro call . body) ) ) )
 
-;;; The test-driver should try to catch errors of the underlying Scheme 
-;;; system. This is non-portable and difficult in many implementations. If
-;;; you do not succeed writing it, you can still run the programs of the book
-;;; but you will not be able to run all the test-suites since some tests 
-;;; (for instance in meroonet/oo-tests.scm) require errors to be caught
-;;; when signalled by list-tail with a non-numeric second argument.
-
-;;; TODO where are these used?
-(define-syntax catch-error
-  (syntax-rules ()
-    ((catch-error forms ...)
-     (protected-eval
-      (lambda ()
-        (list (begin forms ...)) ) ) ) ) )
-
-(define (make-new-error exit)
-  (lambda (string . culprits)
-    (newline stderr-port)
-    (display "== ERROR == " stderr-port)
-    (display string stderr-port)
-    (newline stderr-port)
-    (for-each (lambda (o) (bounded-display o stderr-port))
-              culprits )
-    (newline stderr-port)
-    (exit '**error**) ) )
-
-(define (protected-eval thunk)
-  (call/cc (lambda (exit)
-             (with-exception-catcher (make-new-error exit)
-		 thunk ) )) )
-;;; Test: (protected-eval (lambda () (car #t)))
-
-;;; Generally, when an error is detected in one of my programs, a
-;;; <something>-error function is called which calls itself wrong. The
-;;; wrong function allows the test-driver to be aware that something
-;;; went wrong.
-
-(define wrong 'wait)
-(define static-wrong 'wait)
-
 ;;; The `show' and `clone' generic functions are predefined in Meroon not in
 ;;; Meroonet.  The clone function that performs a shallow copy of a Meroonet
 ;;; object.
+
 (define-generic (show (o) . stream)
   (let ((stream (if (pair? stream) (car stream)
                     (current-output-port) )))
@@ -262,16 +215,13 @@
 (define-generic (clone (o))
   (list->vector (vector->list o)) )
 
-;;; The test-driver should try to catch errors of the underlying Scheme system.
-;;; This is non-portable and difficult in many implementations. If do not
-;;; succeed writing it, you can still run the programs of the book but you will
-;;; not be able to run all the test-suites since some tests (for instance in
-;;; meroonet/oo-tests.scm) require errors to be caught when signalled by
-;;; list-tail with a non-numeric second argument.
+;;; Generally, when an error is detected in one of my programs, a
+;;; <something>-error function is called which calls itself wrong. The
+;;; wrong function allows the test-driver to be aware that something
+;;; went wrong.
 
-;(set! error-handler
-;      (lambda error-msg
-;        (error-print error-msg) ) )
+(define wrong 'wait)
+(define static-wrong 'wait)
 
 ;;; This function will test a suite of tests.
 
