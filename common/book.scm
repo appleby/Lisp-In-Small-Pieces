@@ -169,6 +169,14 @@
                          (newline) ) )
               (loop (read in)) ) ) ) ) ) )
 
+;;; Generally, when an error is detected in one of my programs, a
+;;; <something>-error function is called which calls itself wrong. The
+;;; wrong function allows the test-driver to be aware that something
+;;; went wrong.
+
+(define wrong 'wait)
+(define static-wrong 'wait)
+
 ;;; Defines specific locations for error handlers for meroonet.scm and
 ;;; tester.scm. They will be filled later.
 
@@ -190,11 +198,6 @@
 (define-macro (define-meroonet-macro call . body)
   `(define-macro ,call . ,body) )
 
-;;; This variable is needed by meroonet/oo-tests.scm test suite.
-(define the-Point 'useful4tests)
-
-(load "meroonet/meroonet.scm")
-
 ;;; Since the define-abbreviation is also necessary for the book when non high
 ;;; level macros are defined, register define-abbreviation for syntax-case. 
 
@@ -202,6 +205,11 @@
   (syntax-rules ()
     ((define-abbreviation call . body)
      (define-meroonet-macro call . body) ) ) )
+
+;;; This variable is needed by meroonet/oo-tests.scm test suite.
+(define the-Point 'useful4tests)
+
+(load "meroonet/meroonet.scm")
 
 ;;; The `show' and `clone' generic functions are predefined in Meroon not in
 ;;; Meroonet.  The clone function that performs a shallow copy of a Meroonet
@@ -214,14 +222,6 @@
 
 (define-generic (clone (o))
   (list->vector (vector->list o)) )
-
-;;; Generally, when an error is detected in one of my programs, a
-;;; <something>-error function is called which calls itself wrong. The
-;;; wrong function allows the test-driver to be aware that something
-;;; went wrong.
-
-(define wrong 'wait)
-(define static-wrong 'wait)
 
 ;;; This function will test a suite of tests.
 
