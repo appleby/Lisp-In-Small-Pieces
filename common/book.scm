@@ -204,7 +204,7 @@
 (define-syntax define-abbreviation
   (syntax-rules ()
     ((define-abbreviation call . body)
-     (define-meroonet-macro call . body) ) ) )
+     (define-macro call . body) ) ) )
 
 ;;; This variable is needed by meroonet/oo-tests.scm test suite.
 (define the-Point 'useful4tests)
@@ -215,13 +215,13 @@
 ;;; Meroonet.  The clone function that performs a shallow copy of a Meroonet
 ;;; object.
 
-(define-generic (show (o) . stream)
-  (let ((stream (if (pair? stream) (car stream)
-                    (current-output-port) )))
-    (bounded-display o stream) ) )
-
-(define-generic (clone (o))
-  (list->vector (vector->list o)) )
+(eval '(begin
+          (define-generic (show (o) . stream)
+            (let ((stream (if (pair? stream) (car stream)
+                              (current-output-port) )))
+              (bounded-display o stream) ) )
+          (define-generic (clone (o))
+            (list->vector (vector->list o)) ) ) )
 
 ;;; This function will test a suite of tests.
 
