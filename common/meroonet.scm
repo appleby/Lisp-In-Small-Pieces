@@ -1,5 +1,3 @@
-;;; $Id: book.scm,v 1.6 1996/02/11 14:09:30 queinnec Exp $
-
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 ;;; This file is part of the files that accompany the book:
 ;;;     LISP Implantation Semantique Programmation (InterEditions, France)
@@ -9,13 +7,10 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
-(load "common/definitions.scm")
-(load "common/additional-libs.scm")
-(load "common/syntax.scm")
-(load "common/meroonet.scm")
-(load "common/generics.scm")
-(load "common/toplevel.scm")
+;;; Load Meroonet. Meroonet defines three macros with
+;;; define-meroonet-macro.
+(define-macro (define-meroonet-macro call . body)
+  `(define-macro ,call . ,body) )
 
-;;; Warp into the new toplevel.
-(start)
-;;; end of book.scm
+(load "meroonet/meroonet.scm")
+
