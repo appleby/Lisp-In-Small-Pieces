@@ -43,16 +43,6 @@
   `(begin (eval '(define-macro ,call . ,body))
           (define-macro ,call . ,body) ) )
 
-;;; The when and unless macros are no longer needed by Meroonet, I
-;;; removed them (version 1.14). But many of my tests assume they are
-;;; there. To define them hygienically with syntax-case and since
-;;; syntax-case is not available at that time, they are left interpreted.
-
-(define-meroonet-macro (when condition . forms)
-  `(if ,condition (begin . ,forms)) )
-(define-meroonet-macro (unless condition . forms)
-  `(if (not ,condition) (begin . ,forms)) )
-
 ;(display "end of hack.bgl")(newline)           ;; DEBUG
 
 ;;; end of hack.bgl

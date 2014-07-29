@@ -7,6 +7,32 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
+;;; This function loads a file expanded with syntax-expand.
+;;;
+;;; 2014 Note: This function is not needed anymore, since the built-in load can
+;;; now do syntax-case expansion. Leaving this here for now since the verbose
+;;; loading might prove useful for debugging.
+
+(define *syntax-case-load-verbose?* #f)
+
+(define (syntax-case-load file)
+  (call-with-input-file file
+    (lambda (in)
+      (if *syntax-case-load-verbose?* 
+          (begin (newline)
+                 (display ";;; Loading ")
+                 (display file)
+                 (newline) ) )
+      (let loop ((e (read in)))
+        (if (eof-object? e) 
+            file
+            (let ((r (eval e)))
+              (if *syntax-case-load-verbose?*
+                  (begin (display ";= ")
+                         (display r)
+                         (newline) ) )
+              (loop (read in)) ) ) ) ) ) )
+
 ;;; This function will test a suite of tests.
 
 (define (test file)
@@ -24,8 +50,8 @@
   (display book-interpreter-name)
   (display "+Meroonet...")
   (newline)
-  (set! *syntax-case-load-verbose?* #t)
-  (set! load syntax-case-load)
+  ;(set! *syntax-case-load-verbose?* #t)
+  ;(set! load syntax-case-load)
   (interpreter
    "? " "= " #t
    make-toplevel )

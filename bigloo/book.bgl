@@ -25,6 +25,6 @@
 
 (define (main options)
   (format #f "")                        ; forces rtbookp to be linked
-  (start options) )
+  (start) )
 
 ;;; end of book.bgl
