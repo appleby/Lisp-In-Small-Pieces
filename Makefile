@@ -161,10 +161,9 @@ o/${HOSTTYPE}/book.bigloo : bigloo/book.bgl o/${HOSTTYPE}/rtbook.a
 
 	-rm bigloo/book.[co] o/${HOSTTYPE}/book.[co]
 
-o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook.o
-o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook+.o
+o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook.o 			common/pp.scm				common/format.scm
 	-rm o/${HOSTTYPE}/rtbook.a
-	cd o/${HOSTTYPE} ; ${AR} cvr rtbook.a rtbook.o rtbook+.o
+	cd o/${HOSTTYPE} ; ${AR} cvr rtbook.a rtbook.o
 	-${RANLIB} o/${HOSTTYPE}/rtbook.a
 
 o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl 			bigloo/hack.bgl 				src/tester.scm
@@ -173,13 +172,6 @@ o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl 			bigloo/hack.bgl 				src/tester.scm
 	${BIGLOO} -c -v -call/cc -cg -w                 -o o/${HOSTTYPE}/rtbook.o bigloo/rtbook.bgl
 
 	-rm bigloo/rtbook.[co] o/${HOSTTYPE}/rtbook.c
-
-o/${HOSTTYPE}/rtbook+.o : bigloo/rtbook+.bgl 			common/pp.scm				common/format.scm
-
-	-[ -d o/${HOSTTYPE} ] || ${MAKE} mkdir
-	${BIGLOO} -c -v -call/cc -cg                 -o o/${HOSTTYPE}/rtbook+.o bigloo/rtbook+.bgl
-
-	-rm bigloo/rtbook+.[co]  o/${HOSTTYPE}/rtbook+.c
 
 # # Default work for the distribution, create some sub-directories
 # # where will go compilation products.

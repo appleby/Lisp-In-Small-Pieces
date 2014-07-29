@@ -15,10 +15,8 @@
 ;;; of Hieb and Dybvig, and the tester utility to run test suites.
 
 (module book (main main)
-        ;; Import the run-time of this interpreter (split into 2 files
-        ;; since it was too large to be compiled easily)
-        (import (rtbook  "bigloo/rtbook.bgl")
-                (rtbookp "bigloo/rtbook+.bgl") ) )
+        ;; Import the run-time of this interpreter
+        (import (rtbook  "bigloo/rtbook.bgl")) )
 
 ;;; Start the interpreter. In fact everything comes from the rtbook
 ;;; module which is separately compiled in order to provide a library
