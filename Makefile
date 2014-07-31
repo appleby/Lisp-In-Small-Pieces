@@ -19,7 +19,7 @@ default.work : build.interpreter
 # If you decide to build a specialized interpreter on top of Bigloo
 # then indicate the correct command to invoke bigloo.
 
-BIGLOO		= bigloo
+BIGLOO = bigloo
 
 # If you decide to build a specialized interpreter on top of Gambit
 # then indicate the correct command to invoke the Gambit compiler.
@@ -27,7 +27,7 @@ BIGLOO		= bigloo
 # the ghostscript binary on my Archlinux system, so the gambit compiler has
 # been renamed to gambitc.
 
-GSC		= gambitc
+GSC = gambitc
 
 # If you decide to build multiple specialized interpreters on multiple
 # machines, then you must give different HOSTTYPE for all these
@@ -35,7 +35,7 @@ GSC		= gambitc
 # shell (tcsh does this), at that time, you can leave empty this
 # definition, it will be automatically inherited from your shell.
 
-export HOSTTYPE	:= $(shell uname -m)
+export HOSTTYPE := $(shell uname -m)
 
 # Choose a Scheme interpreter. This interpreter must contain Meroonet,
 # hygienic macros and a test-suite driver. It is better to build a
@@ -48,11 +48,11 @@ export HOSTTYPE	:= $(shell uname -m)
 # 2014 Note: book.gsc, the pre-compiled version of Gambit is not supported
 # due to issues compiling scheme files with gsc when passing the -:s flag.
 # See the comment for the book.gsc target below.
-#SCHEME	= o/${HOSTTYPE}/book.gsc
+#SCHEME = o/${HOSTTYPE}/book.gsc
 
 # 2014 Note: These schemes are the only known-working options. See the
 # README.md file for more info.
-#SCHEME	= o/${HOSTTYPE}/book.bigloo
+#SCHEME = o/${HOSTTYPE}/book.bigloo
 #SCHEME       = o/${HOSTTYPE}/book.gsi
 SCHEME       = o/${HOSTTYPE}/book.mit
 
@@ -64,22 +64,22 @@ endif
 # This variable allows to measure time.
 # I personnally use Gnu time but time will do also.
 
-TIME		= time
+TIME = time
 
 # This is the make utility. You can use Gnu make or others, I paid
 # attention not to use advanced features.
 
-MAKE		= make
+MAKE = make
 
 # A temporary file used to store temporary results. Put it in a place
 # where it will disappear automatically sometime.
 
-RESULTS		= /tmp/result
+RESULTS = /tmp/result
 
 # A temporary file used to store the names of failing tests when running the
 # grand.test target.
 
-FAILURES	= /tmp/failures
+FAILURES = /tmp/failures
 
 # Make an archive grouping *.o files
 # You need it if you want to test the Scheme towards C compiler.
@@ -126,19 +126,19 @@ LiSP4bigloo19d.distribution : LiSP4bigloo19d.tar.gz
 LiSP4bigloo19d.tar.gz : LiSP4bigloo19d.tar
 	gzip LiSP4bigloo19d.tar
 LiSP4bigloo19d.tar :
-	tar -cvhf LiSP4bigloo19d.tar --exclude RCS 		README.LiSP4bigloo19d Test.mkf bigloo src/tester.scm meroonet
+	tar -cvhf LiSP4bigloo19d.tar --exclude RCS  README.LiSP4bigloo19d Test.mkf bigloo src/tester.scm meroonet
 
 o/${HOSTTYPE}/book.bigloo : bigloo/book.bgl o/${HOSTTYPE}/rtbook.a
-	${BIGLOO} -v -call/cc -cg -o o/${HOSTTYPE}/book.bigloo 		bigloo/book.bgl -ldopt o/${HOSTTYPE}/rtbook.a
+	${BIGLOO} -v -call/cc -cg -o o/${HOSTTYPE}/book.bigloo  bigloo/book.bgl -ldopt o/${HOSTTYPE}/rtbook.a
 
 	-rm bigloo/book.[co] o/${HOSTTYPE}/book.[co]
 
-o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook.o 			common/pp.scm				common/format.scm
+o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook.o  common/pp.scm common/format.scm
 	-rm o/${HOSTTYPE}/rtbook.a
 	cd o/${HOSTTYPE} ; ${AR} cvr rtbook.a rtbook.o
 	-${RANLIB} o/${HOSTTYPE}/rtbook.a
 
-o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl 			bigloo/hack.bgl 				src/tester.scm
+o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl  bigloo/hack.bgl  src/tester.scm
 
 	-[ -d o/${HOSTTYPE} ] || ${MAKE} mkdir
 	${BIGLOO} -c -v -call/cc -cg -w                 -o o/${HOSTTYPE}/rtbook.o bigloo/rtbook.bgl
@@ -148,13 +148,13 @@ o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl 			bigloo/hack.bgl 				src/tester.scm
 # Default work for the distribution, create some sub-directories
 # where will go compilation products.
 build.interpreter : mkdir
-	@if [ "X${SCHEME}" = X ] ;	then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ;	else : ; fi
+	@if [ "X${SCHEME}" = X ] ; then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ; else : ; fi
 
 	case "${SCHEME}" in *bigloo|*gsi|*mit) ${MAKE} ${SCHEME} ;; *) : ;; esac
 
 ######################################## Test interpreters
 
-test.interpreters :	o/${HOSTTYPE}/book.bigloo.test	o/${HOSTTYPE}/book.mit.test o/${HOSTTYPE}/book.gsi.test
+test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test o/${HOSTTYPE}/book.gsi.test
 
 # Makes a command to run mitscheme. Must be run from the current directory.
 o/${HOSTTYPE}/book.mit : mkdir
@@ -174,14 +174,14 @@ o/${HOSTTYPE}/book.gsi : mkdir
 # so change pathnames to absolute pathnames. Takes five hours on my
 # old Sony.
 o/${HOSTTYPE}/book-gsc.scm : mkdir gambit/book.scm
-	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm 		> o/${HOSTTYPE}/book-gsc.scm
+	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm  > o/${HOSTTYPE}/book-gsc.scm
 
 o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
-	cd o/${HOSTTYPE} ; 		${GSC} -:s -expansion book-gsc.scm 			> book-gsc.escm
+	cd o/${HOSTTYPE} ;  ${GSC} -:s -expansion book-gsc.scm  > book-gsc.escm
 
 	more o/${HOSTTYPE}/book-gsc.escm
 o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
-	cd o/${HOSTTYPE} ; 		${GSC} -:s -link -verbose -report book-gsc.scm
+	cd o/${HOSTTYPE} ;  ${GSC} -:s -link -verbose -report book-gsc.scm
 
 # Due to a bug in gsc, compiling with the -:s appears to be broken. See the
 # following threads for more info:
@@ -197,18 +197,18 @@ o/${HOSTTYPE}/book.gsc : o/${HOSTTYPE}/book-gsc_.o
 	cd o/${HOSTTYPE} ; ${GSC} -:s -exe -o book.gsc book-gsc.o book-gsc_.o
 
 check.results :
-	@if grep -i '= done' ${RESULTS} ; 					then echo '*** Tests successfully passed ***' ;				else echo '*** *** Abnormal results **** ***' ; exit 1 ; fi
+	@if grep -i '= done' ${RESULTS} ;  then echo '*** Tests successfully passed ***' ; else echo '*** *** Abnormal results **** ***' ; exit 1 ; fi
 
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test1
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test2
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test3
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test4
 o/${HOSTTYPE}/book.bigloo.test1 : o/${HOSTTYPE}/book.bigloo
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.bigloo	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.bigloo \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.bigloo.test2 : o/${HOSTTYPE}/book.bigloo
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.bigloo		\
+	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.bigloo \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.bigloo.test3 :
@@ -223,11 +223,11 @@ o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test2
 o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test3
 o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test4
 o/${HOSTTYPE}/book.gsi.test1 : o/${HOSTTYPE}/book.gsi
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsi	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsi \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.gsi.test2 : o/${HOSTTYPE}/book.gsi
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.gsi		\
+	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.gsi \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.gsi.test3 :
@@ -242,11 +242,11 @@ o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test2
 o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test3
 o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test4
 o/${HOSTTYPE}/book.gsc.test1 : o/${HOSTTYPE}/book.gsc
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsc	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsc \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.gsc.test2 : o/${HOSTTYPE}/book.gsc
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.gsc		\
+	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.gsc \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.gsc.test3 :
@@ -261,11 +261,11 @@ o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test2
 o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test3
 o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test4
 o/${HOSTTYPE}/book.mit.test1 : o/${HOSTTYPE}/book.mit
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.mit	\
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.mit \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.mit.test2 : o/${HOSTTYPE}/book.mit
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.mit		\
+	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.mit \
 		| tee ${RESULTS}
 	${MAKE} check.results
 o/${HOSTTYPE}/book.mit.test3 :
@@ -280,7 +280,7 @@ o/${HOSTTYPE}/book.mit.test4 :
 mkdir :
 	-[ -d o ] || mkdir o
 	-[ -d o/${HOSTTYPE} ] || mkdir o/${HOSTTYPE}
-clean :: ;	-rm -rf o/${HOSTTYPE}
+clean :: ; -rm -rf o/${HOSTTYPE}
 
 tags : TAGS
 TAGS :
@@ -293,9 +293,9 @@ TAGS :
 # long. That means that it is a very long long test (hours!) so it is
 # only run if the variable YOU_HAVE_TIME is true (not false).
 
-YOU_HAVE_TIME	=	true
+YOU_HAVE_TIME = true
 
-ALL_GRAND_TESTS =	${TEST_CHAP1}			${TEST_CHAP2}			${TEST_CHAP3}			${TEST_CHAP4}			${TEST_CHAP5}			${TEST_CHAP6}			${TEST_CHAP7}			${TEST_CHAP8}			${TEST_CHAP9}			${TEST_CHAP10}
+ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} ${TEST_CHAP5} ${TEST_CHAP6} ${TEST_CHAP7} ${TEST_CHAP8} ${TEST_CHAP9} ${TEST_CHAP10}
 
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 
@@ -318,7 +318,7 @@ grand.test :
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 do.grand.test :
 	@rm -f ${FAILURES}
-	@for test in ${GRAND_TESTS} 					;	do ( echo Testing $$test ...					;	     ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS}	;	   echo Checking results of $$test ...				;	   ${PERL} perl/check.prl ${RESULTS} $$test			;	   [ $$? -ne 0 ] && echo $$test >> ${FAILURES} ; done; echo "Finished grand.test"
+	@for test in ${GRAND_TESTS}  ; do ( echo Testing $$test ... ;      ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS} ;    echo Checking results of $$test ... ;    ${PERL} perl/check.prl ${RESULTS} $$test ;    [ $$? -ne 0 ] && echo $$test >> ${FAILURES} ; done; echo "Finished grand.test"
 
 	@[ -e ${FAILURES} ] && ( echo "The following tests failed:"; cat ${FAILURES} ) || echo "All tests passed."
 
@@ -330,68 +330,68 @@ grand.test.with.mit : o/${HOSTTYPE}/book.mit
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.mit TIME=time
 
 # Test only parts of the grand tour of tests.
-TMP_ALL_TESTS =	${TEST_CHAP9}				${TEST_CHAP10}
+TMP_ALL_TESTS = ${TEST_CHAP9} ${TEST_CHAP10}
 
 tmp.grand.test :
-	@for test in ${TMP_ALL_TESTS} 					;	do ( echo Testing $$test ...					;	     ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS}	;	   echo Checking results of $$test ...				;	   ${PERL} perl/check.prl ${RESULTS} $$test			;	   done
+	@for test in ${TMP_ALL_TESTS}  ; do ( echo Testing $$test ... ;      ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS} ;    echo Checking results of $$test ... ;    ${PERL} perl/check.prl ${RESULTS} $$test ;    done
 
 ##################################### Chap 1 ##############################
 
-TEST_CHAP1 =	test.chap1
+TEST_CHAP1 = test.chap1
 
 # chap1.scm contains a naive interpreter written in naive Scheme.
 # 6.40user 1.30system 0:17.72elapsed
 test.chap1 : src/chap1.scm
-	echo "						(load \"src/chap1.scm\")				(and (test-scheme1 \"src/scheme.tst\")			     (test-scheme1 \"src/chap1.tst\") )"		| ${SCHEME}
+	echo " (load \"src/chap1.scm\") (and (test-scheme1 \"src/scheme.tst\")      (test-scheme1 \"src/chap1.tst\") )" | ${SCHEME}
 
 ##################################### Chap 2 ##############################
 
-TEST_CHAP2 =	test.chap2a			test.chap2b			test.chap2c			test.chap2e			test.chap2f			test.chap2g			test.chap2h
+TEST_CHAP2 = test.chap2a test.chap2b test.chap2c test.chap2e test.chap2f test.chap2g test.chap2h
 
 # chap2a.scm contains a little Lisp2 interpreter (eval e env fenv).
 # chap2d.scm displays simple cyclic lists in a finite way.
 test.chap2a : src/chap2a.scm
-	echo "						(load \"src/chap2a.scm\")				(and (test-chap2a \"src/chap2a.tst\")			     (load \"src/chap2d.scm\")				     'done )"						| ${SCHEME}
+	echo " (load \"src/chap2a.scm\") (and (test-chap2a \"src/chap2a.tst\")      (load \"src/chap2d.scm\")      'done )" | ${SCHEME}
 
 # chap2b.scm adds flet and function to the previous interpreter
 src/chap2b.scm : src/chap2a.scm
 test.chap2b :  src/chap2b.scm
-	echo "						(load \"src/chap2a.scm\")				(load \"src/chap2b.scm\")				(test-scheme2a \"src/chap2b.tst\")"			| ${SCHEME}
+	echo " (load \"src/chap2a.scm\") (load \"src/chap2b.scm\") (test-scheme2a \"src/chap2b.tst\")" | ${SCHEME}
 
 # chap2c.scm adds dynamic variables (eval e env fenv denv)
 src/chap2c.scm : src/chap2b.scm
 test.chap2c :  src/chap2c.scm
-	echo "						(load \"src/chap2a.scm\")				(load \"src/chap2b.scm\")				(load \"src/chap2c.scm\")				(test-scheme2c \"src/chap2c.tst\")"			| ${SCHEME}
+	echo " (load \"src/chap2a.scm\") (load \"src/chap2b.scm\") (load \"src/chap2c.scm\") (test-scheme2c \"src/chap2c.tst\")" | ${SCHEME}
 
 # chap2e.scm adds dynamic variables a la Common Lisp
 src/chap2e.scm : src/chap2c.scm
 test.chap2e : src/chap2e.scm
-	echo "						(load \"src/chap2a.scm\")				(load \"src/chap2b.scm\")				(load \"src/chap2c.scm\")				(load \"src/chap2e.scm\")				(test-scheme2c \"src/chap2e.tst\")"			| ${SCHEME}
+	echo " (load \"src/chap2a.scm\") (load \"src/chap2b.scm\") (load \"src/chap2c.scm\") (load \"src/chap2e.scm\") (test-scheme2c \"src/chap2e.tst\")" | ${SCHEME}
 
 # chap2f.scm adds dynamic variables without special forms
 test.chap2f : src/chap2f.scm
-	echo "						(load \"src/chap2f.scm\")				(test-scheme2f \"src/chap2f.tst\")"			| ${SCHEME}
+	echo " (load \"src/chap2f.scm\") (test-scheme2f \"src/chap2f.tst\")" | ${SCHEME}
 
 # chap2g.scm adds the let, letrec special forms to chap1.scm (scheme)
 src/chap2g.scm : src/chap1.scm
 test.chap2g : src/chap2g.scm
-	echo "						(load \"src/chap1.scm\")				(load \"src/chap2g.scm\")				(and (test-scheme1 \"src/scheme.tst\")			     (test-scheme1 \"src/chap2g.tst\") )"		| ${SCHEME}
+	echo " (load \"src/chap1.scm\") (load \"src/chap2g.scm\") (and (test-scheme1 \"src/scheme.tst\")      (test-scheme1 \"src/chap2g.tst\") )" | ${SCHEME}
 
 # chap2h.scm allows extensions such as (1 e) or ((f1 f2) e)
 src/chap2h.scm : src/chap1.scm
 test.chap2h : src/chap2h.scm
-	echo "						(load \"src/chap1.scm\")				(load \"src/chap2h.scm\")				(and (test-scheme1 \"src/scheme.tst\")			     (test-scheme1 \"src/chap2h.tst\") )"		| ${SCHEME}
+	echo " (load \"src/chap1.scm\") (load \"src/chap2h.scm\") (and (test-scheme1 \"src/scheme.tst\")      (test-scheme1 \"src/chap2h.tst\") )" | ${SCHEME}
 
 ##################################### Chap 3 ##############################
 
-TEST_CHAP3 =	test.chap3f			test.chap3h
+TEST_CHAP3 = test.chap3f test.chap3h
 
 # chap3{a,b,c,d,e}.scm contain excerpts from chapter3
 
 # chap3f.scm contains an interpreter in OO style
 # 15.69user 1.94system 0:35.62elapsed
 test.chap3f : src/chap3g.scm
-	echo "						(load \"src/chap3f.scm\")				(load \"src/chap3g.scm\")				(load \"src/chap3h.scm\")				(test-scheme3f \"src/scheme.tst\")"			| ${SCHEME}
+	echo " (load \"src/chap3f.scm\") (load \"src/chap3g.scm\") (load \"src/chap3h.scm\") (test-scheme3f \"src/scheme.tst\")" | ${SCHEME}
 
 # chap3g.scm defines additional control features (block, catch)
 # chap3h.scm defines unwind-protect
@@ -400,98 +400,98 @@ src/chap3g.scm : src/chap3f.scm
 src/chap3h.scm : src/chap3f.scm
 src/chap3j.scm : src/chap3f.scm
 test.chap3h : src/chap3g.scm
-	echo "						(load \"src/chap3f.scm\")				(load \"src/chap3g.scm\")				(load \"src/chap3h.scm\")				(load \"src/chap3j.scm\")				(and (test-scheme3f \"src/scheme.tst\")			     (test-scheme3f \"src/chap3f.tst\") )"		| ${SCHEME}
+	echo " (load \"src/chap3f.scm\") (load \"src/chap3g.scm\") (load \"src/chap3h.scm\") (load \"src/chap3j.scm\") (and (test-scheme3f \"src/scheme.tst\")      (test-scheme3f \"src/chap3f.tst\") )" | ${SCHEME}
 
 ##################################### Chap 4 ##############################
 
-TEST_CHAP4 =	test.chap4
+TEST_CHAP4 = test.chap4
 
 # chap4.scm contains excerpts from chapter 4
 # chap4a.scm contains a Scheme interpreter coded with nothing but closures.
 # 72.25user 2.45system 1:49.86elapsed
 test.chap4 : src/chap4.scm src/chap4a.scm src/chap4.tst
-	echo "						(load \"src/chap4.scm\")				(load \"src/chap4a.scm\")				(define box1 'wait)					(define p1 'wait)					(and 							 (file-test \"src/scheme.tst\")				 (set! evaluate new-evaluate)				 (file-test \"src/chap4a.tst\")				 (suite-test \"src/chap4.tst\" \"?? \" \"== \" #t 	    (lambda (read check err)				      (lambda () 					        (check (eval (read) ${EVAL_ENVIRONMENT})) ) )	    naive-match )					)"							| ${SCHEME}
+	echo " (load \"src/chap4.scm\") (load \"src/chap4a.scm\") (define box1 'wait) (define p1 'wait) (and   (file-test \"src/scheme.tst\")  (set! evaluate new-evaluate)  (file-test \"src/chap4a.tst\")  (suite-test \"src/chap4.tst\" \"?? \" \"== \" #t      (lambda (read check err)       (lambda ()          (check (eval (read) ${EVAL_ENVIRONMENT})) ) )     naive-match ) )" | ${SCHEME}
 
 ##################################### Chap 5 ##############################
 # Denotational semantics
 
-TEST_CHAP5 = 	test.chap5a				loop.test.chap5b			test.chap5c 				test.chap5d 				test.chap5e 				test.chap5f 				test.chap5g				test.chap5h
+TEST_CHAP5 =  test.chap5a loop.test.chap5b test.chap5c  test.chap5d  test.chap5e  test.chap5f  test.chap5g test.chap5h
 
-bench.chap5 :	bench.chap5a
+bench.chap5 : bench.chap5a
 
 # 41.63user 2.28system 1:07.39elapsed
 test.chap5a : src/chap5a.scm
-	echo "							(load \"src/chap5a.scm\")					(test-denScheme \"src/scheme.tst\")"				| ${SCHEME}
+	echo " (load \"src/chap5a.scm\") (test-denScheme \"src/scheme.tst\")" | ${SCHEME}
 
 # See typical times a the end of src/chap5-bench.scm
 # 41.23user 1.75system 0:52.19elapsed
 bench.chap5a : src/chap5a.scm
-	echo "							(load \"src/chap5a.scm\")					(bench \"src/chap5-bench.scm\")"				| ${SCHEME}
+	echo " (load \"src/chap5a.scm\") (bench \"src/chap5-bench.scm\")" | ${SCHEME}
 
 # Lambda calculus denotation
 # The last tests loop due to applicative order.
 loop.test.chap5b :
 	-echo skip that test or run it by hand : ${MAKE} test.chap5b
 test.chap5b : src/chap5b.scm
-	echo "							(load \"src/chap5b.scm\")					(test-L \"src/chap5b.tst\")"					| ${SCHEME}
+	echo " (load \"src/chap5b.scm\") (test-L \"src/chap5b.tst\")" | ${SCHEME}
 
 # Scheme + dynamic variables denotational interpreter
 test.chap5c : src/chap5c.scm
-	echo "							(load \"src/chap5c.scm\")					(and (test-denScheme \"src/scheme.tst\")			     (test-denScheme \"src/chap5c.tst\") )"	 		| ${SCHEME}
+	echo " (load \"src/chap5c.scm\") (and (test-denScheme \"src/scheme.tst\")      (test-denScheme \"src/chap5c.tst\") )"   | ${SCHEME}
 
 # Same as chap5c except that this one tries to precompute meanings.
 # This is slightly faster than chap5a.
 test.chap5d : src/chap5d.scm src/chap5-bench.scm
-	echo "							(load \"src/chap5d.scm\")					(test-denScheme \"src/scheme.tst\")"				| ${SCHEME}
+	echo " (load \"src/chap5d.scm\") (test-denScheme \"src/scheme.tst\")" | ${SCHEME}
 
 # 39.59user 1.92system 0:54.78elapsed
 bench.chap5d : src/chap5d.scm src/chap5-bench.scm
-	echo "							(load \"src/chap5d.scm\")					(bench \"src/chap5-bench.scm\")"				| ${SCHEME}
+	echo " (load \"src/chap5d.scm\") (bench \"src/chap5-bench.scm\")" | ${SCHEME}
 
 # Modify the denotational interpreter chap5d to specify that
 # the evaluation order is unspecified.
 test.chap5e : src/chap5e.scm
-	echo "							(load \"src/chap5d.scm\")					(load \"src/chap5e.scm\")					(test-den+Scheme \"src/chap5e.tst\")" 				| ${SCHEME}
+	echo " (load \"src/chap5d.scm\") (load \"src/chap5e.scm\") (test-den+Scheme \"src/chap5e.tst\")"  | ${SCHEME}
 
 # CPS without any tests.
 test.chap5f : src/chap5f.scm
-	echo "					(and (load \"src/chap5f.scm\")			     'done )" 					| ${SCHEME}
+	echo " (and (load \"src/chap5f.scm\")      'done )"  | ${SCHEME}
 
 # Same as chap5d with an explicit global environment.
 # 42.34user 2.28system 1:14.96elapsed
 test.chap5g : src/chap5g.scm
-	echo "							(load \"src/chap5g.scm\")					(and (test-denScheme \"src/scheme.tst\")			     (test-denScheme \"src/chap5g.tst\") )"			| ${SCHEME}
+	echo " (load \"src/chap5g.scm\") (and (test-denScheme \"src/scheme.tst\")      (test-denScheme \"src/chap5g.tst\") )" | ${SCHEME}
 
 # Unordered evaluation order simulated with random.
 test.chap5h : src/chap5h.scm
-	echo "							(load \"src/chap5h.scm\")					(load \"src/chap1.scm\")					(test-scheme1 \"src/scheme.tst\")"				| ${SCHEME}
+	echo " (load \"src/chap5h.scm\") (load \"src/chap1.scm\") (test-scheme1 \"src/scheme.tst\")" | ${SCHEME}
 
 ##################################### Chap 6 ##############################
 # Chapter on fast interpretation (by means of precompilation)
 
-TEST_CHAP6 = 	test.chap6a				test.chap6b				test.chap6c				test.chap6d				shared.test.chap6dd			test.chap6e				dynext.test.chap6f			test.chap6g				test.chap6h
+TEST_CHAP6 =  test.chap6a test.chap6b test.chap6c test.chap6d shared.test.chap6dd test.chap6e dynext.test.chap6f test.chap6g test.chap6h
 
-bench.chap6 :	bench.chap6a			bench.chap6b			bench.chap6c			bench.chap6d			bench.chap6e
+bench.chap6 : bench.chap6a bench.chap6b bench.chap6c bench.chap6d bench.chap6e
 
-test.chap6.bgl :	test.chap6a.bgl
+test.chap6.bgl : test.chap6a.bgl
 
 # Fast interpretation, code is precompiled into (lambda (sr k)..)
 # 10.71user 1.80system 0:26.55elapsed
 test.chap6a : src/chap6a.scm
-	echo  "							(load \"src/chap6a.scm\")					(test-scheme6a \"src/scheme.tst\")"				| ${SCHEME}
+	echo  " (load \"src/chap6a.scm\") (test-scheme6a \"src/scheme.tst\")" | ${SCHEME}
 
 # Interpreted bench
 # 5.42user 0.90system 0:08.78elapsed
 bench.chap6a : src/chap6a.scm
-	echo  "							(load \"src/chap6a.scm\")					(bench6a 1 (call-with-input-file \"src/chap5-bench.scm\" read))"| ${SCHEME}
+	echo  " (load \"src/chap6a.scm\") (bench6a 1 (call-with-input-file \"src/chap5-bench.scm\" read))"| ${SCHEME}
 
 # Compiled bench with Bigloo
-# 129.65user 11.95system 3:15.62elapsed 	(compile)
-# 7.63user 0.54system 0:09.60elapsed 	(10*bench)
+# 129.65user 11.95system 3:15.62elapsed  (compile)
+# 7.63user 0.54system 0:09.60elapsed  (10*bench)
 test.chap6a.bgl : o/${HOSTTYPE}/rtbook.a o/${HOSTTYPE}/bglchap6a
 	${TIME} o/${HOSTTYPE}/bglchap6a 10
 o/${HOSTTYPE}/bglchap6a : src/chap6a.scm bigloo/compapp.scm
-	echo "								(load \"bigloo/compapp.scm\")						(define the-bench (call-with-input-file \"src/chap5-bench.scm\" read))	(compile-bigloo-application 						  \"${BIGLOO}\" \"o/${HOSTTYPE}/\"					  \"bglchap6a\" 							  \`(bench6a (string->number (cadr command-options))			             ',the-bench )						  \"src/chap6a.scm\" )"						| ${SCHEME}
+	echo " (load \"bigloo/compapp.scm\") (define the-bench (call-with-input-file \"src/chap5-bench.scm\" read)) (compile-bigloo-application    \"${BIGLOO}\" \"o/${HOSTTYPE}/\"   \"bglchap6a\"    \`(bench6a (string->number (cadr command-options))              ',the-bench )   \"src/chap6a.scm\" )" | ${SCHEME}
 
 # With chap6a.scm 1.1 -sch 4 10
 #7.54user 0.64system 0:08.28elapsed 98%CPU (844text+5508data 4268max)k
@@ -536,7 +536,7 @@ o/${HOSTTYPE}/bglchap6a : src/chap6a.scm bigloo/compapp.scm
 
 # Testing the same fast interpreter with Bigloo (intepreted)
 test.chap6.bgl :
-	echo "								(define primes								  (lambda (n f max)							    ((lambda (filter)							       (begin								         (set! filter (lambda (p)					                        (lambda (n) (= 0 (remainder n p))) ))		         (if (> n max)							             '()							             (if (f n)							                 (primes (+ n 1) f max)					                 (cons n						                       ((lambda (ff)					                          (primes (+ n 1)				                                  (lambda (p) (if (f p) #t (ff p)))	                                  max ) )				                        (filter n) ) ) ) ) ) )				     'wait ) ) )							(define (bench factor)							  (let loop ((factor factor))						    (let ((v (eval '(primes 2 (lambda (x) #f) 50))))			      (if (> factor 1)							          (loop (- factor 1))						          (display v) ) ) ) )						(bench 100)" 	| ${TIME} bigloo -i
+	echo " (define primes   (lambda (n f max)     ((lambda (filter)        (begin          (set! filter (lambda (p)                         (lambda (n) (= 0 (remainder n p))) ))          (if (> n max)              '()              (if (f n)                  (primes (+ n 1) f max)                  (cons n                        ((lambda (ff)                           (primes (+ n 1)                                   (lambda (p) (if (f p) #t (ff p)))                                   max ) )                         (filter n) ) ) ) ) ) )      'wait ) ) ) (define (bench factor)   (let loop ((factor factor))     (let ((v (eval '(primes 2 (lambda (x) #f) 50))))       (if (> factor 1)           (loop (- factor 1))           (display v) ) ) ) ) (bench 100)"  | ${TIME} bigloo -i
 
 # (bench 10)
 #0.89user 0.22system 0:02.24elapsed 49%CPU (958text+1151data 1612max)k
@@ -545,7 +545,7 @@ test.chap6.bgl :
 
 # Compare also with CAML light
 test.chap6.ml :
-	echo "								let rec primes n f max =						 let filter p n = ( 0 = n mod p)					 in if ( n > max) then []						    else if (f n) then primes (n+1) f max				         else n :: let ff = (filter n)					                   in primes (n+1) 					                             (function p -> if (f p) then true 		                                            else (ff p)) 		                             max;;					let bench factor =							  let rec loop factor =							    let v = primes 2 (fun x -> false) 50 				    in if (factor > 1) then loop (factor-1)				       else v								  in loop factor;;							bench 100;;"		| ${TIME} camllight
+	echo " let rec primes n f max =  let filter p n = ( 0 = n mod p)  in if ( n > max) then []     else if (f n) then primes (n+1) f max          else n :: let ff = (filter n)                    in primes (n+1)                               (function p -> if (f p) then true                                              else (ff p))                               max;; let bench factor =   let rec loop factor =     let v = primes 2 (fun x -> false) 50      in if (factor > 1) then loop (factor-1)        else v   in loop factor;; bench 100;;" | ${TIME} camllight
 
 # bench 10;;
 #0.51user 0.21system 0:01.27elapsed 56%CPU (96text+542data 448max)k
@@ -555,22 +555,22 @@ test.chap6.ml :
 # patch to chap6a.scm to define new global variables on the fly:
 # 11.06user 1.86system 0:31.25elapsed
 test.chap6b : src/chap6a.scm src/chap6b.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6b.scm\")					(and (test-scheme6b \"src/chap6b.tst\")				     (test-scheme6b \"src/scheme.tst\") )"			| ${SCHEME}
+	echo  " (load \"src/chap6a.scm\") (load \"src/chap6b.scm\") (and (test-scheme6b \"src/chap6b.tst\")      (test-scheme6b \"src/scheme.tst\") )" | ${SCHEME}
 
 # Interpreted bench
 # 5.65user 0.89system 0:11.17elapsed
 bench.chap6b : src/chap6a.scm src/chap6b.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6b.scm\")					(bench6a 1 (call-with-input-file \"src/chap5-bench.scm\" read))	"								| ${SCHEME}
+	echo  " (load \"src/chap6a.scm\") (load \"src/chap6b.scm\") (bench6a 1 (call-with-input-file \"src/chap5-bench.scm\" read)) " | ${SCHEME}
 
 # Environment is now held in a global variable *env*.
 # Programs are precompiled into (lambda (k) ...)
 # 11.97user 2.01system 0:34.30elapsed
 test.chap6c : src/chap6c.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6c.scm\")					(test-scheme6c \"src/scheme.tst\")"				| ${SCHEME}
+	echo  " (load \"src/chap6a.scm\") (load \"src/chap6c.scm\") (test-scheme6c \"src/scheme.tst\")" | ${SCHEME}
 
 # Interpreted bench
 bench.chap6c : src/chap6c.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6c.scm\")					(bench6c 1 (call-with-input-file \"src/chap5-bench.scm\" read))	"								| ${SCHEME}
+	echo  " (load \"src/chap6a.scm\") (load \"src/chap6c.scm\") (bench6c 1 (call-with-input-file \"src/chap5-bench.scm\" read)) " | ${SCHEME}
 
 # chap6c.scm 1.2 -sch 4 10 (same as chap6a.scm: No gain !)
 #2.40user 0.48system 0:03.02elapsed 95%CPU (843text+3152data 2984max)k
@@ -581,12 +581,12 @@ bench.chap6c : src/chap6c.scm
 # The program is precompiled into (lambda ()...)
 # 11.09user 1.90system 0:27.29elapsed
 test.chap6d : src/chap6d.scm
-	echo  "							(load \"src/chap6d.scm\")					(test-scheme6d \"src/scheme.tst\")"				| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (test-scheme6d \"src/scheme.tst\")" | ${SCHEME}
 
 # Interpreted bench
 # 5.35user 0.81system 0:10.35elapsed
 bench.chap6d : src/chap6d.scm
-	echo  "							(load \"src/chap6d.scm\")					(bench6d 1 (call-with-input-file \"src/chap5-bench.scm\" read))"  | ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (bench6d 1 (call-with-input-file \"src/chap5-bench.scm\" read))"  | ${SCHEME}
 
 # Variant with pre-allocated frames (work for Lisp not for Scheme)
 # An error is expected on one of the lattest tests on call/cc. This
@@ -594,7 +594,7 @@ bench.chap6d : src/chap6d.scm
 # continuation to return multiply."
 shared.test.chap6dd : test.chap6dd
 test.chap6dd : src/chap6d.scm src/chap6dd.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6dd.scm\")					(and (test-scheme6d \"src/chap6dd.tst\")			     (test-scheme6d \"src/scheme.tst\") )"  			| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap6dd.scm\") (and (test-scheme6d \"src/chap6dd.tst\")      (test-scheme6d \"src/scheme.tst\") )"   | ${SCHEME}
 
 # chap6d.scm 1.1 -sch 4 10 (similar to Bigloo)
 #0.86user 0.15system 0:01.16elapsed 87%CPU (786text+646data 908max)k
@@ -616,10 +616,10 @@ test.chap6dd : src/chap6d.scm src/chap6dd.scm
 # a small byte-tree-code compiler. (Not used in the book)
 #
 test.chap6e : src/chap6e.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6e.scm\")					(test-scheme6e \"src/scheme.tst\")"				| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap6e.scm\") (test-scheme6e \"src/scheme.tst\")" | ${SCHEME}
 
 bench.chap6e : src/chap6e.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6e.scm\")					(bench6e 1 (call-with-input-file \"src/chap5-bench.scm\" read))	"								| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap6e.scm\") (bench6e 1 (call-with-input-file \"src/chap5-bench.scm\" read)) " | ${SCHEME}
 
 # chap6e 1.2 -sch 4 10  (slower than chap6d)
 #1.32user 0.12system 0:01.72elapsed 83%CPU (991text+690data 1028max)k
@@ -645,23 +645,23 @@ long.dynext.test.chap6f :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap6f ; else : ; fi
 dynext.test.chap6f : test.chap6f
 test.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
-	echo  "							(load \"src/chap6f.scm\")					(test-scheme \"src/scheme.tst\")" 				| ${SCHEME}
+	echo  " (load \"src/chap6f.scm\") (test-scheme \"src/scheme.tst\")"  | ${SCHEME}
 
 # start an interpreter to interactively compile towards C.
 # The (scheme) toplevel reads an expression and shows the generated C.
 # This test fails on continuation used out of their dynamic extent (no
 # full continuation a la Scheme).
 start.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
-	@( echo  "						(load \"src/chap6f.scm\")					(scheme)" ; tee ) | ${SCHEME}
+	@( echo  " (load \"src/chap6f.scm\") (scheme)" ; tee ) | ${SCHEME}
 
-# A little bench to appreciate the compiler speed.	(obsolete)
+# A little bench to appreciate the compiler speed. (obsolete)
 bench.chap6f : o/${HOSTTYPE}/chap6f-bench
 	${TIME} o/${HOSTTYPE}/chap6f-bench
 
-export CaFLAGS	=	-I${LiSP_TOPDIR}/src/c ${CFLAGS}
+export CaFLAGS = -I${LiSP_TOPDIR}/src/c ${CFLAGS}
 
 o/${HOSTTYPE}/chap6f-bench.c : src/chap6f.scm src/chap5-bench.scm
-	echo  "							(loadq \"src/chap6f.scm\")					(compile-file \"src/chap5-bench.scm\" \"o/${HOSTTYPE}/tt.c\")	"	| ${SCHEME} -sch 8
+	echo  " (loadq \"src/chap6f.scm\") (compile-file \"src/chap5-bench.scm\" \"o/${HOSTTYPE}/tt.c\") " | ${SCHEME} -sch 8
 
 	-indent o/${HOSTTYPE}/tt.c
 
@@ -674,48 +674,48 @@ o/${HOSTTYPE}/chap6f-bench : o/${HOSTTYPE}/chap6f-bench.c
 o/${HOSTTYPE}/chap6f-bench : src/c/rt.h o/${HOSTTYPE}/rt.o
 	cd o/${HOSTTYPE} ; ${CC} -o tt ${CaFLAGS} chap6f-bench.c rt.o
 
-########### end of chap6f which was superseded by chap10.	(obsolete)
+########### end of chap6f which was superseded by chap10. (obsolete)
 
 # Handling the define special form.
 test.chap6g : src/chap6a.scm src/chap6b.scm src/chap6g.scm
-	echo  "							(load \"src/chap6a.scm\")					(load \"src/chap6b.scm\")					(load \"src/chap6g.scm\")					(and (test-scheme6b \"src/chap6g.tst\")				     (test-scheme6b \"src/scheme.tst\") )"			| ${SCHEME}
+	echo  " (load \"src/chap6a.scm\") (load \"src/chap6b.scm\") (load \"src/chap6g.scm\") (and (test-scheme6b \"src/chap6g.tst\")      (test-scheme6b \"src/scheme.tst\") )" | ${SCHEME}
 
 # exercice on a specialized invocation protocol for thunks
 test.chap6h : src/chap6d.scm src/chap6h.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap6h.scm\")					(test-scheme6d \"src/scheme.tst\")"  				| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap6h.scm\") (test-scheme6d \"src/scheme.tst\")"   | ${SCHEME}
 
 ##################################### Chap 7 ##############################
 # Bytecode compilation
 
-TEST_CHAP7 =		test.chap7a				test.chap7b 				test.chap7c				test.chap7d 				test.chap7e 				test.chap7g 				test.chap7h				shallow.test.chap7i
+TEST_CHAP7 = test.chap7a test.chap7b  test.chap7c test.chap7d  test.chap7e  test.chap7g  test.chap7h shallow.test.chap7i
 
 # Linearize the intermediate language to make register *val* appear.
 # 13.48user 1.84system 0:31.70elapsed
 test.chap7a : src/chap6d.scm src/chap7a.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7a.scm\")					(test-scheme7a \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7a.scm\") (test-scheme7a \"src/scheme.tst\")"   | ${SCHEME}
 
 # make stack appear (as well as other registers)
 # 13.91user 1.81system 0:33.46elapsed
 test.chap7b : src/chap6d.scm src/chap7b.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7b.scm\")					(test-scheme7b \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7b.scm\") (test-scheme7b \"src/scheme.tst\")"   | ${SCHEME}
 
 # represents instructions by list of closures. Make register PC appear.
 # 18.09user 1.95system 0:42.60elapsed
 test.chap7c : src/chap6d.scm src/chap7c.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7c.scm\")					(test-scheme7c \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7c.scm\") (test-scheme7c \"src/scheme.tst\")"   | ${SCHEME}
 
 # the complete bytecode compiler itself.
 # The instruction set is defined in chap7f but is directly
 # handled by chap7d.
 # 64.28user 2.92system 1:39.47elapsed
 test.chap7d : src/chap6d.scm src/chap7d.scm src/chap7f.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(test-scheme7d \"src/scheme.tst\")"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (test-scheme7d \"src/scheme.tst\")"   | ${SCHEME}
 
 # added bind-exit, dynamic variables and error handling (first version
 # with dynenv register) in the bytecode compiler.
 # 106.45user 4.26system 2:48.65elapsed
 test.chap7e : src/chap7d.scm src/chap7e.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7e.scm\")					(and (test-scheme7e \"src/scheme.tst\")				     (test-scheme7e \"src/chap7d.tst\")				     (test-scheme7e \"src/chap5c.tst\") )"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7e.scm\") (and (test-scheme7e \"src/scheme.tst\")      (test-scheme7e \"src/chap7d.tst\")      (test-scheme7e \"src/chap5c.tst\") )"   | ${SCHEME}
 
 # chap7f.scm contains the definition of the instructions of the machine
 
@@ -723,74 +723,74 @@ test.chap7e : src/chap7d.scm src/chap7e.scm
 # with the bytecode compiler.
 # 219.27user 13.58system 8:47.39elapsed
 test.chap7g : src/chap7h.scm src/chap7g.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(load \"src/chap7g.scm\")					(and (test-scheme7g \"src/scheme.tst\")				     (test-scheme7g \"src/chap7d.tst\")				     (test-scheme7g \"src/chap5c.tst\") )			(compile-file \"tmp.si/foo\")					(run-application 100 \"tmp.si/foo.so\")				(compile-file \"tmp.si/fact\")					(compile-file \"tmp.si/fib\")					(compile-file \"tmp.si/after\")					(build-application \"tmp.si/a.out\" 				   \"tmp.si/fact\" \"tmp.si/fib\" 				   \"tmp.si/foo\" \"tmp.si/after\" )				(run-application 400 \"tmp.si/a.out\")				(build-application-renaming-variables 				     \"tmp.si/na.out\" \"tmp.si/a.out\" 			     '((fib fact) (fact fib)) )					(run-application 400 \"tmp.si/na.out\")				(assoc 'long-goto (disassemble *code*))"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (and (test-scheme7g \"src/scheme.tst\")      (test-scheme7g \"src/chap7d.tst\")      (test-scheme7g \"src/chap5c.tst\") ) (compile-file \"tmp.si/foo\") (run-application 100 \"tmp.si/foo.so\") (compile-file \"tmp.si/fact\") (compile-file \"tmp.si/fib\") (compile-file \"tmp.si/after\") (build-application \"tmp.si/a.out\"     \"tmp.si/fact\" \"tmp.si/fib\"     \"tmp.si/foo\" \"tmp.si/after\" ) (run-application 400 \"tmp.si/a.out\") (build-application-renaming-variables       \"tmp.si/na.out\" \"tmp.si/a.out\"       '((fib fact) (fact fib)) ) (run-application 400 \"tmp.si/na.out\") (assoc 'long-goto (disassemble *code*))"   | ${SCHEME}
 
 # implementation variant for dynamic variables, error handlers
 # with labels in the stack (without dynenv register).
 # 106.77user 4.34system 2:49.31elapsed
 test.chap7h : src/chap7d.scm src/chap7h.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(and (test-scheme7h \"src/scheme.tst\")				     (test-scheme7h \"src/chap7d.tst\")				     (test-scheme7h \"src/chap5c.tst\") )"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (and (test-scheme7h \"src/scheme.tst\")      (test-scheme7h \"src/chap7d.tst\")      (test-scheme7h \"src/chap5c.tst\") )"   | ${SCHEME}
 
 # shallow binding for dynamic variables
 # It will fail on the last test of src/chap7d.tst
 shallow.test.chap7i : test.chap7i
 test.chap7i : src/chap7h.scm
-	echo  "							(load \"src/chap6d.scm\")					(load \"src/chap7d.scm\")					(load \"src/chap7h.scm\")					(load \"src/chap7i.scm\")					(and (test-scheme7h \"src/scheme.tst\")				     (test-scheme7h \"src/chap5c.tst\")				     (test-scheme7h \"src/chap7d.tst\") )"  		| ${SCHEME}
+	echo  " (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7i.scm\") (and (test-scheme7h \"src/scheme.tst\")      (test-scheme7h \"src/chap5c.tst\")      (test-scheme7h \"src/chap7d.tst\") )"   | ${SCHEME}
 
 ##################################### Chap 8 ##############################
 # Chapter on evaluation and reflection
 
-TEST_CHAP8 =	test.chap8a				test.chap8b				test.chap8c				test.chap8d				evalf.test.chap8e			evalf.test.chap8f			evalf.test.chap8g			test.chap8h				test.chap8i				big.test.chap8j				test.reflisp
+TEST_CHAP8 = test.chap8a test.chap8b test.chap8c test.chap8d evalf.test.chap8e evalf.test.chap8f evalf.test.chap8g test.chap8h test.chap8i big.test.chap8j test.reflisp
 
 # add eval/ce (as a special form) to the naive interpreter of chapter 1.
 # 7.33user 1.62system 0:20.39elapsed
 test.chap8a : src/chap8a.scm src/chap1.scm
-	echo "					(load \"src/chap1.scm\")			(load \"src/chap8a.scm\")			(and (test-scheme1 \"src/scheme.tst\")		     (test-program \"src/chap8.tst\") 		     (set! set-global-value! dynamic-set-global-value!)		     (test-scheme1 \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap1.scm\") (load \"src/chap8a.scm\") (and (test-scheme1 \"src/scheme.tst\")      (test-program \"src/chap8.tst\")       (set! set-global-value! dynamic-set-global-value!)      (test-scheme1 \"src/chap8a.tst\")      )" | ${SCHEME}
 
 # Add eval/ce (as a special form) to the predenotational interpreter
 # (with closures everyhere) seen in chapter 4.
 # 72.39user 2.33system 1:34.67elapsed
 test.chap8b : src/chap8b.scm src/chap4a.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap4a.scm\")			(load \"src/chap8b.scm\")			(and (file-test \"src/scheme.tst\")		     (file-test \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap4a.scm\") (load \"src/chap8b.scm\") (and (file-test \"src/scheme.tst\")      (file-test \"src/chap8a.tst\")      )" | ${SCHEME}
 
 # Add eval/ce (as a special form) to the threaded interpreter of chapter 6.
 # 12.58user 2.06system 0:34.32elapsed
 test.chap8c : src/chap8c.scm src/chap6d.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap8c.scm\")			(and (test-scheme6d \"src/scheme.tst\")	     (test-scheme6d \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap8c.scm\") (and (test-scheme6d \"src/scheme.tst\")      (test-scheme6d \"src/chap8a.tst\")      )" | ${SCHEME}
 
 # Add eval/ce (as a special form) to the bytecode compiler
 # 157.23user 14.52system 5:20.46elapsed
 test.chap8d : src/chap8c.scm src/chap8d.scm src/chap6d.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8d.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (load \"src/chap8d.scm\") (and (test-scheme7g \"src/scheme.tst\")      (test-scheme7g \"src/chap5c.tst\")      (test-scheme7g \"src/chap7d.tst\")      (test-scheme7g \"src/chap8a.tst\")      )" | ${SCHEME}
 
 # add eval/at (a function) as a function to the naive interpreter
 # It fails on a test preceded by "eval as a function will fail..."
 # 7.39user 1.47system 0:21.48elapsed
 evalf.test.chap8e : src/chap8e.scm src/chap1.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap1.scm\")			(load \"src/chap8e.scm\")			(and (test-scheme1 \"src/scheme.tst\")		     (test-scheme1 \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap1.scm\") (load \"src/chap8e.scm\") (and (test-scheme1 \"src/scheme.tst\")      (test-scheme1 \"src/chap8a.tst\")      )" | ${SCHEME}
 
 # add eval/at (a function) to the bytecode compiler.
 # It fails on a test preceded by "eval as a function will fail..."
 # 156.77user 14.10system 5:03.18elapsed
 evalf.test.chap8f : src/chap8f.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8f.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (load \"src/chap8f.scm\") (and (test-scheme7g \"src/scheme.tst\")      (test-scheme7g \"src/chap5c.tst\")      (test-scheme7g \"src/chap7d.tst\")      (test-scheme7g \"src/chap8a.tst\")      )" | ${SCHEME}
 
 # represent interpreted functions as functions in the naive interpreter.
 # It fails on a test preceded by "eval as a function will fail..."
 # 8.28user 1.43system 0:20.69elapsed
 evalf.test.chap8g : src/chap8g.scm src/chap1.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap1.scm\")			(load \"src/chap8g.scm\")			(and (test-scheme1 \"src/scheme.tst\")		     (test-scheme1 \"src/chap8a.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap1.scm\") (load \"src/chap8g.scm\") (and (test-scheme1 \"src/scheme.tst\")      (test-scheme1 \"src/chap8a.tst\")      )" | ${SCHEME}
 
 # Add the export special form and a binary function eval/b,
 # also add procedure->body and procedure->environment.
 # 173.64user 15.58system 5:33.69elapsed
 test.chap8h : src/chap8h.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8h.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (load \"src/chap8h.scm\") (and (test-scheme7g \"src/scheme.tst\")      (test-scheme7g \"src/chap5c.tst\")      (test-scheme7g \"src/chap7d.tst\")      (test-scheme7g \"src/chap8h.tst\")      )" | ${SCHEME}
 
 # add the import special form
 # 180.38user 16.38system 5:48.37elapsed
 test.chap8i : src/chap8i.scm
-	echo "					(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(load \"src/chap8i.scm\")			(and (test-scheme7g \"src/scheme.tst\")		     (test-scheme7g \"src/chap5c.tst\")		     (test-scheme7g \"src/chap7d.tst\")		     (test-scheme7g \"src/chap8h.tst\")		     (test-scheme7g \"src/chap8i.tst\")		     )"						| ${SCHEME}
+	echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (load \"src/chap8h.scm\") (load \"src/chap8i.scm\") (and (test-scheme7g \"src/scheme.tst\")      (test-scheme7g \"src/chap5c.tst\")      (test-scheme7g \"src/chap7d.tst\")      (test-scheme7g \"src/chap8h.tst\")      (test-scheme7g \"src/chap8i.tst\")      )" | ${SCHEME}
 
 # a little reflective interpreter.
 # Pay attention, this is very long and needs much much space...
@@ -799,45 +799,45 @@ long.test.chap8j :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap8j ; else : ; fi
 big.test.chap8j : test.chap8j
 test.chap8j : src/chap8h.scm si/reflisp.scm
-	( echo "				(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(load \"src/chap8j.scm\")			(call-with-input-file \"si/reflisp.scm\"	  (lambda (in) 					    (let ((e (read in)))			      (call-with-output-file \"tmp.si/tmp.scm\"	        (lambda (out)					   (write \`((lambda (reflisp-code) ,e)	                     ',e ) out )			   (newline out) ) ) ) ) )		(compile-file \"tmp.si/tmp\")			(build-application \"tmp.si/a.out\" \"tmp.si/tmp\")		(display \`(byte-size is ,(vector-length *code*)))(newline)	(and (run-application 400 \"tmp.si/a.out\") 'done)"		;	  cat src/chap8j.tst )			| ${SCHEME}
+	( echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (load \"src/chap8h.scm\") (load \"src/chap8j.scm\") (call-with-input-file \"si/reflisp.scm\"   (lambda (in)      (let ((e (read in)))       (call-with-output-file \"tmp.si/tmp.scm\"         (lambda (out)    (write \`((lambda (reflisp-code) ,e)                      ',e ) out )    (newline out) ) ) ) ) ) (compile-file \"tmp.si/tmp\") (build-application \"tmp.si/a.out\" \"tmp.si/tmp\") (display \`(byte-size is ,(vector-length *code*)))(newline) (and (run-application 400 \"tmp.si/a.out\") 'done)" ;   cat src/chap8j.tst ) | ${SCHEME}
 
 tmp.test.chap8j :
-	( echo "				(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(load \"src/chap8j.scm\")			(and (run-application 400 \"tmp.si/a.out\") 'done)"	;	  cat src/chap8j.tst )				| ${SCHEME}
+	( echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (load \"src/chap8h.scm\") (load \"src/chap8j.scm\") (and (run-application 400 \"tmp.si/a.out\") 'done)" ;   cat src/chap8j.tst ) | ${SCHEME}
 
 # a direct test of the reflective interpreter
 # 29.32user 2.25system 0:37.23elapsed
 test.reflisp : si/reflisp.scm src/chap8k.scm
-	( echo "				(load \"src/chap8a.scm\")			(load \"src/chap6d.scm\")			(load \"src/chap7d.scm\")			(load \"src/chap7h.scm\")			(load \"src/chap7g.scm\")			(load \"src/chap8h.scm\")			(load \"src/chap8j.scm\")			(load \"src/chap8k.scm\")			(begin (display \`(cons-size is ,(count-pairs reflisp-code)))(newline))	(and (reflisp) 'done)" ; cat src/chap8j.tst )		| ${SCHEME}
+	( echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap7d.scm\") (load \"src/chap7h.scm\") (load \"src/chap7g.scm\") (load \"src/chap8h.scm\") (load \"src/chap8j.scm\") (load \"src/chap8k.scm\") (begin (display \`(cons-size is ,(count-pairs reflisp-code)))(newline)) (and (reflisp) 'done)" ; cat src/chap8j.tst ) | ${SCHEME}
 
 ##################################### Chap 9 #############################
 # Chapter on macros
 
-TEST_CHAP9 =	test.chap9c
+TEST_CHAP9 = test.chap9c
 
 # A macro system (hygien if I want it, where I want it).
 # 40.60user 3.69system 2:02.59elapsed
 test.chap9c : src/chap9c.scm
-	echo "					(load \"src/chap9c.scm\")			(load \"src/chap9d.scm\")			(load \"src/chap9e.scm\")			(and (test-scheme9d \"src/scheme.tst\")	     (test-scheme9d \"src/chap9c.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap9c.scm\") (load \"src/chap9d.scm\") (load \"src/chap9e.scm\") (and (test-scheme9d \"src/scheme.tst\")      (test-scheme9d \"src/chap9c.tst\") )" | ${SCHEME}
 
 ##################################### Chap 10 #############################
 # Chapter on compilation -> C
 
-TEST_CHAP10 =	test.chap10a				test.chap10c				dynext.test.chap10e			test.chap10k				dynext.test.chap10je			test.chap10jk
+TEST_CHAP10 = test.chap10a test.chap10c dynext.test.chap10e test.chap10k dynext.test.chap10je test.chap10jk
 
 # chap10a.scm: objectification
 # chap10b.scm: small interpreter for objectified code
 # 16.74user 1.91system 0:38.87elapsed
 test.chap10a : src/chap10a.scm src/chap10b.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10b.scm\")			(and (test-scheme10b \"src/scheme.tst\"))"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10b.scm\") (and (test-scheme10b \"src/scheme.tst\"))" | ${SCHEME}
 
 # chap10c.scm: extract and globalize quotations
 # chap10d.scm: interpret the objectified code
 # 29.68user 2.30system 1:33.23elapsed
 test.chap10c : src/chap10a.scm src/chap10b.scm
 test.chap10c : src/chap10c.scm src/chap10d.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10b.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10d.scm\")			(and (test-scheme10b \"src/scheme.tst\"))"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10b.scm\") (load \"src/chap10c.scm\") (load \"src/chap10d.scm\") (and (test-scheme10b \"src/scheme.tst\"))" | ${SCHEME}
 
-all-o = 	o/${HOSTTYPE}/scheme.o 		o/${HOSTTYPE}/schemelib.o 		o/${HOSTTYPE}/schemeklib.o
+all-o =  o/${HOSTTYPE}/scheme.o  o/${HOSTTYPE}/schemelib.o  o/${HOSTTYPE}/schemeklib.o
 
 o/${HOSTTYPE}/scheme.o : src/c/scheme.h src/c/scheme.c
 	cd o/${HOSTTYPE} ; ${CC} ${CFLAGS} -c ../../src/c/scheme.c
@@ -861,7 +861,7 @@ test.chap10e : src/chap10g.scm src/chap10e.scm
 test.chap10e : src/chap10h.scm src/chap10f.scm
 test.chap10e : o/${HOSTTYPE}/scheme.o
 test.chap10e : o/${HOSTTYPE}/schemelib.o
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(and (test-scheme10e \"src/chap10e.tst\")	     (test-scheme10e \"src/scheme.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (and (test-scheme10e \"src/chap10e.tst\")      (test-scheme10e \"src/scheme.tst\") )" | ${SCHEME}
 
 # chap10m.scm contains the letify function that recursively copies an AST
 # into a pure tree, trying to insert let forms.
@@ -872,13 +872,13 @@ long.dynext.test.chap10n :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10n ; else : ; fi
 dynext.test.chap10n : test.chap10n
 test.chap10n : src/chap10m.scm src/chap10n.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(load \"src/chap10m.scm\")			(load \"src/chap10n.scm\")			(and (test-scheme10e \"src/chap10e.tst\")	     (test-scheme10e \"src/scheme.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10m.scm\") (load \"src/chap10n.scm\") (and (test-scheme10e \"src/chap10e.tst\")      (test-scheme10e \"src/scheme.tst\") )" | ${SCHEME}
 
 # Generate the C code corresponding to the running example of chapter 10.
 # The C code will be left in o/chap10ex.c
 chap10e.example : src/c/chap10ex.c
 src/c/chap10ex.c : src/chap10ex.scm src/chap10e.scm
-	echo "						(load \"src/chap10a.scm\")				(load \"src/chap10c.scm\")				(load \"src/chap10g.scm\")				(load \"src/chap10e.scm\")				(load \"src/chap10h.scm\")				(load \"src/chap10f.scm\")				(set! *cc+cflags* \"${CC} ${CFLAGS}\")			(call-with-input-file \"src/chap10ex.scm\"		   (lambda (in) (test-expression (read in))) )"		| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (set! *cc+cflags* \"${CC} ${CFLAGS}\") (call-with-input-file \"src/chap10ex.scm\"    (lambda (in) (test-expression (read in))) )" | ${SCHEME}
 
 	size o/${HOSTTYPE}/chap10e
 	emacs -batch -l el/c-indent.el
@@ -900,17 +900,17 @@ src/c/chap10ex.E : src/c/chap10ex.c src/c/scheme.h
 # a bug on write on strings containing \". To be solved.
 # 225.49user 18.02system 4:53.16elapsed
 o/${HOSTTYPE}/LiSPbookc :
-	H_DIR=`pwd`/src/c/ ; export H_DIR 			;	A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE	;	echo "							(load \"bigloo/compapp.scm\")					'(set! *verbose* #t)						(compile-bigloo-application 					  \"${BIGLOO}\" \"o/${HOSTTYPE}/\"				  \"LiSPbookc\" 						  '(begin (set! *h-dir* \"$$H_DIR\")					  (set! *rtbook-library* \"$$A_FILE\")			          (compiler-entry-point command-options) )		  \"src/chap10a.scm\" 						  \"src/chap10c.scm\" 						  \"src/chap10g.scm\" 						  \"src/chap10e.scm\" 						  \"src/chap10h.scm\" 						  \"src/chap10f.scm\" 						)"								| ${SCHEME}
+	H_DIR=`pwd`/src/c/ ; export H_DIR  ; A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE ; echo " (load \"bigloo/compapp.scm\") '(set! *verbose* #t) (compile-bigloo-application    \"${BIGLOO}\" \"o/${HOSTTYPE}/\"   \"LiSPbookc\"    '(begin (set! *h-dir* \"$$H_DIR\")   (set! *rtbook-library* \"$$A_FILE\")           (compiler-entry-point command-options) )   \"src/chap10a.scm\"    \"src/chap10c.scm\"    \"src/chap10g.scm\"    \"src/chap10e.scm\"    \"src/chap10h.scm\"    \"src/chap10f.scm\"  )" | ${SCHEME}
 
 # The following entries do not work since the rtbook.a library is not
 # sufficient: IO operations are missing.
 # Compile the compiler with itself (stage 2)
 o/${HOSTTYPE}/LiSPbookc2 : o/${HOSTTYPE}/LiSPbookc
-	${TIME} o/${HOSTTYPE}/LiSPbookc o/${HOSTTYPE}/LiSPbookc.bgl -v 		-o o/${HOSTTYPE}/LiSPbookc2 -C o/${HOSTTYPE}/LiSPbookc2.c
+	${TIME} o/${HOSTTYPE}/LiSPbookc o/${HOSTTYPE}/LiSPbookc.bgl -v  -o o/${HOSTTYPE}/LiSPbookc2 -C o/${HOSTTYPE}/LiSPbookc2.c
 
 # Recompile the compiler with itself (stage 3)
 o/${HOSTTYPE}/LiSPbookc3 : o/${HOSTTYPE}/LiSPbookc2
-	${TIME} o/${HOSTTYPE}/LiSPbookc2 o/${HOSTTYPE}/LiSPbookc.bgl -v 		-o o/${HOSTTYPE}/LiSPbookc3 -C o/${HOSTTYPE}/LiSPbookc3.c
+	${TIME} o/${HOSTTYPE}/LiSPbookc2 o/${HOSTTYPE}/LiSPbookc.bgl -v  -o o/${HOSTTYPE}/LiSPbookc3 -C o/${HOSTTYPE}/LiSPbookc3.c
 
 LiSPbookc.compare : o/${HOSTTYPE}/LiSPbookc3
 	ls -l o/${HOSTTYPE}/LiSPbookc*[23].c
@@ -929,14 +929,14 @@ test.chap10i : src/chap10g.scm src/chap10e.scm
 test.chap10i : src/chap10h.scm src/chap10f.scm src/chap10i.scm
 test.chap10i : o/${HOSTTYPE}/scheme.o
 test.chap10i : o/${HOSTTYPE}/schemelib.o
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(load \"src/chap10i.scm\")			(and (test-scheme10e \"src/scheme.tst\")	     (test-scheme10e \"src/chap10e.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10i.scm\") (and (test-scheme10e \"src/scheme.tst\")      (test-scheme10e \"src/chap10e.tst\") )" | ${SCHEME}
 
 # as for various interpreters, try our usual bench.
 # Compile it and run it.
 chap10e.bench : o/${HOSTTYPE}/scheme.o
 chap10e.bench : o/${HOSTTYPE}/schemelib.o
 chap10e.bench : src/chap5-bench.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(call-with-input-file \"src/chap5-bench.scm\" 	  (lambda (in) (test-expression (read in))) )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (call-with-input-file \"src/chap5-bench.scm\"    (lambda (in) (test-expression (read in))) )" | ${SCHEME}
 
 	${TIME} o/${HOSTTYPE}/chap10e
 #0.01user 0.01system 0:00.07elapsed 28%CPU (16avgtext+36avgdata 44maxresident)k
@@ -946,11 +946,11 @@ chap10e.bench : src/chap5-bench.scm
 # You can try (test-expression e) or (show-C-expression e).
 # See file chap10f.scm for other possibilities.
 start.chap10e : ${all-o}
-	( echo "				(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")					" ; tee ) 			|  ${SCHEME}
+	( echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") " ; tee )  |  ${SCHEME}
 
 # test indepently a compiled file o/chap10e.c.
 test.chap10e.c : ${all-o}
-	cd o/${HOSTTYPE} ; 	${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e &&        ./chap10e
+	cd o/${HOSTTYPE} ;  ${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e &&        ./chap10e
 
 # chap10k.scm : CPS transformation, use schemeklib.c
 # Very long test but it does not fail on call/cc tests.
@@ -960,17 +960,17 @@ long.test.chap10k :
 test.chap10k : o/${HOSTTYPE}/scheme.o
 test.chap10k : o/${HOSTTYPE}/schemeklib.o
 test.chap10k : src/chap10k.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(load \"src/chap10k.scm\")			(load \"src/chap10m.scm\")			(and (test-scheme10k \"src/scheme.tst\")	     (test-scheme10k \"src/chap10k.tst\")	     (test-scheme10k \"src/chap10e.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10k.scm\") (load \"src/chap10m.scm\") (and (test-scheme10k \"src/scheme.tst\")      (test-scheme10k \"src/chap10k.tst\")      (test-scheme10k \"src/chap10e.tst\") )" | ${SCHEME}
 
-# Test chap10k by direct interpretation		(obsolete)
+# Test chap10k by direct interpretation (obsolete)
 test.chap10l : src/chap10l.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10b.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10d.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(load \"src/chap10k.scm\")			(load \"src/chap10m.scm\")			(load \"src/chap10l.scm\")			(and (test-scheme10b \"src/scheme.tst\")	     (test-scheme10b \"src/chap10k.tst\")	     (test-scheme10b \"src/chap10e.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10b.scm\") (load \"src/chap10c.scm\") (load \"src/chap10d.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10k.scm\") (load \"src/chap10m.scm\") (load \"src/chap10l.scm\") (and (test-scheme10b \"src/scheme.tst\")      (test-scheme10b \"src/chap10k.tst\")      (test-scheme10b \"src/chap10e.tst\") )" | ${SCHEME}
 
 # as for various interpreters, try our usual bench.
 chap10k.bench : o/${HOSTTYPE}/scheme.o
 chap10k.bench : o/${HOSTTYPE}/schemeklib.o
 chap10k.bench : src/chap5-bench.scm
-	echo "						(load \"src/chap10a.scm\")				(load \"src/chap10c.scm\")				(load \"src/chap10g.scm\")				(load \"src/chap10e.scm\")				(load \"src/chap10h.scm\")				(load \"src/chap10f.scm\")				(load \"src/chap10k.scm\")				(load \"src/chap10m.scm\")				(set! *a.out* \"chap10k\")				(call-with-input-file \"src/chap5-bench.scm\" 		  (lambda (in) (test-expression (read in))) )"		| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10k.scm\") (load \"src/chap10m.scm\") (set! *a.out* \"chap10k\") (call-with-input-file \"src/chap5-bench.scm\"    (lambda (in) (test-expression (read in))) )" | ${SCHEME}
 
 	${TIME} o/${HOSTTYPE}/chap10k
 #0.04user0.03system 0:00.07elapsed 100%CPU(42avgtext+221avgdata 212maxresident)k
@@ -980,7 +980,7 @@ chap10k.bench : src/chap5-bench.scm
 # The C code will be left in o/chap10kex.c
 chap10k.example : src/c/chap10kex.c
 src/c/chap10kex.c : src/chap10ex.scm src/chap10e.scm
-	echo "						(load \"src/chap10a.scm\")				(load \"src/chap10c.scm\")				(load \"src/chap10g.scm\")				(load \"src/chap10e.scm\")				(load \"src/chap10h.scm\")				(load \"src/chap10f.scm\")				(load \"src/chap10k.scm\")				(load \"src/chap10m.scm\")				(set! *cc+cflags* \"${CC} ${CFLAGS}\")			(call-with-input-file \"src/chap10ex.scm\"		   (lambda (in) (test-expression (read in))) )"		| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10k.scm\") (load \"src/chap10m.scm\") (set! *cc+cflags* \"${CC} ${CFLAGS}\") (call-with-input-file \"src/chap10ex.scm\"    (lambda (in) (test-expression (read in))) )" | ${SCHEME}
 
 	size o/${HOSTTYPE}/chap10e
 	emacs -batch -l el/c-indent.el
@@ -996,14 +996,14 @@ long.dynext.test.chap10je :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap10je ; else : ; fi
 dynext.test.chap10je : test.chap10je
 test.chap10je : src/chap10j.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(load \"src/chap10j.scm\")			(and (test-scheme10e \"src/scheme.tst\")	     (test-scheme10e \"src/chap10e.tst\") 	     (test-scheme10e \"src/chap10j.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10j.scm\") (and (test-scheme10e \"src/scheme.tst\")      (test-scheme10e \"src/chap10e.tst\")       (test-scheme10e \"src/chap10j.tst\") )" | ${SCHEME}
 
 # This one does not fail but lasts long...
 # 857.14user 529.60system 33:20.49elapsed
 long.test.chap10jk :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10jk ; else : ; fi
 test.chap10jk : src/chap10j.scm src/chap10p.scm
-	echo "					(load \"src/chap10a.scm\")			(load \"src/chap10c.scm\")			(load \"src/chap10g.scm\")			(load \"src/chap10e.scm\")			(load \"src/chap10h.scm\")			(load \"src/chap10f.scm\")			(load \"src/chap10k.scm\")			(load \"src/chap10m.scm\")			(load \"src/chap10j.scm\")			(load \"src/chap10p.scm\")			(and (test-scheme10k \"src/scheme.tst\")	     (test-scheme10k \"src/chap10e.tst\") 	     (test-scheme10k \"src/chap10k.tst\") 	     (test-scheme10k \"src/chap10j.tst\") )"	| ${SCHEME}
+	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10k.scm\") (load \"src/chap10m.scm\") (load \"src/chap10j.scm\") (load \"src/chap10p.scm\") (and (test-scheme10k \"src/scheme.tst\")      (test-scheme10k \"src/chap10e.tst\")       (test-scheme10k \"src/chap10k.tst\")       (test-scheme10k \"src/chap10j.tst\") )" | ${SCHEME}
 
 # Compare time between o/$HOSTTYPE/c10ex.c and c10kex.c
 # They have been modified from src/c/chap10[k]ex.c to repeat the
@@ -1013,12 +1013,12 @@ compare.chap10 : o/${HOSTTYPE}/c10ex o/${HOSTTYPE}/c10kex
 compare.chap10 :
 	csh -c "time o/${HOSTTYPE}/c10ex"
 	csh -c "time o/${HOSTTYPE}/c10kex"
-bCFLAGS	= -I../../src/c -ansi -pedantic -O
+bCFLAGS = -I../../src/c -ansi -pedantic -O
 o/${HOSTTYPE}/c10ex : src/c/c10ex.c ${all-o}
-	cd o/${HOSTTYPE} ; ${CC} ${bCFLAGS} -o c10ex ../../src/c/c10ex.c 		scheme.o schemelib.o
+	cd o/${HOSTTYPE} ; ${CC} ${bCFLAGS} -o c10ex ../../src/c/c10ex.c  scheme.o schemelib.o
 
 o/${HOSTTYPE}/c10kex : src/c/c10kex.c ${all-o}
-	cd o/${HOSTTYPE} ; ${CC} ${bCFLAGS} -o c10kex ../../src/c/c10kex.c 		scheme.o schemeklib.o
+	cd o/${HOSTTYPE} ; ${CC} ${bCFLAGS} -o c10kex ../../src/c/c10kex.c  scheme.o schemeklib.o
 
 # blaye% time o/${HOSTTYPE}/c10ex
 # (2 3)
@@ -1034,9 +1034,9 @@ o/${HOSTTYPE}/c10kex : src/c/c10kex.c ${all-o}
 clean ::
 	-rm *~ .*~
 rec.clean : clean
-	@PWD=`pwd` ; export PWD					; \
-	for d in `find . -type d -print`			; \
-	  do ( cd $$d ; echo Cleaning $$d 			; \
+	@PWD=`pwd` ; export PWD ; \
+	for d in `find . -type d -print` ; \
+	  do ( cd $$d ; echo Cleaning $$d  ; \
 	       ${MAKE} -f $$PWD/Makefile clean ) ; done
 
 # Create tags for editing sources with Gnu Emacs.
