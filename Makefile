@@ -12,9 +12,10 @@
 
 default.work : build.interpreter
 
-# This is the Imakefile of the distribution.  The first part defines the
-# variables that you may have to setup in order to run the tests. The second
-# part defines how to test the various parts of the sourcef files.
+# This is the Imakefile of the distribution.  The first part defines
+# the variables that you may have to setup in order to run the
+# tests. The second part defines how to test the various parts of
+# the sourcef files.
 
 # If you decide to build a specialized interpreter on top of Bigloo
 # then indicate the correct command to invoke bigloo.
@@ -24,35 +25,39 @@ BIGLOO = bigloo
 # If you decide to build a specialized interpreter on top of Gambit
 # then indicate the correct command to invoke the Gambit compiler.
 #
-# 2014 Note: The default binary name is ``gsc'', but that name conflicts with
-# the ghostscript binary on my Archlinux system, so the gambit compiler has
-# been renamed to gambitc.
+# 2014 Note: The default binary name is ``gsc'', but that name
+# conflicts with the ghostscript binary on my Archlinux system, so
+# the gambit compiler has been renamed to gambitc.
 
 GSC = gambitc
 
-# If you decide to build multiple specialized interpreters on multiple
-# machines, then you must give different HOSTTYPE for all these
-# CPU-different machines. Very often, HOSTTYPE is set up for you by your
-# shell (tcsh does this), at that time, you can leave empty this
-# definition, it will be automatically inherited from your shell.
+# If you decide to build multiple specialized interpreters on
+# multiple machines, then you must give different HOSTTYPE for all
+# these CPU-different machines. Very often, HOSTTYPE is set up for
+# you by your shell (tcsh does this). If so, you can leave empty
+# this definition, it will be automatically inherited from your
+# shell.
 
 export HOSTTYPE := $(shell uname -m)
 
-# Choose a Scheme interpreter. This interpreter must contain Meroonet,
-# hygienic macros and a test-suite driver. It is better to build a
-# specialized interpreter with these facilities compiled in, see entries
-# o/${HOSTTYPE}/book.{bigloo,gsc} below to regenerate them. You can also
-# directly use an interpreter and load on the fly Meroonet and the test-suite
-# driver every time.  This is what the MIT-based definition or the Gambit (gsi)
-# based definition does.
+# Choose a Scheme interpreter. This interpreter must contain
+# Meroonet, hygienic macros and a test-suite driver. It is better to
+# build a specialized interpreter with these facilities compiled in,
+# see entries o/${HOSTTYPE}/book.{bigloo,gsc} below to regenerate
+# them. You can also directly use an interpreter and load on the fly
+# Meroonet and the test-suite driver every time.  This is what the
+# MIT-based definition or the Gambit (gsi) based definition does.
 
-# 2014 Note: book.gsc, the pre-compiled version of Gambit is not supported
-# due to issues compiling scheme files with gsc when passing the -:s flag.
-# See the comment for the book.gsc target below.
-#SCHEME = o/${HOSTTYPE}/book.gsc
-
-# 2014 Note: These schemes are the only known-working options. See the
+# 2014 Note: book.gsc, the pre-compiled version of Gambit is not
+# supported due to issues compiling scheme files with gsc when
+# passing the -:s flag.  See the comment for the book.gsc target
+# below.
+#
+# SCHEME = o/${HOSTTYPE}/book.gsc
+#
+# These schemes are the only known-working options. See the
 # README.md file for more info.
+#
 #SCHEME = o/${HOSTTYPE}/book.bigloo
 #SCHEME = o/${HOSTTYPE}/book.gsi
 SCHEME = o/${HOSTTYPE}/book.mit
@@ -67,18 +72,20 @@ endif
 
 TIME = time
 
-# This is the make utility. You can use Gnu make or others, I paid
-# attention not to use advanced features.
+# This is the make utility. This makefile uses a couple of GNU-make
+# specific features. If you want to port to BSD make, just search
+# for '$(shell' and '$(filter-out' and replace those with
+# BSD-make-equivalent features.
 
 MAKE = make
 
-# A temporary file used to store temporary results. Put it in a place
-# where it will disappear automatically sometime.
+# A temporary file used to store temporary results. Put it in a
+# place where it will disappear automatically sometime.
 
 RESULTS = /tmp/result
 
-# A temporary file used to store the names of failing tests when running the
-# grand.test target.
+# A temporary file used to store the names of failing tests when
+# running the grand.test target.
 
 FAILURES = /tmp/failures
 
@@ -106,20 +113,18 @@ PERL = perl
 # Absolute path to LiSP source root.
 export LiSP_TOPDIR = ${CURDIR}
 
-# Set the SHELL explicitly. Mit-scheme's run-shell-command respects this
-# variable, and some shell commands will fail if using a non-standard shell
-# (e.g. fish).
+# Set the SHELL explicitly. Mit-scheme's run-shell-command respects
+# this variable, and some shell commands will fail if using a
+# non-standard shell (e.g. fish).
 export SHELL := $(shell which sh)
 
-# This part of the global Imakefile defines how to run and test the programs of
-# the book.  When tests are time-consuming, the time is indicated (measured on
-# my machine: a Sony workstation with a R3000 processor). Tests range from a
-# few seconds to a few hours!
+# This part of the global Imakefile defines how to run and test the
+# programs of the book.
 
 ##################################### Build specialized interpreters.
-# Rebuild a Bigloo interpreter with Meroonet and tester in it.  Adapted to
-# Bigloo 4.1a. Due to name conflicts, the compilation of rtbook.bgl emits much
-# warnings: ignore them!
+# Rebuild a Bigloo interpreter with Meroonet and tester in it.
+# Adapted to Bigloo 4.1a. Due to name conflicts, the compilation of
+# rtbook.bgl emits much warnings: ignore them!
 
 LiSP4bigloo19d.distribution : LiSP4bigloo19d.tar.gz
 	mv LiSP4bigloo19d.tar.gz `date +LiSP4bigloo19d-%y%h%d.tgz`
@@ -154,7 +159,8 @@ build.interpreter : mkdir
 
 test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test o/${HOSTTYPE}/book.gsi.test
 
-# Makes a command to run mitscheme. Must be run from the current directory.
+# Makes a command to run mitscheme. Must be run from the current
+# directory.
 o/${HOSTTYPE}/book.mit : mkdir
 	echo "#!/bin/sh" > $@
 	echo "exec mit-scheme --batch-mode --load mitscheme/book.mit" >> $@
@@ -168,23 +174,24 @@ o/${HOSTTYPE}/book.gsi : mkdir
 	chmod a=rwx o/${HOSTTYPE}/book.gsi
 
 # Compile for Gambit
-# Gambit rules to find files are relative to previous ones (as in Mac)
-# so change pathnames to absolute pathnames. Takes five hours on my
-# old Sony.
+# Gambit rules to find files are relative to previous ones (as in
+# Mac) so change pathnames to absolute pathnames.
 o/${HOSTTYPE}/book-gsc.scm : mkdir gambit/book.scm
 	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm > o/${HOSTTYPE}/book-gsc.scm
 
 o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 	cd o/${HOSTTYPE} ; ${GSC} -:s -expansion book-gsc.scm > book-gsc.escm
-
 	more o/${HOSTTYPE}/book-gsc.escm
+
 o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 	cd o/${HOSTTYPE} ; ${GSC} -:s -link -verbose -report book-gsc.scm
 
-# Due to a bug in gsc, compiling with the -:s appears to be broken. See the
-# following threads for more info:
+# Due to a bug in gsc, compiling with the -:s appears to be broken.
+# See the following threads for more info:
+#
 # http://comments.gmane.org/gmane.lisp.scheme.gambit/6980
 # https://mercure.iro.umontreal.ca/pipermail/gambit-list/2013-October/007106.html
+#
 # TODO: check back on this and see if a fix has landed -- ma.
 o/${HOSTTYPE}/book-gsc.o : o/${HOSTTYPE}/book-gsc.c
 	cd o/${HOSTTYPE} ; ${GSC} -:s -obj book-gsc.c
@@ -274,7 +281,8 @@ o/${HOSTTYPE}/book.mit.test4 :
 	${MAKE} check.results
 
 ######################################## Utility entries
-# Build the necessary directories where will go specialized interpreters.
+# Build the necessary directories where will go specialized
+# interpreters.
 mkdir :
 	-[ -d o ] || mkdir o
 	-[ -d o/${HOSTTYPE} ] || mkdir o/${HOSTTYPE}
@@ -286,9 +294,9 @@ TAGS :
 
 ########################## All the tests
 # Some tests have a name starting with no. That means that the test
-# has some problems (it does not complete or loops) I just verify that
-# it ends at the expected point. Some test have a name starting with
-# long. That means that it is a very long long test (hours!) so it is
+# has some problems (it does not complete or loops) I just verify
+# that it ends at the expected point. Some test have a name starting
+# with long. That means that it is a very long long test, so it is
 # only run if the variable YOU_HAVE_TIME is true (not false).
 
 YOU_HAVE_TIME = true
@@ -297,11 +305,12 @@ ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} ${TEST
 
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 
-# BROKEN_TESTS represent tests that are still not passing in SCHEMEs that have
-# otherwise been "fixed" (Bigloo, Gambit, and MIT). These are test for which I
-# was not able to find a quick fix, and may require a non-trivial effort to get
-# them working.  In the case of test.reflisp, this test was previously only
-# supported in Bigloo, (src/chap8k.scm generated a divide-by-zero error when
+# 2014 Note: BROKEN_TESTS represent tests that are still not passing
+# in SCHEMEs that have otherwise been "fixed" (Bigloo, Gambit, and
+# MIT). These are test for which I was not able to find a quick fix,
+# and may require a non-trivial effort to get them working.  In the
+# case of test.reflisp, this test was previously only supported in
+# Bigloo, (src/chap8k.scm generated a divide-by-zero error when
 # attempting to compile with anyting other than bigloo).
 BROKEN_TESTS = test.reflisp
 
@@ -612,7 +621,6 @@ test.chap6dd : src/chap6d.scm src/chap6dd.scm
 #7.14user 0.42system 0:07.64elapsed 98%CPU (977text+2861data 2984max)k
 
 # a small byte-tree-code compiler. (Not used in the book)
-#
 test.chap6e : src/chap6e.scm
 	echo " (load \"src/chap6d.scm\") (load \"src/chap6e.scm\") (test-scheme6e \"src/scheme.tst\")" | ${SCHEME}
 
@@ -631,14 +639,13 @@ bench.chap6e : src/chap6e.scm
 # but faster than Scheme->C.
 
 ########### Skip chap6f which was superseded by chap10.
-# Small compiler towards C (not in the book but still working)
-# This compiler uses a different pattern of C generation and a variant
+# Small compiler towards C (not in the book but still working). This
+# compiler uses a different pattern of C generation and a variant
 # for environment management. That's why I leave it here. It is
 # grafted to the precompiler similarly to the bytecode compiler.
-# ATTENTION, this is a very long test:
-# 751.89user 555.90system 42:25.34elapsed
-# This test fails on continuation used out of their dynamic extent (no
-# full continuation a la Scheme).
+# ATTENTION, this is a very long test: 751.89user 555.90system
+# 42:25.34elapsed This test fails on continuation used out of their
+# dynamic extent (no full continuation a la Scheme).
 long.dynext.test.chap6f :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap6f ; else : ; fi
 dynext.test.chap6f : test.chap6f
@@ -646,9 +653,10 @@ test.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
 	echo " (load \"src/chap6f.scm\") (test-scheme \"src/scheme.tst\")" | ${SCHEME}
 
 # start an interpreter to interactively compile towards C.
-# The (scheme) toplevel reads an expression and shows the generated C.
-# This test fails on continuation used out of their dynamic extent (no
-# full continuation a la Scheme).
+#
+# The (scheme) toplevel reads an expression and shows the generated
+# C.  This test fails on continuation used out of their dynamic
+# extent (no full continuation a la Scheme).
 start.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
 	@( echo " (load \"src/chap6f.scm\") (scheme)" ; tee ) | ${SCHEME}
 
@@ -697,7 +705,8 @@ test.chap7a : src/chap6d.scm src/chap7a.scm
 test.chap7b : src/chap6d.scm src/chap7b.scm
 	echo " (load \"src/chap6d.scm\") (load \"src/chap7b.scm\") (test-scheme7b \"src/scheme.tst\")" | ${SCHEME}
 
-# represents instructions by list of closures. Make register PC appear.
+# represents instructions by list of closures. Make register PC
+# appear.
 # 18.09user 1.95system 0:42.60elapsed
 test.chap7c : src/chap6d.scm src/chap7c.scm
 	echo " (load \"src/chap6d.scm\") (load \"src/chap7c.scm\") (test-scheme7c \"src/scheme.tst\")" | ${SCHEME}
@@ -751,7 +760,8 @@ test.chap8a : src/chap8a.scm src/chap1.scm
 test.chap8b : src/chap8b.scm src/chap4a.scm
 	echo " (load \"src/chap8a.scm\") (load \"src/chap4a.scm\") (load \"src/chap8b.scm\") (and (file-test \"src/scheme.tst\") (file-test \"src/chap8a.tst\") )" | ${SCHEME}
 
-# Add eval/ce (as a special form) to the threaded interpreter of chapter 6.
+# Add eval/ce (as a special form) to the threaded interpreter of
+# chapter 6.
 # 12.58user 2.06system 0:34.32elapsed
 test.chap8c : src/chap8c.scm src/chap6d.scm
 	echo " (load \"src/chap8a.scm\") (load \"src/chap6d.scm\") (load \"src/chap8c.scm\") (and (test-scheme6d \"src/scheme.tst\") (test-scheme6d \"src/chap8a.tst\") )" | ${SCHEME}
@@ -861,10 +871,11 @@ test.chap10e : o/${HOSTTYPE}/scheme.o
 test.chap10e : o/${HOSTTYPE}/schemelib.o
 	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (and (test-scheme10e \"src/chap10e.tst\") (test-scheme10e \"src/scheme.tst\") )" | ${SCHEME}
 
-# chap10m.scm contains the letify function that recursively copies an AST
-# into a pure tree, trying to insert let forms.
-# This test is very long... but it fails on continuations that are used
-# out of their dynamic extent or multiply.
+# chap10m.scm contains the letify function that recursively copies
+# an AST into a pure tree, trying to insert let forms.  This test is
+# very long... but it fails on continuations that are used out of
+# their dynamic extent or multiply.
+#
 # 598.56user 490.32system 22:40.07elapsed
 long.dynext.test.chap10n :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10n ; else : ; fi
@@ -872,8 +883,8 @@ dynext.test.chap10n : test.chap10n
 test.chap10n : src/chap10m.scm src/chap10n.scm
 	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10m.scm\") (load \"src/chap10n.scm\") (and (test-scheme10e \"src/chap10e.tst\") (test-scheme10e \"src/scheme.tst\") )" | ${SCHEME}
 
-# Generate the C code corresponding to the running example of chapter 10.
-# The C code will be left in o/chap10ex.c
+# Generate the C code corresponding to the running example of
+# chapter 10. The C code will be left in o/chap10ex.c
 chap10e.example : src/c/chap10ex.c
 src/c/chap10ex.c : src/chap10ex.scm src/chap10e.scm
 	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (set! *cc+cflags* \"${CC} ${CFLAGS}\") (call-with-input-file \"src/chap10ex.scm\" (lambda (in) (test-expression (read in))) )" | ${SCHEME}
@@ -882,8 +893,9 @@ src/c/chap10ex.c : src/chap10ex.scm src/chap10e.scm
 	emacs -batch -l el/c-indent.el
 	mv o/chap10e.c src/c/chap10ex.c
 
-# This is the best I can to show the expanded version of the file. It needs
-# to be hacked a little by hand before being inserted in the book.
+# This is the best I can to show the expanded version of the file.
+# It needs to be hacked a little by hand before being inserted in
+# the book.
 src/c/chap10ex.E : perl/indent-E.prl perl/preindent.prl
 src/c/chap10ex.E : src/c/chap10ex.c src/c/scheme.h
 	perl/preindent.prl < src/c/scheme.h > /tmp/scheme.h
@@ -894,17 +906,21 @@ src/c/chap10ex.E : src/c/chap10ex.c src/c/scheme.h
 	indent src/c/chap10ex.E
 
 # Compile this compiler with Bigloo
+#
 # I patched a little the o/${HOSTTYPE}/LiSPbookc.bgl file because of
 # a bug on write on strings containing \". To be solved.
+#
 # 225.49user 18.02system 4:53.16elapsed
 o/${HOSTTYPE}/LiSPbookc :
 	H_DIR=`pwd`/src/c/ ; export H_DIR ; A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE ; echo " (load \"bigloo/compapp.scm\") '(set! *verbose* #t) (compile-bigloo-application \"${BIGLOO}\" \"o/${HOSTTYPE}/\" \"LiSPbookc\" '(begin (set! *h-dir* \"$$H_DIR\") (set! *rtbook-library* \"$$A_FILE\") (compiler-entry-point command-options) ) \"src/chap10a.scm\" \"src/chap10c.scm\" \"src/chap10g.scm\" \"src/chap10e.scm\" \"src/chap10h.scm\" \"src/chap10f.scm\" )" | ${SCHEME}
 
-# The following entries do not work since the rtbook.a library is not
-# sufficient: IO operations are missing.
+# The following entries do not work since the rtbook.a library is
+# not sufficient: IO operations are missing.
+#
 # Compile the compiler with itself (stage 2)
-o/${HOSTTYPE}/LiSPbookc2 : o/${HOSTTYPE}/LiSPbookc
-	${TIME} o/${HOSTTYPE}/LiSPbookc o/${HOSTTYPE}/LiSPbookc.bgl -v -o o/${HOSTTYPE}/LiSPbookc2 -C o/${HOSTTYPE}/LiSPbookc2.c
+o/${HOSTTYPE}/LiSPbookc2 : o/${HOSTTYPE}/LiSPbookc ${TIME}
+	o/${HOSTTYPE}/LiSPbookc o/${HOSTTYPE}/LiSPbookc.bgl -v -o
+	o/${HOSTTYPE}/LiSPbookc2 -C o/${HOSTTYPE}/LiSPbookc2.c
 
 # Recompile the compiler with itself (stage 3)
 o/${HOSTTYPE}/LiSPbookc3 : o/${HOSTTYPE}/LiSPbookc2
@@ -915,10 +931,10 @@ LiSPbookc.compare : o/${HOSTTYPE}/LiSPbookc3
 	diff o/${HOSTTYPE}/LiSPbookc*[23].c | wc
 	size o/${HOSTTYPE}/LiSPbookc*[23]
 
-# chap10i.scm : *Untested* variants for function invokation since
-# it requires a change in SCM_invoke (in scheme.c).
-# This test is very long... but it fails on continuations that are used
-# out of their dynamic extent or multiply.
+# chap10i.scm : *Untested* variants for function invokation since it
+# requires a change in SCM_invoke (in scheme.c).  This test is very
+# long... but it fails on continuations that are used out of their
+# dynamic extent or multiply.
 long.dynext.test.chap10i :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap10i ; else : ; fi
 dynext.test.chap10i : test.chap10i
@@ -974,8 +990,8 @@ chap10k.bench : src/chap5-bench.scm
 #0.04user0.03system 0:00.07elapsed 100%CPU(42avgtext+221avgdata 212maxresident)k
 #0inputs+1outputs (0major+9minor)pagefaults 0swaps
 
-# Generate the C code corresponding to the running example of chapter 10.
-# The C code will be left in o/chap10kex.c
+# Generate the C code corresponding to the running example of
+# chapter 10.  The C code will be left in o/chap10kex.c
 chap10k.example : src/c/chap10kex.c
 src/c/chap10kex.c : src/chap10ex.scm src/chap10e.scm
 	echo " (load \"src/chap10a.scm\") (load \"src/chap10c.scm\") (load \"src/chap10g.scm\") (load \"src/chap10e.scm\") (load \"src/chap10h.scm\") (load \"src/chap10f.scm\") (load \"src/chap10k.scm\") (load \"src/chap10m.scm\") (set! *cc+cflags* \"${CC} ${CFLAGS}\") (call-with-input-file \"src/chap10ex.scm\" (lambda (in) (test-expression (read in))) )" | ${SCHEME}
