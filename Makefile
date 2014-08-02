@@ -280,18 +280,6 @@ o/${HOSTTYPE}/book.mit.test4 :
 	${MAKE} SCHEME=o/${HOSTTYPE}/book.mit test.chap2a | tee ${RESULTS}
 	${MAKE} check.results
 
-######################################## Utility entries
-# Build the necessary directories where will go specialized
-# interpreters.
-mkdir :
-	-[ -d o ] || mkdir o
-	-[ -d o/${HOSTTYPE} ] || mkdir o/${HOSTTYPE}
-clean :: ; -rm -rf o/${HOSTTYPE}
-
-tags : TAGS
-TAGS :
-	etags src/?*.scm
-
 ########################## All the tests
 # Some tests have a name starting with no. That means that the test
 # has some problems (it does not complete or loops) I just verify
@@ -1043,10 +1031,16 @@ o/${HOSTTYPE}/c10kex : src/c/c10kex.c ${all-o}
 
 ######################################################### Common entries
 
-# Clean or recursively clean directories.
+# Build the necessary directories where will go specialized interpreters.
+mkdir :
+	-[ -d o ] || mkdir o
+	-[ -d o/${HOSTTYPE} ] || mkdir o/${HOSTTYPE}
 
+# Clean or recursively clean directories.
 clean ::
-	-rm *~ .*~
+	-rm -rf o/${HOSTTYPE}
+	-rm chap10*.log
+
 rec.clean : clean
 	@PWD=`pwd` ; export PWD ; \
 	for d in `find . -type d -print` ; \
@@ -1054,7 +1048,6 @@ rec.clean : clean
 	       ${MAKE} -f $$PWD/Makefile clean ) ; done
 
 # Create tags for editing sources with Gnu Emacs.
-
 tags : TAGS
 TAGS :
 	etags */?*.scm
