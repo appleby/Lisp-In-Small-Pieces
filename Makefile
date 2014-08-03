@@ -1034,12 +1034,6 @@ clean ::
 	-rm -rf o/${HOSTTYPE}
 	-rm chap10*.log
 
-rec.clean : clean
-	@PWD=`pwd` ; export PWD ; \
-	for d in `find . -type d -print` ; \
-	  do ( cd $$d ; echo Cleaning $$d ; \
-	       ${MAKE} -f $$PWD/Makefile clean ) ; done
-
 # Create tags for editing sources with Gnu Emacs.
 tags : TAGS
 TAGS :
