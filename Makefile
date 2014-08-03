@@ -126,13 +126,6 @@ export SHELL := $(shell which sh)
 # Adapted to Bigloo 4.1a. Due to name conflicts, the compilation of
 # rtbook.bgl emits much warnings: ignore them!
 
-LiSP4bigloo19d.distribution : LiSP4bigloo19d.tar.gz
-	mv LiSP4bigloo19d.tar.gz `date +LiSP4bigloo19d-%y%h%d.tgz`
-LiSP4bigloo19d.tar.gz : LiSP4bigloo19d.tar
-	gzip LiSP4bigloo19d.tar
-LiSP4bigloo19d.tar :
-	tar -cvhf LiSP4bigloo19d.tar --exclude RCS README.LiSP4bigloo19d Test.mkf bigloo src/tester.scm meroonet
-
 o/${HOSTTYPE}/book.bigloo : bigloo/book.bgl o/${HOSTTYPE}/rtbook.a
 	${BIGLOO} -v -call/cc -cg -o o/${HOSTTYPE}/book.bigloo bigloo/book.bgl -ldopt o/${HOSTTYPE}/rtbook.a
 	-rm bigloo/book.[co] o/${HOSTTYPE}/book.[co]
