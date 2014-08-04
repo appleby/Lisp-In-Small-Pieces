@@ -95,9 +95,9 @@ TODO
 
 * ~~Maybe: Remove unused code, like the included syntax-case files.~~
 * ~~Maybe: Move common code out of `<interpreter>/book.scm`.~~
+* ~~Maybe: Clean up formatting of the Makefile~~
 * Maybe: Remove unused/unsupported/deprecated targets from the Makefile.
 * Maybe: Get C files to compile without warnings
-* Maybe: Clean up formatting of the Makefile
 
 
 [README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
