@@ -127,7 +127,8 @@ export SHELL := $(shell which sh)
 # rtbook.bgl emits much warnings: ignore them!
 
 o/${HOSTTYPE}/book.bigloo : bigloo/book.bgl o/${HOSTTYPE}/rtbook.a
-	${BIGLOO} -v -call/cc -cg -o o/${HOSTTYPE}/book.bigloo bigloo/book.bgl -ldopt o/${HOSTTYPE}/rtbook.a
+	${BIGLOO} -v -call/cc -cg -o o/${HOSTTYPE}/book.bigloo bigloo/book.bgl \
+	    -ldopt o/${HOSTTYPE}/rtbook.a
 	-rm bigloo/book.[co] o/${HOSTTYPE}/book.[co]
 
 o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook.o common/pp.scm common/format.scm
@@ -144,13 +145,16 @@ o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl bigloo/hack.bgl src/tester.scm
 # Default work for the distribution, create some sub-directories
 # where will go compilation products.
 build.interpreter : mkdir
-	@if [ "X${SCHEME}" = X ] ; then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ; else : ; fi
+	@if [ "X${SCHEME}" = X ] ; \
+	    then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ; \
+	    else : ; fi
 
 	case "${SCHEME}" in *bigloo|*gsi|*mit) ${MAKE} ${SCHEME} ;; *) : ;; esac
 
 ######################################## Test interpreters
 
-test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test o/${HOSTTYPE}/book.gsi.test
+test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test \
+    o/${HOSTTYPE}/book.gsi.test
 
 # Makes a command to run mitscheme. Must be run from the current
 # directory.
@@ -170,7 +174,8 @@ o/${HOSTTYPE}/book.gsi : mkdir
 # Gambit rules to find files are relative to previous ones (as in
 # Mac) so change pathnames to absolute pathnames.
 o/${HOSTTYPE}/book-gsc.scm : mkdir gambit/book.scm
-	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm > o/${HOSTTYPE}/book-gsc.scm
+	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm \
+	    > o/${HOSTTYPE}/book-gsc.scm
 
 o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 	cd o/${HOSTTYPE} ; ${GSC} -:s -expansion book-gsc.scm > book-gsc.escm
@@ -195,7 +200,9 @@ o/${HOSTTYPE}/book.gsc : o/${HOSTTYPE}/book-gsc_.o
 	cd o/${HOSTTYPE} ; ${GSC} -:s -exe -o book.gsc book-gsc.o book-gsc_.o
 
 check.results :
-	@if grep -i '= done' ${RESULTS} ; then echo '*** Tests successfully passed ***' ; else echo '*** *** Abnormal results **** ***' ; exit 1 ; fi
+	@if grep -i '= done' ${RESULTS} ; \
+	    then echo '*** Tests successfully passed ***' ; \
+	    else echo '*** *** Abnormal results **** ***' ; exit 1 ; fi
 
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test1
 o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test2
@@ -282,7 +289,9 @@ o/${HOSTTYPE}/book.mit.test4 :
 
 YOU_HAVE_TIME = true
 
-ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} ${TEST_CHAP5} ${TEST_CHAP6} ${TEST_CHAP7} ${TEST_CHAP8} ${TEST_CHAP9} ${TEST_CHAP10}
+ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} \
+		  ${TEST_CHAP5} ${TEST_CHAP6} ${TEST_CHAP7} ${TEST_CHAP8} \
+		  ${TEST_CHAP9} ${TEST_CHAP10}
 
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 
@@ -306,9 +315,15 @@ grand.test :
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 do.grand.test :
 	@rm -f ${FAILURES}
-	@for test in ${GRAND_TESTS} ; do ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS} ; echo Checking results of $$test ... ; ${PERL} perl/check.prl ${RESULTS} $$test ; [ $$? -ne 0 ] && echo $$test >> ${FAILURES} ; done; echo "Finished grand.test"
+	@for test in ${GRAND_TESTS} ; do \
+	    ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) \
+	    | tee ${RESULTS} ; echo Checking results of $$test ... ; \
+	    ${PERL} perl/check.prl ${RESULTS} $$test ; \
+	    [ $$? -ne 0 ] && echo $$test >> ${FAILURES} ; \
+	done; echo "Finished grand.test"
 
-	@[ -e ${FAILURES} ] && ( echo "The following tests failed:"; cat ${FAILURES} ) || echo "All tests passed."
+	@[ -e ${FAILURES} ] && ( echo "The following tests failed:"; \
+	    cat ${FAILURES} ) || echo "All tests passed."
 
 grand.test.with.bigloo : o/${HOSTTYPE}/book.bigloo
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo TIME=time
@@ -321,7 +336,11 @@ grand.test.with.mit : o/${HOSTTYPE}/book.mit
 TMP_ALL_TESTS = ${TEST_CHAP9} ${TEST_CHAP10}
 
 tmp.grand.test :
-	@for test in ${TMP_ALL_TESTS} ; do ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) | tee ${RESULTS} ; echo Checking results of $$test ... ; ${PERL} perl/check.prl ${RESULTS} $$test ; done
+	@for test in ${TMP_ALL_TESTS} ; do \
+	    ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) \
+	    | tee ${RESULTS} ; echo Checking results of $$test ... ; \
+	    ${PERL} perl/check.prl ${RESULTS} $$test ; \
+	done
 
 ##################################### Chap 1 ##############################
 
@@ -334,7 +353,8 @@ test.chap1 : src/chap1.scm
 
 ##################################### Chap 2 ##############################
 
-TEST_CHAP2 = test.chap2a test.chap2b test.chap2c test.chap2e test.chap2f test.chap2g test.chap2h
+TEST_CHAP2 = test.chap2a test.chap2b test.chap2c test.chap2e test.chap2f \
+	     test.chap2g test.chap2h
 
 # chap2a.scm contains a little Lisp2 interpreter (eval e env fenv).
 # chap2d.scm displays simple cyclic lists in a finite way.
@@ -403,7 +423,8 @@ test.chap4 : src/chap4.scm src/chap4a.scm src/chap4.tst
 ##################################### Chap 5 ##############################
 # Denotational semantics
 
-TEST_CHAP5 = test.chap5a loop.test.chap5b test.chap5c test.chap5d test.chap5e test.chap5f test.chap5g test.chap5h
+TEST_CHAP5 = test.chap5a loop.test.chap5b test.chap5c test.chap5d test.chap5e \
+	     test.chap5f test.chap5g test.chap5h
 
 bench.chap5 : bench.chap5a
 
@@ -457,7 +478,9 @@ test.chap5h : src/chap5h.scm
 ##################################### Chap 6 ##############################
 # Chapter on fast interpretation (by means of precompilation)
 
-TEST_CHAP6 = test.chap6a test.chap6b test.chap6c test.chap6d shared.test.chap6dd test.chap6e dynext.test.chap6f test.chap6g test.chap6h
+TEST_CHAP6 = test.chap6a test.chap6b test.chap6c test.chap6d \
+	     shared.test.chap6dd test.chap6e dynext.test.chap6f test.chap6g \
+	     test.chap6h
 
 bench.chap6 : bench.chap6a bench.chap6b bench.chap6c bench.chap6d bench.chap6e
 
@@ -674,7 +697,8 @@ test.chap6h : src/chap6d.scm src/chap6h.scm
 ##################################### Chap 7 ##############################
 # Bytecode compilation
 
-TEST_CHAP7 = test.chap7a test.chap7b test.chap7c test.chap7d test.chap7e test.chap7g test.chap7h shallow.test.chap7i
+TEST_CHAP7 = test.chap7a test.chap7b test.chap7c test.chap7d test.chap7e \
+	     test.chap7g test.chap7h shallow.test.chap7i
 
 # Linearize the intermediate language to make register *val* appear.
 # 13.48user 1.84system 0:31.70elapsed
@@ -728,7 +752,9 @@ test.chap7i : src/chap7h.scm
 ##################################### Chap 8 ##############################
 # Chapter on evaluation and reflection
 
-TEST_CHAP8 = test.chap8a test.chap8b test.chap8c test.chap8d evalf.test.chap8e evalf.test.chap8f evalf.test.chap8g test.chap8h test.chap8i big.test.chap8j test.reflisp
+TEST_CHAP8 = test.chap8a test.chap8b test.chap8c test.chap8d evalf.test.chap8e \
+	     evalf.test.chap8f evalf.test.chap8g test.chap8h test.chap8i \
+	     big.test.chap8j test.reflisp
 
 # add eval/ce (as a special form) to the naive interpreter of chapter 1.
 # 7.33user 1.62system 0:20.39elapsed
@@ -811,7 +837,8 @@ test.chap9c : src/chap9c.scm
 ##################################### Chap 10 #############################
 # Chapter on compilation -> C
 
-TEST_CHAP10 = test.chap10a test.chap10c dynext.test.chap10e test.chap10k dynext.test.chap10je test.chap10jk
+TEST_CHAP10 = test.chap10a test.chap10c dynext.test.chap10e test.chap10k \
+	      dynext.test.chap10je test.chap10jk
 
 # chap10a.scm: objectification
 # chap10b.scm: small interpreter for objectified code
@@ -826,7 +853,8 @@ test.chap10c : src/chap10a.scm src/chap10b.scm
 test.chap10c : src/chap10c.scm src/chap10d.scm
 	echo " (load \"src/chap10a.scm\") (load \"src/chap10b.scm\") (load \"src/chap10c.scm\") (load \"src/chap10d.scm\") (and (test-scheme10b \"src/scheme.tst\"))" | ${SCHEME}
 
-all-o = o/${HOSTTYPE}/scheme.o o/${HOSTTYPE}/schemelib.o o/${HOSTTYPE}/schemeklib.o
+all-o = o/${HOSTTYPE}/scheme.o o/${HOSTTYPE}/schemelib.o \
+	o/${HOSTTYPE}/schemeklib.o
 
 o/${HOSTTYPE}/scheme.o : src/c/scheme.h src/c/scheme.c
 	cd o/${HOSTTYPE} ; ${CC} ${CFLAGS} -c ../../src/c/scheme.c
@@ -893,7 +921,9 @@ src/c/chap10ex.E : src/c/chap10ex.c src/c/scheme.h
 #
 # 225.49user 18.02system 4:53.16elapsed
 o/${HOSTTYPE}/LiSPbookc :
-	H_DIR=`pwd`/src/c/ ; export H_DIR ; A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE ; echo " (load \"bigloo/compapp.scm\") '(set! *verbose* #t) (compile-bigloo-application \"${BIGLOO}\" \"o/${HOSTTYPE}/\" \"LiSPbookc\" '(begin (set! *h-dir* \"$$H_DIR\") (set! *rtbook-library* \"$$A_FILE\") (compiler-entry-point command-options) ) \"src/chap10a.scm\" \"src/chap10c.scm\" \"src/chap10g.scm\" \"src/chap10e.scm\" \"src/chap10h.scm\" \"src/chap10f.scm\" )" | ${SCHEME}
+	H_DIR=`pwd`/src/c/ ; export H_DIR ; \
+	A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE ; \
+	echo " (load \"bigloo/compapp.scm\") '(set! *verbose* #t) (compile-bigloo-application \"${BIGLOO}\" \"o/${HOSTTYPE}/\" \"LiSPbookc\" '(begin (set! *h-dir* \"$$H_DIR\") (set! *rtbook-library* \"$$A_FILE\") (compiler-entry-point command-options) ) \"src/chap10a.scm\" \"src/chap10c.scm\" \"src/chap10g.scm\" \"src/chap10e.scm\" \"src/chap10h.scm\" \"src/chap10f.scm\" )" | ${SCHEME}
 
 # The following entries do not work since the rtbook.a library is
 # not sufficient: IO operations are missing.
@@ -905,7 +935,8 @@ o/${HOSTTYPE}/LiSPbookc2 : o/${HOSTTYPE}/LiSPbookc ${TIME}
 
 # Recompile the compiler with itself (stage 3)
 o/${HOSTTYPE}/LiSPbookc3 : o/${HOSTTYPE}/LiSPbookc2
-	${TIME} o/${HOSTTYPE}/LiSPbookc2 o/${HOSTTYPE}/LiSPbookc.bgl -v -o o/${HOSTTYPE}/LiSPbookc3 -C o/${HOSTTYPE}/LiSPbookc3.c
+	${TIME} o/${HOSTTYPE}/LiSPbookc2 o/${HOSTTYPE}/LiSPbookc.bgl -v \
+	    -o o/${HOSTTYPE}/LiSPbookc3 -C o/${HOSTTYPE}/LiSPbookc3.c
 
 LiSPbookc.compare : o/${HOSTTYPE}/LiSPbookc3
 	ls -l o/${HOSTTYPE}/LiSPbookc*[23].c
@@ -945,7 +976,9 @@ start.chap10e : ${all-o}
 
 # test indepently a compiled file o/chap10e.c.
 test.chap10e.c : ${all-o}
-	cd o/${HOSTTYPE} ; ${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e && ./chap10e
+	cd o/${HOSTTYPE} ; \
+	${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e \
+	&& ./chap10e
 
 # chap10k.scm : CPS transformation, use schemeklib.c
 # Very long test but it does not fail on call/cc tests.
@@ -1010,10 +1043,12 @@ compare.chap10 :
 	csh -c "time o/${HOSTTYPE}/c10kex"
 bCFLAGS = -I../../src/c -ansi -pedantic -O
 o/${HOSTTYPE}/c10ex : src/c/c10ex.c ${all-o}
-	cd o/${HOSTTYPE} ; ${CC} ${bCFLAGS} -o c10ex ../../src/c/c10ex.c scheme.o schemelib.o
+	cd o/${HOSTTYPE} ; \
+	${CC} ${bCFLAGS} -o c10ex ../../src/c/c10ex.c scheme.o schemelib.o
 
 o/${HOSTTYPE}/c10kex : src/c/c10kex.c ${all-o}
-	cd o/${HOSTTYPE} ; ${CC} ${bCFLAGS} -o c10kex ../../src/c/c10kex.c scheme.o schemeklib.o
+	cd o/${HOSTTYPE} ; \
+	${CC} ${bCFLAGS} -o c10kex ../../src/c/c10kex.c scheme.o schemeklib.o
 
 # blaye% time o/${HOSTTYPE}/c10ex
 # (2 3)
