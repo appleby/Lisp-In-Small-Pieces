@@ -310,7 +310,6 @@ endif
 
 GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 
-# roughly 4 hours.
 grand.test :
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 do.grand.test :
@@ -347,7 +346,6 @@ tmp.grand.test :
 TEST_CHAP1 = test.chap1
 
 # chap1.scm contains a naive interpreter written in naive Scheme.
-# 6.40user 1.30system 0:17.72elapsed
 test.chap1 : src/chap1.scm
 	echo \
 	    '(load "src/chap1.scm")' \
@@ -434,7 +432,6 @@ TEST_CHAP3 = test.chap3f test.chap3h
 # chap3{a,b,c,d,e}.scm contain excerpts from chapter3
 
 # chap3f.scm contains an interpreter in OO style
-# 15.69user 1.94system 0:35.62elapsed
 test.chap3f : src/chap3g.scm
 	echo \
 	    '(load "src/chap3f.scm")' \
@@ -465,7 +462,6 @@ TEST_CHAP4 = test.chap4
 
 # chap4.scm contains excerpts from chapter 4
 # chap4a.scm contains a Scheme interpreter coded with nothing but closures.
-# 72.25user 2.45system 1:49.86elapsed
 test.chap4 : src/chap4.scm src/chap4a.scm src/chap4.tst
 	echo \
 	    '(load "src/chap4.scm")' \
@@ -490,7 +486,6 @@ TEST_CHAP5 = test.chap5a loop.test.chap5b test.chap5c test.chap5d test.chap5e \
 
 bench.chap5 : bench.chap5a
 
-# 41.63user 2.28system 1:07.39elapsed
 test.chap5a : src/chap5a.scm
 	echo \
 	    '(load "src/chap5a.scm")' \
@@ -498,7 +493,6 @@ test.chap5a : src/chap5a.scm
 	| ${SCHEME}
 
 # See typical times a the end of src/chap5-bench.scm
-# 41.23user 1.75system 0:52.19elapsed
 bench.chap5a : src/chap5a.scm
 	echo \
 	    '(load "src/chap5a.scm")' \
@@ -531,7 +525,6 @@ test.chap5d : src/chap5d.scm src/chap5-bench.scm
 	    '(test-denScheme "src/scheme.tst")' \
 	| ${SCHEME}
 
-# 39.59user 1.92system 0:54.78elapsed
 bench.chap5d : src/chap5d.scm src/chap5-bench.scm
 	echo \
 	    '(load "src/chap5d.scm")' \
@@ -555,7 +548,6 @@ test.chap5f : src/chap5f.scm
 	| ${SCHEME}
 
 # Same as chap5d with an explicit global environment.
-# 42.34user 2.28system 1:14.96elapsed
 test.chap5g : src/chap5g.scm
 	echo \
 	    '(load "src/chap5g.scm")' \
@@ -583,7 +575,6 @@ bench.chap6 : bench.chap6a bench.chap6b bench.chap6c bench.chap6d bench.chap6e
 test.chap6.bgl : test.chap6a.bgl
 
 # Fast interpretation, code is precompiled into (lambda (sr k)..)
-# 10.71user 1.80system 0:26.55elapsed
 test.chap6a : src/chap6a.scm
 	echo \
 	    '(load "src/chap6a.scm")' \
@@ -591,7 +582,6 @@ test.chap6a : src/chap6a.scm
 	| ${SCHEME}
 
 # Interpreted bench
-# 5.42user 0.90system 0:08.78elapsed
 bench.chap6a : src/chap6a.scm
 	echo \
 	    '(load "src/chap6a.scm")' \
@@ -599,8 +589,6 @@ bench.chap6a : src/chap6a.scm
 	| ${SCHEME}
 
 # Compiled bench with Bigloo
-# 129.65user 11.95system 3:15.62elapsed (compile)
-# 7.63user 0.54system 0:09.60elapsed (10*bench)
 test.chap6a.bgl : o/${HOSTTYPE}/rtbook.a o/${HOSTTYPE}/bglchap6a
 	${TIME} o/${HOSTTYPE}/bglchap6a 10
 
@@ -613,47 +601,6 @@ o/${HOSTTYPE}/bglchap6a : src/chap6a.scm bigloo/compapp.scm
 	    "  `(bench6a (string->number (cadr command-options)) ',the-bench)" \
 	    '  "src/chap6a.scm")' \
 	| ${SCHEME}
-
-# With chap6a.scm 1.1 -sch 4 10
-#7.54user 0.64system 0:08.28elapsed 98%CPU (844text+5508data 4268max)k
-# With chap6a.scm 1.1 -sch 8 10
-#4.18user 0.54system 0:04.79elapsed 98%CPU (832text+4593data 4048max)k
-# With chap6a.scm 1.1 -sch 16 10
-#4.17user 0.65system 0:05.36elapsed 89%CPU (870text+4760data 4176max)k
-
-# With chap6a.scm 1.2 -sch 4 10 (vectorized global env)
-#6.68user 0.65system 0:08.31elapsed 88%CPU (997text+5595data 4328max)k
-# With chap6a.scm 1.2 -sch 8 10
-#3.36user 0.58system 0:04.01elapsed 98%CPU (842text+4536data 4052max)k
-# With chap6a.scm 1.2 -sch 16 20
-#6.59user 0.91system 0:07.60elapsed 98%CPU (851text+7110data 6424max)k
-
-# With chap6a.scm 1.3 -sch 4 10 (allocation frame)
-#7.89user 0.54system 0:08.92elapsed 94%CPU (1045text+5856data 4428max)k
-# With chap6a.scm 1.3 -sch 8 10
-#3.48user 0.54system 0:04.13elapsed 97%CPU (849text+4686data 4156max)k
-# With chap6a.scm 1.3 -sch 16 10
-#3.22user 0.70system 0:04.04elapsed 97%CPU (841text+4912data 4284max)k
-
-# New version chap6a.scm 1.4 -sch 4 10 (inline+g.init)
-# No more GC with an initial heap of 4 megs.
-#2.87user 0.53system 0:04.32elapsed 78%CPU (993text+3906data 3704max)k
-# With chap6a.scm 1.4 -sch 8 10
-#2.84user 0.50system 0:03.42elapsed 97%CPU (822text+4109data 3696max)k
-
-# New version chap6a.scm 1.5 -sch 4 10 (closed-application+primitive+inline)
-#2.36user 0.50system 0:03.46elapsed 82%CPU (1021text+3033data 2980max)k
-# chap6a -sch 16 100 [1 gc]
-#25.5user 2.94system 0:34.76elapsed 80%CPU (907text+17464data 16076max)k
-# try with optimizations turned on in scc (SCCFLAGS= -Ob -Og -On -Ot)
-#18.55user 2.47system 0:24.77elapsed 84%CPU (1014text+16738data 16284max)k
-
-# New version with better written code chap6a.scm 1.6 -sch 4 10
-#2.44user 0.53system 0:03.52elapsed 84%CPU (1036text+3068data 2996max)k
-# (globalized listify! function) chap6a.scm 1.7 -sch 4 10
-#2.37user 0.50system 0:03.21elapsed 89%CPU (839text+3101data 2916max)k
-# chap6a 1.7 -sch 16 100 [1 gc]
-#25.66user 2.63system 0:28.87elapsed 97%CPU (895text+17803data 17148max)k
 
 # Testing the same fast interpreter with Bigloo (intepreted)
 test.chap6.bgl :
@@ -682,11 +629,6 @@ test.chap6.bgl :
 	    "(bench 100)" \
 	| ${TIME} bigloo -i
 
-# (bench 10)
-#0.89user 0.22system 0:02.24elapsed 49%CPU (958text+1151data 1612max)k
-# (bench 100)
-#4.48user 0.41system 0:06.38elapsed 76%CPU (1392text+2377data 2704max)k
-
 # Compare also with CAML light
 test.chap6.ml :
 	echo \
@@ -713,13 +655,7 @@ test.chap6.ml :
 	    "bench 100;;" \
 	    | ${TIME} camllight
 
-# bench 10;;
-#0.51user 0.21system 0:01.27elapsed 56%CPU (96text+542data 448max)k
-# bench 100;;
-#1.43user 0.24system 0:02.21elapsed 75%CPU (101text+693data 456max)k
-
 # patch to chap6a.scm to define new global variables on the fly:
-# 11.06user 1.86system 0:31.25elapsed
 test.chap6b : src/chap6a.scm src/chap6b.scm
 	echo \
 	    '(load "src/chap6a.scm")' \
@@ -729,7 +665,6 @@ test.chap6b : src/chap6a.scm src/chap6b.scm
 	| ${SCHEME}
 
 # Interpreted bench
-# 5.65user 0.89system 0:11.17elapsed
 bench.chap6b : src/chap6a.scm src/chap6b.scm
 	echo \
 	    '(load "src/chap6a.scm")' \
@@ -739,7 +674,6 @@ bench.chap6b : src/chap6a.scm src/chap6b.scm
 
 # Environment is now held in a global variable *env*.
 # Programs are precompiled into (lambda (k) ...)
-# 11.97user 2.01system 0:34.30elapsed
 test.chap6c : src/chap6c.scm
 	echo \
 	    '(load "src/chap6a.scm")' \
@@ -755,14 +689,8 @@ bench.chap6c : src/chap6c.scm
 	    '(bench6c 1 (call-with-input-file "src/chap5-bench.scm" read))' \
 	| ${SCHEME}
 
-# chap6c.scm 1.2 -sch 4 10 (same as chap6a.scm: No gain !)
-#2.40user 0.48system 0:03.02elapsed 95%CPU (843text+3152data 2984max)k
-# chap6c -sch 16 100 [1 gc]
-#25.51user 2.58system 0:28.99elapsed 96%CPU (1068text+17836data 17268max)k
-
 # Make continuation implicit.
 # The program is precompiled into (lambda ()...)
-# 11.09user 1.90system 0:27.29elapsed
 test.chap6d : src/chap6d.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -770,7 +698,6 @@ test.chap6d : src/chap6d.scm
 	| ${SCHEME}
 
 # Interpreted bench
-# 5.35user 0.81system 0:10.35elapsed
 bench.chap6d : src/chap6d.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -790,23 +717,6 @@ test.chap6dd : src/chap6d.scm src/chap6dd.scm
 	    '     (test-scheme6d "src/scheme.tst"))' \
 	| ${SCHEME}
 
-# chap6d.scm 1.1 -sch 4 10 (similar to Bigloo)
-#0.86user 0.15system 0:01.16elapsed 87%CPU (786text+646data 908max)k
-# chap6d.scm 1.1 -sch 16 100 [No GC] (slower than Bigloo)
-#7.50user 0.42system 0:08.02elapsed 98%CPU (876text+2753data 2808max)k
-# chap6d.scm 1.4 -sch 4 10 (explicit closures)
-#0.96user 0.10system 0:01.21elapsed 87%CPU (885text+705data 1044max)k
-# chap6d.scm 1.4 -sch 16 100
-#7.89user 0.45system 0:08.45elapsed 98%CPU (1019text+3152data 3288max)k
-# chap6d.scm 1.4 -sch 4 10 (explicit closures) -Ot -Ob -Og
-#0.74user 0.17system 0:01.97elapsed 46%CPU (1107text+653data 1124max)k
-# chap6d.scm 1.4 -sch 16 100 -Ot -Ob -Og  (still slower than bigloo)
-#6.21user 0.46system 0:06.78elapsed 98%CPU (998text+3100data 3256max)k
-# chap6d.scm 1.5 -sch 4 10 (simplified bench/bigloo)
-#0.88user 0.11system 0:01.08elapsed 91%CPU (874text+683data 1016max)k
-# chap6d.scm 1.5 -sch 16 100
-#7.14user 0.42system 0:07.64elapsed 98%CPU (977text+2861data 2984max)k
-
 # a small byte-tree-code compiler. (Not used in the book)
 test.chap6e : src/chap6e.scm
 	echo \
@@ -822,14 +732,6 @@ bench.chap6e : src/chap6e.scm
 	    '(bench6e 1 (call-with-input-file "src/chap5-bench.scm" read))' \
 	| ${SCHEME}
 
-# chap6e 1.2 -sch 4 10  (slower than chap6d)
-#1.32user 0.12system 0:01.72elapsed 83%CPU (991text+690data 1028max)k
-# -sch 16 100
-#11.64user 0.42system 0:12.36elapsed 97%CPU (1079text+2872data 3004max)k
-# chap6e 1.2 -sch 4 10 (with -Ob -Og -Ot) Very dependent of these options
-#0.72user 0.13system 0:01.12elapsed 75%CPU (870text+643data 996max)k
-# chap6e 1.2 -sch 16 100 (with -Ob -Og -Ot) (Closer to Bigloo now !)
-#5.73user 0.48system 0:06.51elapsed 95%CPU (988text+2813data 2972max)k
 # chap6e is very dependent on tests on types in byte-eval
 # but faster than Scheme->C.
 
@@ -838,9 +740,9 @@ bench.chap6e : src/chap6e.scm
 # compiler uses a different pattern of C generation and a variant
 # for environment management. That's why I leave it here. It is
 # grafted to the precompiler similarly to the bytecode compiler.
-# ATTENTION, this is a very long test: 751.89user 555.90system
-# 42:25.34elapsed This test fails on continuation used out of their
-# dynamic extent (no full continuation a la Scheme).
+# ATTENTION, this is a very long test. This test fails on
+# continuation used out of their dynamic extent (no full
+# continuation a la Scheme).
 long.dynext.test.chap6f :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap6f ; else : ; fi
 dynext.test.chap6f : test.chap6f
@@ -907,7 +809,6 @@ TEST_CHAP7 = test.chap7a test.chap7b test.chap7c test.chap7d test.chap7e \
 	     test.chap7g test.chap7h shallow.test.chap7i
 
 # Linearize the intermediate language to make register *val* appear.
-# 13.48user 1.84system 0:31.70elapsed
 test.chap7a : src/chap6d.scm src/chap7a.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -916,7 +817,6 @@ test.chap7a : src/chap6d.scm src/chap7a.scm
 	| ${SCHEME}
 
 # make stack appear (as well as other registers)
-# 13.91user 1.81system 0:33.46elapsed
 test.chap7b : src/chap6d.scm src/chap7b.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -926,7 +826,6 @@ test.chap7b : src/chap6d.scm src/chap7b.scm
 
 # represents instructions by list of closures. Make register PC
 # appear.
-# 18.09user 1.95system 0:42.60elapsed
 test.chap7c : src/chap6d.scm src/chap7c.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -937,7 +836,6 @@ test.chap7c : src/chap6d.scm src/chap7c.scm
 # the complete bytecode compiler itself.
 # The instruction set is defined in chap7f but is directly
 # handled by chap7d.
-# 64.28user 2.92system 1:39.47elapsed
 test.chap7d : src/chap6d.scm src/chap7d.scm src/chap7f.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -947,7 +845,6 @@ test.chap7d : src/chap6d.scm src/chap7d.scm src/chap7f.scm
 
 # added bind-exit, dynamic variables and error handling (first version
 # with dynenv register) in the bytecode compiler.
-# 106.45user 4.26system 2:48.65elapsed
 test.chap7e : src/chap7d.scm src/chap7e.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -962,7 +859,6 @@ test.chap7e : src/chap7d.scm src/chap7e.scm
 
 # separate compilation stuff, link compiled files, build stand-alone
 # with the bytecode compiler.
-# 219.27user 13.58system 8:47.39elapsed
 test.chap7g : src/chap7h.scm src/chap7g.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -989,7 +885,6 @@ test.chap7g : src/chap7h.scm src/chap7g.scm
 
 # implementation variant for dynamic variables, error handlers
 # with labels in the stack (without dynenv register).
-# 106.77user 4.34system 2:49.31elapsed
 test.chap7h : src/chap7d.scm src/chap7h.scm
 	echo \
 	    '(load "src/chap6d.scm")' \
@@ -1022,7 +917,6 @@ TEST_CHAP8 = test.chap8a test.chap8b test.chap8c test.chap8d evalf.test.chap8e \
 	     big.test.chap8j test.reflisp
 
 # add eval/ce (as a special form) to the naive interpreter of chapter 1.
-# 7.33user 1.62system 0:20.39elapsed
 test.chap8a : src/chap8a.scm src/chap1.scm
 	echo \
 	    '(load "src/chap1.scm")' \
@@ -1035,7 +929,6 @@ test.chap8a : src/chap8a.scm src/chap1.scm
 
 # Add eval/ce (as a special form) to the predenotational interpreter
 # (with closures everyhere) seen in chapter 4.
-# 72.39user 2.33system 1:34.67elapsed
 test.chap8b : src/chap8b.scm src/chap4a.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1047,7 +940,6 @@ test.chap8b : src/chap8b.scm src/chap4a.scm
 
 # Add eval/ce (as a special form) to the threaded interpreter of
 # chapter 6.
-# 12.58user 2.06system 0:34.32elapsed
 test.chap8c : src/chap8c.scm src/chap6d.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1058,7 +950,6 @@ test.chap8c : src/chap8c.scm src/chap6d.scm
 	| ${SCHEME}
 
 # Add eval/ce (as a special form) to the bytecode compiler
-# 157.23user 14.52system 5:20.46elapsed
 test.chap8d : src/chap8c.scm src/chap8d.scm src/chap6d.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1075,7 +966,6 @@ test.chap8d : src/chap8c.scm src/chap8d.scm src/chap6d.scm
 
 # add eval/at (a function) as a function to the naive interpreter
 # It fails on a test preceded by "eval as a function will fail..."
-# 7.39user 1.47system 0:21.48elapsed
 evalf.test.chap8e : src/chap8e.scm src/chap1.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1087,7 +977,6 @@ evalf.test.chap8e : src/chap8e.scm src/chap1.scm
 
 # add eval/at (a function) to the bytecode compiler.
 # It fails on a test preceded by "eval as a function will fail..."
-# 156.77user 14.10system 5:03.18elapsed
 evalf.test.chap8f : src/chap8f.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1104,7 +993,6 @@ evalf.test.chap8f : src/chap8f.scm
 
 # represent interpreted functions as functions in the naive interpreter.
 # It fails on a test preceded by "eval as a function will fail..."
-# 8.28user 1.43system 0:20.69elapsed
 evalf.test.chap8g : src/chap8g.scm src/chap1.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1116,7 +1004,6 @@ evalf.test.chap8g : src/chap8g.scm src/chap1.scm
 
 # Add the export special form and a binary function eval/b,
 # also add procedure->body and procedure->environment.
-# 173.64user 15.58system 5:33.69elapsed
 test.chap8h : src/chap8h.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1132,7 +1019,6 @@ test.chap8h : src/chap8h.scm
 	| ${SCHEME}
 
 # add the import special form
-# 180.38user 16.38system 5:48.37elapsed
 test.chap8i : src/chap8i.scm
 	echo \
 	    '(load "src/chap8a.scm")' \
@@ -1151,7 +1037,6 @@ test.chap8i : src/chap8i.scm
 
 # a little reflective interpreter.
 # Pay attention, this is very long and needs much much space...
-# 674.78user 111.28system 33:32.47elapsed
 long.test.chap8j :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap8j ; else : ; fi
 big.test.chap8j : test.chap8j
@@ -1197,7 +1082,6 @@ tmp.test.chap8j :
 	| ${SCHEME}
 
 # a direct test of the reflective interpreter
-# 29.32user 2.25system 0:37.23elapsed
 test.reflisp : si/reflisp.scm src/chap8k.scm
 	( echo \
 	    '(load "src/chap8a.scm")' \
@@ -1221,7 +1105,6 @@ test.reflisp : si/reflisp.scm src/chap8k.scm
 TEST_CHAP9 = test.chap9c
 
 # A macro system (hygien if I want it, where I want it).
-# 40.60user 3.69system 2:02.59elapsed
 test.chap9c : src/chap9c.scm
 	echo \
 	    '(load "src/chap9c.scm")' \
@@ -1239,7 +1122,6 @@ TEST_CHAP10 = test.chap10a test.chap10c dynext.test.chap10e test.chap10k \
 
 # chap10a.scm: objectification
 # chap10b.scm: small interpreter for objectified code
-# 16.74user 1.91system 0:38.87elapsed
 test.chap10a : src/chap10a.scm src/chap10b.scm
 	echo \
 	    '(load "src/chap10a.scm")' \
@@ -1249,7 +1131,6 @@ test.chap10a : src/chap10a.scm src/chap10b.scm
 
 # chap10c.scm: extract and globalize quotations
 # chap10d.scm: interpret the objectified code
-# 29.68user 2.30system 1:33.23elapsed
 test.chap10c : src/chap10a.scm src/chap10b.scm
 test.chap10c : src/chap10c.scm src/chap10d.scm
 	echo \
@@ -1276,7 +1157,6 @@ o/${HOSTTYPE}/schemeklib.o : src/c/scheme.h src/c/schemeklib.c
 # chap10f.scm: tests on test-suites
 # This test is very long... but it fails on continuations that are used
 # out of their dynamic extent or multiply.
-# 593.30user 492.04system 25:24.63elapsed
 long.dynext.test.chap10e :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10e ; else : ; fi
 dynext.test.chap10e : test.chap10e
@@ -1300,8 +1180,6 @@ test.chap10e : o/${HOSTTYPE}/schemelib.o
 # an AST into a pure tree, trying to insert let forms.  This test is
 # very long... but it fails on continuations that are used out of
 # their dynamic extent or multiply.
-#
-# 598.56user 490.32system 22:40.07elapsed
 long.dynext.test.chap10n :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10n ; else : ; fi
 dynext.test.chap10n : test.chap10n
@@ -1356,8 +1234,6 @@ src/c/chap10ex.E : src/c/chap10ex.c src/c/scheme.h
 #
 # I patched a little the o/${HOSTTYPE}/LiSPbookc.bgl file because of
 # a bug on write on strings containing \". To be solved.
-#
-# 225.49user 18.02system 4:53.16elapsed
 o/${HOSTTYPE}/LiSPbookc :
 	H_DIR=`pwd`/src/c/ ; export H_DIR ; \
 	A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE ; \
@@ -1438,8 +1314,6 @@ chap10e.bench : src/chap5-bench.scm
 	| ${SCHEME}
 
 	${TIME} o/${HOSTTYPE}/chap10e
-#0.01user 0.01system 0:00.07elapsed 28%CPU (16avgtext+36avgdata 44maxresident)k
-#0inputs+1outputs (0major+8minor)pagefaults 0swaps
 
 # Start a compiler.
 # You can try (test-expression e) or (show-C-expression e).
@@ -1463,7 +1337,6 @@ test.chap10e.c : ${all-o}
 
 # chap10k.scm : CPS transformation, use schemeklib.c
 # Very long test but it does not fail on call/cc tests.
-# 837.20user 526.45system 30:42.24elapsed
 long.test.chap10k :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10k ; else : ; fi
 test.chap10k : o/${HOSTTYPE}/scheme.o
@@ -1522,8 +1395,6 @@ chap10k.bench : src/chap5-bench.scm
 	| ${SCHEME}
 
 	${TIME} o/${HOSTTYPE}/chap10k
-#0.04user0.03system 0:00.07elapsed 100%CPU(42avgtext+221avgdata 212maxresident)k
-#0inputs+1outputs (0major+9minor)pagefaults 0swaps
 
 # Generate the C code corresponding to the running example of
 # chapter 10.  The C code will be left in o/chap10kex.c
@@ -1553,7 +1424,6 @@ src/c/chap10kex.c : src/chap10ex.scm src/chap10e.scm
 # very long.
 
 # This test fails on continuations used out of their dynamic extent.
-# 595.30user 492.41system 24:49.56elapsed
 long.dynext.test.chap10je :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap10je ; else : ; fi
 dynext.test.chap10je : test.chap10je
@@ -1572,7 +1442,6 @@ test.chap10je : src/chap10j.scm
 	| ${SCHEME}
 
 # This one does not fail but lasts long...
-# 857.14user 529.60system 33:20.49elapsed
 long.test.chap10jk :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10jk ; else : ; fi
 test.chap10jk : src/chap10j.scm src/chap10p.scm
@@ -1609,13 +1478,6 @@ o/${HOSTTYPE}/c10ex : src/c/c10ex.c ${all-o}
 o/${HOSTTYPE}/c10kex : src/c/c10kex.c ${all-o}
 	cd o/${HOSTTYPE} ; \
 	${CC} ${bCFLAGS} -o c10kex ../../src/c/c10kex.c scheme.o schemeklib.o
-
-# blaye% time o/${HOSTTYPE}/c10ex
-# (2 3)
-# 0.830u 0.270s 0:01.14 96.4% 3+170k 0+0io 0pf+0w
-# blaye% time o/${HOSTTYPE}/c10kex
-# (2 3)
-# 1.360u 0.360s 0:01.70 101.1% 3+247k 0+0io 0pf+0w
 
 ######################################################### Common entries
 
