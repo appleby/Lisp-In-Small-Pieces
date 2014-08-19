@@ -11,48 +11,48 @@
 
 ;;; Excerpts from chapter 3 (not necessarily Scheme)
 
-(defun fact (n)                                  \[\em\hfill\cl\]
-  (prog (r)
-            (setq r 1)
-       loop (cond ((= n 1) (return r)))
-            (setq r (* n r))
-            (setq n (- n 1))
-            (go loop) ) )
+;; (defun fact (n)                                  \[\em\hfill\cl\]
+;;   (prog (r)
+;;             (setq r 1)
+;;        loop (cond ((= n 1) (return r)))
+;;             (setq r (* n r))
+;;             (setq n (- n 1))
+;;             (go loop) ) )
 
-(defun fact2 (n)                                  \[\em\hfill\cl\]
-  (prog (r)
-            (setq r 1)
-       loop (setq r (* (cond ((= n 1) (return r))
-                             ('else n) )
-                       r ))
-            (setq n (- n 1))
-            (go loop) ) )
+;; (defun fact2 (n)                                  \[\em\hfill\cl\]
+;;   (prog (r)
+;;             (setq r 1)
+;;        loop (setq r (* (cond ((= n 1) (return r))
+;;                              ('else n) )
+;;                        r ))
+;;             (setq n (- n 1))
+;;             (go loop) ) )
 
-(define *active-catchers* '())
+;; (define *active-catchers* '())
 
-(define-syntax throw 
-  (syntax-rules ()
-    ((throw tag value)
-     (let* ((label tag)                ; compute once
-            (escape (assv label        ; compare with {\tt eqv?}
-                          *active-catchers* )) )
-       (if (pair? escape)
-           ((cdr escape) value)
-           (wrong "No associated catch to" label) ) ) ) ) )
+;; (define-syntax throw
+;;   (syntax-rules ()
+;;     ((throw tag value)
+;;      (let* ((label tag)                ; compute once
+;;             (escape (assv label        ; compare with {\tt eqv?}
+;;                           *active-catchers* )) )
+;;        (if (pair? escape)
+;;            ((cdr escape) value)
+;;            (wrong "No associated catch to" label) ) ) ) ) )
 
-(define-syntax catch 
-  (syntax-rules ()
-    ((catch tag . body)
-     (let* ((saved-catchers *active-catchers*)
-            (result (block label
-                      (set! *active-catchers* 
-                            (cons (cons tag 
-                                        (lambda (x) 
-                                          (return-from label x) ) )
-                                  *active-catchers* ) )
-                      . body )) )
-       (set! *active-catchers* saved-catchers)
-       result ) ) ))
+;; (define-syntax catch
+;;   (syntax-rules ()
+;;     ((catch tag . body)
+;;      (let* ((saved-catchers *active-catchers*)
+;;             (result (block label
+;;                       (set! *active-catchers*
+;;                             (cons (cons tag
+;;                                         (lambda (x)
+;;                                           (return-from label x) ) )
+;;                                   *active-catchers* ) )
+;;                       . body )) )
+;;        (set! *active-catchers* saved-catchers)
+;;        result ) ) ))
 
 (define (find-symbol id tree)
   (if (pair? tree)

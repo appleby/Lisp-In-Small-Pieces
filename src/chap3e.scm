@@ -9,6 +9,8 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
+;;; Excerpts from chapter 3 (not necessarily Scheme)
+
 (define (fact n)
   (let ((r 1))
     (let ((k (call/cc (lambda (c) c))))
@@ -16,23 +18,23 @@
       (set! n ( - n 1))
       (if (= n 1) r (k k)) ) ) )
 
-(define-syntax catch 
-  (syntax-rules
-    ((catch tag . body)
-     (let ((saved-catchers *active-catchers*))
-       (unwind-protect 
-         (block label
-           (set! *active-catchers* 
-                 (cons (cons tag (lambda (x) (return-from label x)))
-                       *active-catchers* ) )
-           . body )
-         (set! *active-catchers* saved-catchers) ) ) ) ) )
+;; (define-syntax catch
+;;   (syntax-rules
+;;     ((catch tag . body)
+;;      (let ((saved-catchers *active-catchers*))
+;;        (unwind-protect
+;;          (block label
+;;            (set! *active-catchers*
+;;                  (cons (cons tag (lambda (x) (return-from label x)))
+;;                        *active-catchers* ) )
+;;            . body )
+;;          (set! *active-catchers* saved-catchers) ) ) ) ) )
 
-(define-syntax let/cc 
-  (syntax-rules ()
-    ((let/cc variable . body)
-     (block variable
-       (let ((variable (lambda (x) (return-from variable x))))
-         . body ) ) ) ) )
+;; (define-syntax let/cc
+;;   (syntax-rules ()
+;;     ((let/cc variable . body)
+;;      (block variable
+;;        (let ((variable (lambda (x) (return-from variable x))))
+;;          . body ) ) ) ) )
 
 ;;; end of chap3e.scm

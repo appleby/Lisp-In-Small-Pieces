@@ -9,25 +9,27 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
-(define-syntax block 
-  (syntax-rules ()
-    ((block label . body)
-     (let ((label (list 'label)))
-       (catch label . body) ) ) ) )
+;;; Excerpts from chapter 3 (not necessarily Scheme)
 
-(define-syntax return-from
-  (syntax-rules ()
-    ((return-from label value)
-     (throw label value) ) ) )
+;; (define-syntax block
+;;   (syntax-rules ()
+;;     ((block label . body)
+;;      (let ((label (list 'label)))
+;;        (catch label . body) ) ) ) )
 
-(define (find-symbol id tree)
-  (block find
-    (letrec ((find (lambda (tree)
-                     (if (pair? tree)
-                         (or (find (car tree))
-                             (find (cdr tree)) )
-                         (if (eq? id tree) (return-from find #t) 
-                             #f ) ) )))
-      (find tree) ) ) )
+;; (define-syntax return-from
+;;   (syntax-rules ()
+;;     ((return-from label value)
+;;      (throw label value) ) ) )
+
+;; (define (find-symbol id tree)
+;;   (block find
+;;     (letrec ((find (lambda (tree)
+;;                      (if (pair? tree)
+;;                          (or (find (car tree))
+;;                              (find (cdr tree)) )
+;;                          (if (eq? id tree) (return-from find #t)
+;;                              #f ) ) )))
+;;       (find tree) ) ) )
 
 ;;; end of chap3c.scm

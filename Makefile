@@ -426,7 +426,8 @@ test.chap2h : src/chap2h.scm
 
 TEST_CHAP3 = test.chap3f test.chap3h
 
-# chap3{a,b,c,d,e}.scm contain excerpts from chapter3
+# chap3{a,b,c,d,e}.scm contain excerpts from chapter3 (not necessarily
+# Scheme).
 
 # chap3f.scm contains an interpreter in OO style
 test.chap3f : src/chap3g.scm
@@ -1492,4 +1493,3 @@ clean ::
 tags : TAGS
 TAGS :
 	etags */?*.scm
-
