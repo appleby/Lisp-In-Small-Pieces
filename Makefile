@@ -293,7 +293,8 @@ ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} \
 		  ${TEST_CHAP5} ${TEST_CHAP6} ${TEST_CHAP7} ${TEST_CHAP8} \
 		  ${TEST_CHAP9} ${TEST_CHAP10}
 
-GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
+GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}" \
+		   WHICH_TESTS="${WHICH_TESTS}"
 
 # 2014 Note: BROKEN_TESTS represent tests that are still not passing
 # in SCHEMEs that have otherwise been "fixed" (Bigloo, Gambit, and
@@ -310,11 +311,17 @@ endif
 
 GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 
-grand.test :
+# Test only parts of the grand tour of tests.
+TMP_ALL_TESTS = ${TEST_CHAP9} ${TEST_CHAP10}
+
+tmp.grand.test : WHICH_TESTS = ${TMP_ALL_TESTS}
+grand.test : WHICH_TESTS = ${GRAND_TESTS}
+grand.test tmp.grand.test:
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
+
 do.grand.test :
 	@rm -f ${FAILURES}
-	@for test in ${GRAND_TESTS} ; do \
+	@for test in ${WHICH_TESTS} ; do \
 	    ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) \
 	    | tee ${RESULTS} ; echo Checking results of $$test ... ; \
 	    ${PERL} perl/check.prl ${RESULTS} $$test ; \
@@ -330,16 +337,6 @@ grand.test.with.gsi : o/${HOSTTYPE}/book.gsi
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.gsi TIME=time
 grand.test.with.mit : o/${HOSTTYPE}/book.mit
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.mit TIME=time
-
-# Test only parts of the grand tour of tests.
-TMP_ALL_TESTS = ${TEST_CHAP9} ${TEST_CHAP10}
-
-tmp.grand.test :
-	@for test in ${TMP_ALL_TESTS} ; do \
-	    ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) \
-	    | tee ${RESULTS} ; echo Checking results of $$test ... ; \
-	    ${PERL} perl/check.prl ${RESULTS} $$test ; \
-	done
 
 ##################################### Chap 1 ##############################
 
