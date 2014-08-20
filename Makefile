@@ -58,9 +58,9 @@ export HOSTTYPE := $(shell uname -m)
 # These schemes are the only known-working options. See the
 # README.md file for more info.
 #
-#SCHEME = o/${HOSTTYPE}/book.bigloo
+SCHEME = o/${HOSTTYPE}/book.bigloo
 #SCHEME = o/${HOSTTYPE}/book.gsi
-SCHEME = o/${HOSTTYPE}/book.mit
+#SCHEME = o/${HOSTTYPE}/book.mit
 
 # Mit-scheme's EVAL takes a mandatory environment argument.
 ifeq (${SCHEME}, o/${HOSTTYPE}/book.mit)
