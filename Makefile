@@ -58,13 +58,16 @@ export HOSTTYPE := $(shell uname -m)
 # These schemes are the only known-working options. See the
 # README.md file for more info.
 #
-SCHEME = o/${HOSTTYPE}/book.bigloo
+#SCHEME = o/${HOSTTYPE}/book.bigloo
 #SCHEME = o/${HOSTTYPE}/book.gsi
 #SCHEME = o/${HOSTTYPE}/book.mit
+SCHEME = o/${HOSTTYPE}/book.guile
 
-# Mit-scheme's EVAL takes a mandatory environment argument.
+# Guile and Mit-scheme's EVAL take a mandatory environment argument.
 ifeq (${SCHEME}, o/${HOSTTYPE}/book.mit)
     EVAL_ENVIRONMENT = user-initial-environment
+else ifeq (${SCHEME}, o/${HOSTTYPE}/book.guile)
+    EVAL_ENVIRONMENT = (interaction-environment)
 endif
 
 # This variable allows to measure time.
@@ -149,18 +152,27 @@ build.interpreter : mkdir
 	    then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ; \
 	    else : ; fi
 
-	case "${SCHEME}" in *bigloo|*gsi|*mit) ${MAKE} ${SCHEME} ;; *) : ;; esac
+	case "${SCHEME}" in \
+	    *bigloo|*gsi|*mit|*guile) ${MAKE} ${SCHEME} ;; \
+	    *) : ;; esac
 
 ######################################## Test interpreters
 
 test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test \
-    o/${HOSTTYPE}/book.gsi.test
+    o/${HOSTTYPE}/book.gsi.test o/${HOSTTYPE}/book.guile.test
 
 # Makes a command to run mitscheme. Must be run from the current
 # directory.
 o/${HOSTTYPE}/book.mit : mkdir
 	echo "#!/bin/sh" > $@
 	echo "exec mit-scheme --batch-mode --load mitscheme/book.mit" >> $@
+	chmod a=rwx $@
+
+# Makes a command to run guile. Must be run from the current
+# directory.
+o/${HOSTTYPE}/book.guile : mkdir
+	echo "#!/bin/sh" > $@
+	echo "exec guile -q -l guile/book.scm" >> $@
 	chmod a=rwx $@
 
 # Makes a command for Gambit interpreter similar to the others.
@@ -280,6 +292,25 @@ o/${HOSTTYPE}/book.mit.test4 :
 	${MAKE} SCHEME=o/${HOSTTYPE}/book.mit test.chap2a | tee ${RESULTS}
 	${MAKE} check.results
 
+o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test1
+o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test2
+o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test3
+o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test4
+o/${HOSTTYPE}/book.guile.test1 : o/${HOSTTYPE}/book.guile
+	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.guile \
+		| tee ${RESULTS}
+	${MAKE} check.results
+o/${HOSTTYPE}/book.guile.test2 : o/${HOSTTYPE}/book.guile
+	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.guile \
+		| tee ${RESULTS}
+	${MAKE} check.results
+o/${HOSTTYPE}/book.guile.test3 :
+	${MAKE} SCHEME=o/${HOSTTYPE}/book.guile test.chap1 | tee ${RESULTS}
+	${MAKE} check.results
+o/${HOSTTYPE}/book.guile.test4 :
+	${MAKE} SCHEME=o/${HOSTTYPE}/book.guile test.chap2a | tee ${RESULTS}
+	${MAKE} check.results
+
 ########################## All the tests
 # Some tests have a name starting with no. That means that the test
 # has some problems (it does not complete or loops) I just verify
@@ -337,6 +368,8 @@ grand.test.with.gsi : o/${HOSTTYPE}/book.gsi
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.gsi TIME=time
 grand.test.with.mit : o/${HOSTTYPE}/book.mit
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.mit TIME=time
+grand.test.with.guile : o/${HOSTTYPE}/book.guile
+	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.guile TIME=time
 
 ##################################### Chap 1 ##############################
 
