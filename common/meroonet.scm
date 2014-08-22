@@ -12,5 +12,4 @@
 (define-macro (define-meroonet-macro call . body)
   `(define-macro ,call . ,body) )
 
-(load "meroonet/meroonet.scm")
-
+(load-relative "meroonet/meroonet.scm")

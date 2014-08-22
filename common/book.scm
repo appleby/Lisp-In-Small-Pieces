@@ -9,12 +9,12 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
-(load "common/definitions.scm")
-(load "common/additional-libs.scm")
-(load "common/syntax.scm")
-(load "common/meroonet.scm")
-(load "common/generics.scm")
-(load "common/toplevel.scm")
+(load-relative "common/definitions.scm")
+(load-relative "common/additional-libs.scm")
+(load-relative "common/syntax.scm")
+(load-relative "common/meroonet.scm")
+(load-relative "common/generics.scm")
+(load-relative "common/toplevel.scm")
 
 ;;; Warp into the new toplevel.
 (start)

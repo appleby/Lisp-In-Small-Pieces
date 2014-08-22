@@ -7,6 +7,7 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 (load "gambit/gambit-book.scm")
+(load "common/compat/load-relative.scm")
 (load "common/compat/gensym.scm")
 (load "common/compat/property-lists.scm")
 (load "common/compat/symbol-append.scm")

@@ -10,9 +10,9 @@
 ;;; pp is already present but not format. but format needs internal functions
 ;;; of pp so redefine pp.
 
-(load "common/pp.scm")
-(load "common/format.scm")
+(load-relative "common/pp.scm")
+(load-relative "common/format.scm")
 
 ;;; Load the test-driver.
 
-(load "src/tester.scm")
+(load-relative "src/tester.scm")

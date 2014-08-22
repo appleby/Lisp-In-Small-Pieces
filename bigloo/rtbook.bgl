@@ -19,6 +19,7 @@
         ;; Meroonet (preceded by a small hack that also defines the
         ;; define-abbreviation macro)
         (include "bigloo/hack.bgl")
+	(include "common/compat/load-relative.scm")
         (include "meroonet/meroonet.scm")
         ;; Additional utilities
         (include "src/tester.scm")
@@ -77,7 +78,7 @@
                 (register-class name super-name own-field-descriptions)
                 (Class-initialize! class name super own-field-descriptions)
                 (Field-defining-class field)
-                Class? 
+                Class?
                 Generic?
                 Field?
                 Mono-Field?
@@ -92,7 +93,7 @@
                 set-Class-superclass!
                 Class-subclass-numbers
                 set-Class-subclass-numbers!
-                make-Class 
+                make-Class
                 allocate-Class
                 make-Generic
                 allocate-Generic
@@ -120,7 +121,7 @@
 ;(display "[rtbook.bgl...")(newline) ; DEBUG
 
 ;;; Include an eval so exported global variables can also appear as symbols.
-(eval ''hack) 
+(eval ''hack)
 
 ;;; This variable is used in chap8k.scm to determine the underlying Scheme
 ;;; interpreter.

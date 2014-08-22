@@ -12,7 +12,7 @@
 ;;; interpreters.
 
 ;;; Guile-specific code.
-;;; 
+;;;
 ;;; Definitions in this section are specific to Mit-Scheme, and are unlikely to
 ;;; be needed if you're porting this file to another scheme.
 
@@ -23,6 +23,13 @@
 
 (define (eval exp . env)
   (native-eval exp (if (null? env) (interaction-environment) (car env))) )
+
+;;; We need to define load-relative to expand to `primitive-load' so
+;;; that loading of files in common/* works as expected. See the
+;;; comment in common/compat/load-relative.scm for more info.
+(define-syntax load-relative
+  (syntax-rules ()
+    ((load-relative path) (primitive-load path))))
 
 ;;; End of Guile-specific code.
 
