@@ -13,7 +13,5 @@
 ;;; Guile, however, it's considered to be relative to the file which
 ;;; contains the `load' form. As such, we use `load-relative' in place
 ;;; of `load' in all common/* files, and override `load-relative' in
-;;; guile/guile-book.scm. All other scheme merely include this file.
-(define-syntax load-relative
-  (syntax-rules ()
-      ((load-relative path) (load path))))
+;;; guile/guile-book.scm. All other schemes merely include this file.
+(define load-relative load)

@@ -24,12 +24,10 @@
 (define (eval exp . env)
   (native-eval exp (if (null? env) (interaction-environment) (car env))) )
 
-;;; We need to define load-relative to expand to `primitive-load' so
-;;; that loading of files in common/* works as expected. See the
+;;; Define `load-relative' to be `primitive-load', rather than `load'
+;;; so that loading of files in common/* works as expected. See the
 ;;; comment in common/compat/load-relative.scm for more info.
-(define-syntax load-relative
-  (syntax-rules ()
-    ((load-relative path) (primitive-load path))))
+(define load-relative primitive-load)
 
 ;;; End of Guile-specific code.
 
