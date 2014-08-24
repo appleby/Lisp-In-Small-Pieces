@@ -117,8 +117,12 @@
    ---
 ((p1 'ref))
    44
-(eqv? (p1 'type) (p1 'type))
-   #f
+
+;;; This is not a reliable test. Presumably, nothing in the Scheme
+;;; spec prevents an implementation from returning #t here if the
+;;; compiler is smart enough, and in fact Guile does return #t.
+;;; (eqv? (p1 'type) (p1 'type))
+;;; #f
 
 (set! p1 (other-make-named-box 'joe 33))
    ---
