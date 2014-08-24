@@ -29,6 +29,11 @@
 ;;; comment in common/compat/load-relative.scm for more info.
 (define load-relative primitive-load)
 
+;;; Guile doesn't have pp. Load pretty-print from common/pp.scm (which
+;;; will get re-loaded from common/book.scm).
+(primitive-load "common/pp.scm")
+(define pp pretty-print)
+
 ;;; End of Guile-specific code.
 
 ;;; General definitions.
