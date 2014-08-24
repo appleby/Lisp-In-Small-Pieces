@@ -34,6 +34,9 @@
 (primitive-load "common/pp.scm")
 (define pp pretty-print)
 
+;;; Pull in SRFI 43 for vector operations.
+(use-modules (srfi srfi-43))
+
 ;;; End of Guile-specific code.
 
 ;;; General definitions.
