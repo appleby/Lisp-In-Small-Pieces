@@ -59,12 +59,12 @@
     (cond ((null? o*) #t)
           ((atom? o*) (display " . " stream)
                       (display o* stream) )
-          ((pair? o*) 
+          ((pair? o*)
            (print (car o*) len (+ dep 1))
            (if (pair? (cdr o*)) (display " " stream))
            (print-list (cdr o*) (+ len 1) dep) ) ) )
   (define (print o len dep)
-    (cond ((object? o) 
+    (cond ((Object? o)
            (display "#<" stream)
            (display (Class-name (object->class o)) stream)
            (display ">" stream) )
@@ -95,4 +95,3 @@
 
 ;;; This variable is needed by meroonet/oo-tests.scm test suite.
 (define the-Point 'useful4tests)
-
