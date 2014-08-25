@@ -1,14 +1,17 @@
 Lisp In Small Pieces for Modern Schemes
 =======================================
 
-This repository contains source code from the book [Lisp In Small Pieces][LiSP]
-by Christian Queinnec, updated to work with modern versions of Bigloo, Gambit,
-and Mit-scheme. Specifically, the following versions are known to pass the
-included test suite, with a [few exceptions][failing-tests] noted below.
+This repository contains source code from the book
+[Lisp In Small Pieces][LiSP] by Christian Queinnec, updated to work
+with modern versions of Bigloo, Gambit, Mit-scheme, and
+Guile. Specifically, the following versions are known to pass the
+included test suite, with a [few exceptions][failing-tests] noted
+below.
 
 - [bigloo][] 4.1a
 - [gambit][] 4.7.2
 - [mit-scheme][] 9.2
+- [guile][] 2.0.11
 
 Running the code
 ----------------
@@ -18,12 +21,13 @@ Running the code
 2. Clone this repo.
     `git clone https://github.com/appleby/Lisp-In-Small-Pieces.git`
 
-3. Build the interpreter for the book. Edit the Makefile and set the `SCHEME`
-   variable to the version of scheme you want. The supported values for
-   `SCHEME` are `o/${HOSTTYPE}/book.{bigloo,gsi,mit}`. So, e.g., to build the
-   Gambit interpreter, set `SCHEME = o/${HOSTTYPE}/book.gsi`. Then run `make` to
-   build the interpreter. If everything goes well, you should have an
-   executable in `o/${HOSTTYPE}/book.gsi`.
+3. Build the interpreter for the book. Edit the Makefile and set the
+   `SCHEME` variable to the version of scheme you want. The supported
+   values for `SCHEME` are
+   `o/${HOSTTYPE}/book.{bigloo,gsi,mit,guile}`.  So, e.g., to build
+   the Gambit interpreter, set `SCHEME = o/${HOSTTYPE}/book.gsi`. Then
+   run `make` to build the interpreter. If everything goes well, you
+   should have an executable in `o/${HOSTTYPE}/book.gsi`.
 
 4. Run `make grand.test` to run the test suite. This will take several minutes,
    but at the end you should see a message that says "All tests passed."
@@ -38,6 +42,7 @@ The following tests from the `grand.test` target are known to fail.
 | bigloo | test.reflisp, test.chap8j |
 | gambit | test.reflisp              |
 | mit    | test.reflisp              |
+| guile  | test.reflisp              |
 
 Note that `test.reflisp` was not supported for gambit and mit-scheme even in
 the original sources. Attempting to compile the `monitor` macro in
@@ -70,11 +75,12 @@ Unknown Failing Tests?
 
 ![Works On My Machine](http://blog.codinghorror.com/content/images/uploads/2007/03/6a0120a85dcdae970b0128776ff992970c-pi.png)
 
-I've only tested the changes in this repo on my personal laptop (Archlinux /
-x86_64), and only with the scheme versions mentioned in the first section of
-this README. If you're using a recent-ish version of bigloo, gambit, or
-mit-scheme and you notice failures not mentioned above, please open a GitHub
-issue, or (even better) send a pull request.
+I've only tested the changes in this repo on my personal laptop
+(Archlinux / x86_64), and only with the scheme versions mentioned in
+the first section of this README. If you're using a recent-ish version
+of any of any of those scheme's and you notice failures not mentioned
+above, please open a GitHub issue, or (even better) send a pull
+request.
 
 I'd also happily accept pull requests adding support for other schemes.
 
@@ -84,6 +90,8 @@ Other Schemes
 In addition to [bigloo][], [gambit][], and [mit-scheme][] the [original
 sources][LiSP-2ndEdition] also supported [elk][], [scheme2c][], and [scm][].
 I'm not planning to get those working myself, but pull requests are welcome.
+
+[Guile][guile] was not supported in the original sources.
 
 More Info
 ---------
@@ -112,3 +120,4 @@ TODO
 [mit-scheme]: http://www.gnu.org/software/mit-scheme/
 [scheme2c]: https://github.com/barak/scheme2c
 [scm]: http://people.csail.mit.edu/jaffer/SCM
+[guile]: http://www.gnu.org/software/guile/
