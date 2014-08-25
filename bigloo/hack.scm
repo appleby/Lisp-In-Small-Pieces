@@ -13,7 +13,7 @@
 
 ;;; NOTE: I'm not sure whether the following comments are any longer relevant.
 
-;(display "starting hack.bgl")(newline)           ;; DEBUG
+;(display "starting hack.scm")(newline)           ;; DEBUG
 
 ;;; Three macros are defined in meroonet.scm: define-class,
 ;;; define-method and define-generic. They must be compiled and made
@@ -43,6 +43,6 @@
   `(begin (eval '(define-macro ,call . ,body))
           (define-macro ,call . ,body) ) )
 
-;(display "end of hack.bgl")(newline)           ;; DEBUG
+;(display "end of hack.scm")(newline)           ;; DEBUG
 
-;;; end of hack.bgl
+;;; end of hack.scm

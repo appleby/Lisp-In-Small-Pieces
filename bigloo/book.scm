@@ -1,5 +1,3 @@
-;;; $Id: book.bgl,v 1.9 1994/08/26 19:19:14 queinnec Exp $
-
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 ;;; This file is part of the files that accompany the book:
 ;;;     LISP Implantation Semantique Programmation (InterEditions, France)
@@ -16,7 +14,7 @@
 
 (module book (main main)
         ;; Import the run-time of this interpreter
-        (import (rtbook  "bigloo/rtbook.bgl")) )
+        (import (rtbook  "bigloo/rtbook.scm")) )
 
 ;;; Start the interpreter. In fact everything comes from the rtbook
 ;;; module which is separately compiled in order to provide a library
@@ -27,4 +25,4 @@
   (format #f "")                        ; forces rtbookp to be linked
   (start) )
 
-;;; end of book.bgl
+;;; end of book.scm

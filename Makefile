@@ -127,10 +127,10 @@ export SHELL := $(shell which sh)
 ##################################### Build specialized interpreters.
 # Rebuild a Bigloo interpreter with Meroonet and tester in it.
 # Adapted to Bigloo 4.1a. Due to name conflicts, the compilation of
-# rtbook.bgl emits much warnings: ignore them!
+# rtbook.scm emits much warnings: ignore them!
 
-o/${HOSTTYPE}/book.bigloo : bigloo/book.bgl o/${HOSTTYPE}/rtbook.a
-	${BIGLOO} -v -call/cc -cg -o o/${HOSTTYPE}/book.bigloo bigloo/book.bgl \
+o/${HOSTTYPE}/book.bigloo : bigloo/book.scm o/${HOSTTYPE}/rtbook.a
+	${BIGLOO} -v -call/cc -cg -o o/${HOSTTYPE}/book.bigloo bigloo/book.scm \
 	    -ldopt o/${HOSTTYPE}/rtbook.a
 	-rm bigloo/book.[co] o/${HOSTTYPE}/book.[co]
 
@@ -139,10 +139,10 @@ o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook.o common/pp.scm common/format.scm
 	cd o/${HOSTTYPE} ; ${AR} cvr rtbook.a rtbook.o
 	-${RANLIB} o/${HOSTTYPE}/rtbook.a
 
-o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.bgl bigloo/hack.bgl src/tester.scm
+o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.scm bigloo/hack.scm src/tester.scm
 
 	-[ -d o/${HOSTTYPE} ] || ${MAKE} mkdir
-	${BIGLOO} -c -v -call/cc -cg -w -o o/${HOSTTYPE}/rtbook.o bigloo/rtbook.bgl
+	${BIGLOO} -c -v -call/cc -cg -w -o o/${HOSTTYPE}/rtbook.o bigloo/rtbook.scm
 	-rm bigloo/rtbook.[co] o/${HOSTTYPE}/rtbook.c
 
 # Default work for the distribution, create some sub-directories

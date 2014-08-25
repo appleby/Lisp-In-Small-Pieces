@@ -1,5 +1,3 @@
-;;; $Id: rtbook.bgl,v 1.9 1998/05/01 09:38:24 queinnec Exp queinnec $
-
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 ;;; This file is part of the files that accompany the book:
 ;;;     LISP Implantation Semantique Programmation (InterEditions, France)
@@ -18,7 +16,7 @@
         (foreign (int time (string) "time"))
         ;; Meroonet (preceded by a small hack that also defines the
         ;; define-abbreviation macro)
-        (include "bigloo/hack.bgl")
+        (include "bigloo/hack.scm")
 	(include "common/compat/load-relative.scm")
         (include "meroonet/meroonet.scm")
         ;; Additional utilities
@@ -118,7 +116,7 @@
                 (determine-method generic o) )
         )
 
-;(display "[rtbook.bgl...")(newline) ; DEBUG
+;(display "[rtbook.scm...")(newline) ; DEBUG
 
 ;;; Include an eval so exported global variables can also appear as symbols.
 (eval ''hack)
@@ -153,4 +151,4 @@
 ;(display " ...")(newline) ; DEBUG
 ;(display "]")(newline) ; DEBUG
 
-;;; end of rtbook.bgl
+;;; end of rtbook.scm
