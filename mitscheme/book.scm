@@ -6,7 +6,7 @@
 ;;;   (IP 128.93.2.54) ftp.inria.fr:INRIA/Projects/icsla/Books/LiSP*.tar.gz
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
-(load "mitscheme/mit-book.mit")
+(load "mitscheme/mit-book.scm")
 (load "common/compat/load-relative.scm")
 (load "common/compat/callcc.scm")
 (load "common/compat/gensym.scm")

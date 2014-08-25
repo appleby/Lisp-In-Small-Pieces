@@ -165,7 +165,7 @@ test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test \
 # directory.
 o/${HOSTTYPE}/book.mit : mkdir
 	echo "#!/bin/sh" > $@
-	echo "exec mit-scheme --batch-mode --load mitscheme/book.mit" >> $@
+	echo "exec mit-scheme --batch-mode --load mitscheme/book.scm" >> $@
 	chmod a=rwx $@
 
 # Makes a command to run guile. Must be run from the current
