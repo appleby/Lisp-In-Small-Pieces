@@ -273,16 +273,16 @@
 
 (define (transcode v s q)
   (cond
-   ((null? c)    (q the-empty-list s))
-   ((boolean? c) (q (create-boolean c) s))
-   ((symbol? c)  (q (create-symbol c) s))
-   ((string? c)  (q (create-string c) s))
-   ((number? c)  (q (create-number c) s))
-   ((pair? c)
-    (transcode (car c) 
+   ((null? v)    (q the-empty-list s))
+   ((boolean? v) (q (create-boolean v) s))
+   ((symbol? v)  (q (create-symbol v) s))
+   ((string? v)  (q (create-string v) s))
+   ((number? v)  (q (create-number v) s))
+   ((pair? v)
+    (transcode (car v) 
                s
                (lambda (a ss)
-                 (transcode (cdr c)
+                 (transcode (cdr v)
                             ss
                             (lambda (d sss)
                               (allocate-pair a d sss q) ) ) ) ) ) ) ) 
