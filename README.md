@@ -78,7 +78,7 @@ Unknown Failing Tests?
 I've only tested the changes in this repo on my personal laptop
 (Archlinux / x86_64), and only with the scheme versions mentioned in
 the first section of this README. If you're using a recent-ish version
-of any of any of those scheme's and you notice failures not mentioned
+of any of any of those schemes and you notice failures not mentioned
 above, please open a GitHub issue, or (even better) send a pull
 request.
 
