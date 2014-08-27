@@ -62,7 +62,12 @@
 ;;; Called from internal DISPALY-STATUS definition in both INTERPRETER and
 ;;; SUITE-TEST in src/tester.scm.
 (define (display-exception args)
-  (apply display-error #f (current-error-port) (cdr args)))
+  (if (and (symbol? (car args))
+	   (= 5 (length args)))
+      ;; Args smell like a guile exception. Call display-error.
+      (apply display-error #f (current-error-port) (cdr args))
+      ;; Not a guile exception, most likely a call to wrong.
+      (display args)))
 
 ;;; The test-driver should try to catch errors of the underlying Scheme system.
 ;;; This is non-portable and difficult in many implementations. If do not
