@@ -213,6 +213,24 @@
                 (toplevel ss) ) ) )
   (toplevel s.global) )
 
+(define (scheme4a)
+  (interpreter
+   "Scheme? "
+   "Scheme= "
+   #t
+   (lambda (read check err)
+     (set! wrong err)
+     (let ((s.current s.global))
+       (lambda ()
+	 ;; reset memorized quotations.
+	 (set! *shared-memo-quotations* '())
+	 (check (evaluate (read)
+			  r.global
+			  s.current
+			  (lambda (v ss)
+			    (set! s.current ss)
+			    (transcode-back v ss) ) )) ) ) ) ) )
+
 (define (evaluate-quote c r s k)
   (transcode c s k) )
 
