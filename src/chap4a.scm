@@ -91,7 +91,7 @@
         (lambda (v* sss)
           (if (eq? (f 'type) 'function)
               ((f 'behavior) v* sss k)
-              (wrong "Not a function" (car v*)) ) ) ) ) ) )
+              (wrong "Not a function" f) ) ) ) ) ) )
 
 (define (evaluate-lambda n* e* r s k)
   (allocate 1 s
