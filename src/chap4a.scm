@@ -628,10 +628,10 @@
 
 ;;; Define some locations to test the interpreter
 
-(definitial a 0)
-(definitial foo 0)
-(definitial fact 0)
-(definitial fib 0)
-(definitial primes 0)
+(definitial a (create-number 0))
+(definitial foo (create-number 0))
+(definitial fact (create-number 0))
+(definitial fib (create-number 0))
+(definitial primes (create-number 0))
 
 ;;; end of chap4a.scm
