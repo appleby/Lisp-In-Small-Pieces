@@ -209,6 +209,7 @@
               s
               (lambda (v ss)
                 (display (transcode-back v ss))
+		(newline)
                 (toplevel ss) ) ) )
   (toplevel s.global) )
 
