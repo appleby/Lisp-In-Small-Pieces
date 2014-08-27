@@ -61,7 +61,8 @@
 
 ;;; Called from internal DISPALY-STATUS definition in both INTERPRETER and
 ;;; SUITE-TEST in src/tester.scm.
-(define display-exception display)
+(define (display-exception args)
+  (apply display-error #f (current-error-port) (cdr args)))
 
 ;;; The test-driver should try to catch errors of the underlying Scheme system.
 ;;; This is non-portable and difficult in many implementations. If do not
