@@ -528,7 +528,7 @@ bench.chap5a : src/chap5a.scm
 	echo \
 	    '(load "src/chap5a.scm")' \
 	    '(bench "src/chap5-bench.scm")' \
-	| ${SCHEME}
+	| ${TIME} ${SCHEME}
 
 # Lambda calculus denotation
 # The last tests loop due to applicative order.
