@@ -560,7 +560,7 @@ bench.chap5d : src/chap5d.scm src/chap5-bench.scm
 	echo \
 	    '(load "src/chap5d.scm")' \
 	    '(bench "src/chap5-bench.scm")' \
-	| ${SCHEME}
+	| ${TIME} ${SCHEME}
 
 # Modify the denotational interpreter chap5d to specify that
 # the evaluation order is unspecified.
