@@ -550,7 +550,7 @@ test.chap5c : src/chap5c.scm
 
 # Same as chap5c except that this one tries to precompute meanings.
 # This is slightly faster than chap5a.
-test.chap5d : src/chap5d.scm src/chap5-bench.scm
+test.chap5d : src/chap5d.scm
 	echo \
 	    '(load "src/chap5d.scm")' \
 	    '(test-denScheme "src/scheme.tst")' \
