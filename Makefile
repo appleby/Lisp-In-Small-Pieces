@@ -1271,7 +1271,7 @@ o/${HOSTTYPE}/LiSPbookc :
 	echo \
 	'(load "bigloo/compapp.scm")' \
 	"'(set! *verbose* #t)" \
-       	'(compile-bigloo-application' \
+	'(compile-bigloo-application' \
 	'  "${BIGLOO}" "o/${HOSTTYPE}/" "LiSPbookc"' \
 	" '(begin" \
 	'    (set! *h-dir* "$$H_DIR")' \
