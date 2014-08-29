@@ -30,6 +30,7 @@ b
  (lambda (f) (lambda (g) (lambda (x) ((f x) (g x))))) )
    2
 
+;;; these three loop
 ((label fact (lambda (x)
                ((((= x) a)
                  a )
@@ -43,7 +44,6 @@ b
   ((+ b) b) )
     24
 
-;;; this one loops 
 ((lambda (Y)
    ((lambda (meta-fact)
       ((Y meta-fact) ((+ b) b)) )
