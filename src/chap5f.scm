@@ -114,12 +114,17 @@
                ,((cps body)
                  (lambda (a) `(,c ,a)) ) ) )) ) ) 
 
+(newline)
+
 (pp ((cps '(set! fact (lambda (n)
                         (if (= n 1) 1
                             (* n (fact (- n 1))) ) )))
      (lambda (x) x) ))
 
+(newline)
+
 (pp ((cps '(begin 1 2))
      (lambda (x) x)))
 
+(newline)
 ;;; end of chap5f.scm
