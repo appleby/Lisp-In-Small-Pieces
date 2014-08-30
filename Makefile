@@ -161,12 +161,16 @@ build.interpreter : mkdir
 test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test \
     o/${HOSTTYPE}/book.gsi.test o/${HOSTTYPE}/book.guile.test
 
+MIT_BAND_FILE=o/${HOSTTYPE}/book.mit.com
+${MIT_BAND_FILE} : mkdir
+	echo "(disk-save \"${MIT_BAND_FILE}\" \"${MIT_BAND_FILE}\")" \
+	| mit-scheme --batch-mode --no-init-file --load mitscheme/book.scm
+
 # Makes a command to run mitscheme. Must be run from the current
 # directory.
-o/${HOSTTYPE}/book.mit : mkdir
+o/${HOSTTYPE}/book.mit : ${MIT_BAND_FILE}
 	echo "#!/bin/sh" > $@
-	echo "exec mit-scheme --batch-mode --no-init-file" \
-		" --load mitscheme/book.scm" >> $@
+	echo "exec mit-scheme --band ${MIT_BAND_FILE} --eval '(start)'" >> $@
 	chmod a=rwx $@
 
 # Makes a command to run guile. Must be run from the current
