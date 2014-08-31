@@ -533,7 +533,7 @@ bench.chap5a : src/chap5a.scm
 	echo \
 	    '(load "src/chap5a.scm")' \
 	    '(bench "src/chap5-bench.scm")' \
-	| ${TIME} ${SCHEME}
+	| ${SCHEME}
 
 # Lambda calculus denotation
 # The last tests loop due to applicative order.
@@ -565,7 +565,7 @@ bench.chap5d : src/chap5d.scm src/chap5-bench.scm
 	echo \
 	    '(load "src/chap5d.scm")' \
 	    '(bench "src/chap5-bench.scm")' \
-	| ${TIME} ${SCHEME}
+	| ${SCHEME}
 
 # Modify the denotational interpreter chap5d to specify that
 # the evaluation order is unspecified.
