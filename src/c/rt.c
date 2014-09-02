@@ -1955,7 +1955,7 @@ SCM SCM_call (SCM fun, SCM frame) {
 SCM SCM_List (SCM args, SCM nullenv)
 { SCM result = SCM_empty ;
   int i = args->frame.size-3 ;
-  for ( i ; i>=0 ; i-- )
+  for ( ; i>=0 ; i-- )
     { result = SCM_cons(args->frame.value[i],result) ; } ;
   return result ;
 }
