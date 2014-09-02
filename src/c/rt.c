@@ -528,8 +528,8 @@ void staticize_allocator() {
 
 /* Reports some statistics on the evaluation				*/
 void SCM_report_usage () {
-   fprintf(stderr,"Allocated data size= %s%u*%dK.\n", 
-           "", zones_number, SCM_ZONE_SIZE/1024 ) ;
+   fprintf(stderr,"Allocated data size= %s%lu*%dK.\n", 
+           "", (unsigned long)zones_number, SCM_ZONE_SIZE/1024 ) ;
 }
 #endif /* NO_GC */
 
