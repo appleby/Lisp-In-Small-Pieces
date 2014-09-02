@@ -877,9 +877,9 @@ SCM SCM_Set_Car (SCM x, SCM y)
 }
 
 SCM SCM_Set_Cdr (SCM x, SCM y)
-{ if ( SCM_pairp(x) ) 
-    if ( SCM_staticp(x) ) SCM_error(65) ;
-    else return (SCM_set_cdr(x,y)) ; 
+{ if ( SCM_pairp(x) )
+    { if ( SCM_staticp(x) ) SCM_error(65) ;
+      else return (SCM_set_cdr(x,y)) ; }
   SCM_error(63) ; /*TEMP*/
 }
 
