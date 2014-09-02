@@ -807,13 +807,11 @@ SCM SCM_Get_Universal_Time ()
 { static struct rusage rusage ;
   static long seconds, microseconds ;
   float delta ;
-  if ( 0==getrusage(RUSAGE_SELF,&rusage) ) 
-    { seconds = (rusage.ru_utime).tv_sec ;
-      microseconds = (rusage.ru_utime).tv_usec ;
-      delta = ((float) seconds) + (((float) microseconds) / 10e+6) ;
-      return SCM_make_floatnum(delta) ;
-    } 
-  else SCM_error(29) ;
+  if ( 0!=getrusage(RUSAGE_SELF,&rusage) ) SCM_error(29) ;
+  seconds = (rusage.ru_utime).tv_sec ;
+  microseconds = (rusage.ru_utime).tv_usec ;
+  delta = ((float) seconds) + (((float) microseconds) / 10e+6) ;
+  return SCM_make_floatnum(delta) ;
 }
 
 /***********************************************************************
@@ -860,27 +858,25 @@ SCM SCM_Cons (SCM x, SCM y)
 }
 
 SCM SCM_Car (SCM x)
-{ if ( SCM_pairp(x) ) { return (SCM_car(x)) ; } ;
-  SCM_error(60) ; /*TEMP*/
+{ if ( !(SCM_pairp(x)) ) SCM_error(60) ; /*TEMP*/
+  return (SCM_car(x)) ;
 }
 
 SCM SCM_Cdr (SCM x)
-{ if ( SCM_pairp(x) ) { return (SCM_cdr(x)) ; } ;
-  SCM_error(61) ; /*TEMP*/
+{ if ( !(SCM_pairp(x)) ) SCM_error(61) ; /*TEMP*/
+  return (SCM_cdr(x)) ;
 }
 
 SCM SCM_Set_Car (SCM x, SCM y)
-{ if ( SCM_pairp(x) ) 
-    if ( SCM_staticp(x) ) SCM_error(64) ;
-    else return (SCM_set_car(x,y)) ; 
-  else SCM_error(62) ; /*TEMP*/
+{ if ( !(SCM_pairp(x)) ) SCM_error(62) ; /*TEMP*/
+  if ( SCM_staticp(x) ) SCM_error(64) ;
+  return (SCM_set_car(x,y)) ; 
 }
 
 SCM SCM_Set_Cdr (SCM x, SCM y)
-{ if ( SCM_pairp(x) )
-    { if ( SCM_staticp(x) ) SCM_error(65) ;
-      else return (SCM_set_cdr(x,y)) ; }
-  SCM_error(63) ; /*TEMP*/
+{ if ( !(SCM_pairp(x)) ) SCM_error(63) ; /*TEMP*/
+  if ( SCM_staticp(x) ) SCM_error(65) ;
+  return (SCM_set_cdr(x,y)) ;
 }
 
 SCM SCM_Not (SCM x)
@@ -893,9 +889,8 @@ SCM SCM_Not (SCM x)
 
 #define DefArithOp(name,op,err)						\
 SCM name (SCM x, SCM y)							\
-{ if ( SCM_fixnump(x) && SCM_fixnump(y) ) 				\
-    return SCM_make_fixnum( SCM_fixnum2int(x) op SCM_fixnum2int(y)) ;	\
-  else SCM_error(err) ;							\
+{ if ( !(SCM_fixnump(x) && SCM_fixnump(y)) ) SCM_error(err) ;		\
+  return SCM_make_fixnum( SCM_fixnum2int(x) op SCM_fixnum2int(y)) ;	\
 }
 
 DefArithOp(SCM_Plus,+,50)
@@ -906,9 +901,8 @@ DefArithOp(SCM_Remainder,%,54)
 
 #define DefArithPred(name,op,err)					\
 SCM name (SCM x, SCM y)							\
-{ if ( SCM_fixnump(x) && SCM_fixnump(y) ) 				\
-    return SCM_2bool(SCM_fixnum2int(x) op SCM_fixnum2int(y)) ;		\
-  else SCM_error(err) ;							\
+{ if ( !(SCM_fixnump(x) && SCM_fixnump(y)) ) SCM_error(err) ;		\
+  return SCM_2bool(SCM_fixnum2int(x) op SCM_fixnum2int(y)) ;		\
 }
 
 DefArithPred(SCM_GtP,>,55)
@@ -922,10 +916,9 @@ DefArithPred(SCM_LeP,<=,59)
 
 #define DefFloatOp(name,op,err)						\
 SCM name (SCM x, SCM y)							\
-{ if ( SCM_floatnump(x) && SCM_floatnump(y) ) 				\
-    return SCM_make_floatnum(SCM_floatnum2float(x) 			\
-                             op SCM_floatnum2float(y)) ; 		\
-  else SCM_error(err) ;							\
+{ if ( !(SCM_floatnump(x) && SCM_floatnump(y)) ) SCM_error(err) ;	\
+  return SCM_make_floatnum(SCM_floatnum2float(x) 			\
+                           op SCM_floatnum2float(y)) ;   		\
 }
 
 DefFloatOp(SCM_Float_Plus,+,40)
@@ -935,10 +928,9 @@ DefFloatOp(SCM_Float_Divide,/,43)
 
 #define DefFloatPred(name,op,err)					\
 SCM name (SCM x, SCM y)							\
-{ if ( SCM_floatnump(x) && SCM_floatnump(y) ) 				\
-    return SCM_2bool(SCM_floatnum2float(x) 				\
-                     op SCM_floatnum2float(y)) ; 			\
-  else SCM_error(err) ;							\
+{ if ( !(SCM_floatnump(x) && SCM_floatnump(y)) ) SCM_error(err) ;	\
+  return SCM_2bool(SCM_floatnum2float(x) 				\
+                   op SCM_floatnum2float(y)) ; 		        	\
 }
 
 DefFloatPred(SCM_Float_GtP,>,44)
@@ -955,7 +947,7 @@ DefFloatPred(SCM_Float_LeP,<=,48)
 
 static int SCM_show_limit = 0 ;
 
-SCM SCM_show (SCM x, FILE *stream) {
+static void SCM_show (SCM x, FILE *stream) {
   if (SCM_show_limit-- < 0) 
     { fputs(" &&&",stream) ; }
   else
@@ -1092,91 +1084,86 @@ SCM SCM_Basic_Write (SCM x) {
 
 /* Safe conversion of a Scheme fixnum into a Scheme character. 		*/
 SCM SCM_Integer2Char (SCM x) {
-  if (SCM_fixnump(x))
-    { int v = SCM_fixnum2int(x) ;
-      return ((SCM) &SCM_characters[v]) ; }
-  else SCM_error(31) ;
+  int v;
+  if (!(SCM_fixnump(x))) SCM_error(31) ;
+  v = SCM_fixnum2int(x) ;
+  return ((SCM) &SCM_characters[v]) ;
 }
 
 /* Safe conversion of a Scheme character into a Scheme fixnum.		*/
 SCM SCM_Char2Integer (SCM x) {
-  if (SCM_charp(x)) return (SCM_make_fixnum(SCM_char2int(x))) ;
-  else SCM_error(32) ;
+  if (!(SCM_charp(x))) SCM_error(32) ;
+  return (SCM_make_fixnum(SCM_char2int(x))) ;
 }
 
 /* Safe conversion of a Scheme symbol to a Scheme string.		*/
 SCM SCM_Symbol2String (SCM x) {
-  if (SCM_symbolp(x)) return (SCM_symbol2string(x)) ;
-  else SCM_error(33) ;
+  if (!(SCM_symbolp(x)))  SCM_error(33) ;
+  return (SCM_symbol2string(x)) ;
 }
 
 /* This function creates new symbols but do not ensure uniqueness.	*/
 SCM SCM_Make_Symbol (SCM x) {
-  if (SCM_stringp(x)) return (SCM_make_symbol(x)) ;
-  else SCM_error(34) ;
+  if (!(SCM_stringp(x))) SCM_error(34) ;
+  return (SCM_make_symbol(x)) ;
 }
 
 /* Read a character from a stream. Use the last poken char if any.	*/
 SCM SCM_Read_Char (SCM x) {
-  if (SCM_streamp(x))
-    { SCM result = SCM_port2poken_char(x) ;
-      if ( result == (SCM) NULL )
-        { char c ;
-          c = fgetc(SCM_port2stream(x)) ;
-          if ( c==EOF ) return SCM_eof ;
-          else return SCM_int2char((int) c) ; }
-      else { SCM_port2poken_char(x) = (SCM) NULL ;
-             return result ; } ; }
-  else SCM_error(80) ;
+  SCM result;
+  if (!(SCM_streamp(x))) SCM_error(80) ;
+  result = SCM_port2poken_char(x) ;
+  if ( result == (SCM) NULL )
+    { char c ;
+      c = fgetc(SCM_port2stream(x)) ;
+      if ( c==EOF ) return SCM_eof ;
+      else return SCM_int2char((int) c) ; }
+  else { SCM_port2poken_char(x) = (SCM) NULL ;
+         return result ; }
 }
 
 /* Peek the next char (if not already done).				*/
 SCM SCM_Peek_Char (SCM x) {
-  if (SCM_streamp(x)) 
-    { SCM result = SCM_port2poken_char(x) ;
-      if ( result == (SCM) NULL )
-        { char c ;
-          c = fgetc(SCM_port2stream(x)) ;
-          result = ( c==EOF ) ? SCM_eof : SCM_int2char((int) c) ; } ;
-      SCM_port2poken_char(x) = result ;
-      return result ; }
-  else SCM_error(81) ;
+  SCM result;
+  if (!(SCM_streamp(x))) SCM_error(81) ;
+  result = SCM_port2poken_char(x) ;
+  if ( result == (SCM) NULL )
+    { char c ;
+      c = fgetc(SCM_port2stream(x)) ;
+      result = ( c==EOF ) ? SCM_eof : SCM_int2char((int) c) ; } ;
+  SCM_port2poken_char(x) = result ;
+  return result ;
 }
 
 /* Return the length of a string (or rope).				*/
 SCM SCM_String_Length (SCM x) {
-  if (SCM_stringp(x)) return SCM_make_fixnum(SCM_string2size(x)) ;
-  else SCM_error(90) ;
+  if (!(SCM_stringp(x))) SCM_error(90) ;
+  return SCM_make_fixnum(SCM_string2size(x)) ;
 }
 
 /* Return the Yth char of a string (or rope). Check the bounds.		*/
 SCM SCM_String_Ref (SCM x, SCM y) 
-{ if (SCM_stringp(x))
-    { if (SCM_fixnump(y))
-        { int index = SCM_fixnum2int(y) ;
-          if ( ( 0<=index ) & (index<SCM_string2size(x)) ) 
-            return (SCM_int2char((int) SCM_string2Cstring(x)[index])) ;
-          else SCM_error(91) ; }
-      else SCM_error(92) ; }
-  else SCM_error(93) ;
+{ int index;
+  if (!(SCM_stringp(x))) SCM_error(93) ;
+  if (!(SCM_fixnump(y))) SCM_error(92) ;
+  index = SCM_fixnum2int(y) ;
+  if ( !(( 0<=index ) & (index<SCM_string2size(x))) ) SCM_error(91) ;
+  return (SCM_int2char((int) SCM_string2Cstring(x)[index])) ;
 }
 
 /* Modifies the Yth character of a string				*/
 SCM SCM_String_Set (SCM x, SCM y, SCM z) 
-{ if (SCM_stringp(x)) 
-    { if (SCM_mutable_stringp(x))
-        { if (SCM_fixnump(y))
-            { int index = SCM_fixnum2int(y) ;
-              if ( ( 0<=index ) & (index<SCM_string2size(x)) )
-                { if (SCM_charp(z))
-                    { char c = SCM_string2Cstring(x)[index] ;
-                      SCM_string2Cstring(x)[index] = (char) SCM_char2int(z) ;
-                      return (SCM_int2char((int) c)) ; }
-                  else SCM_error(94) ; }
-                else SCM_error(95) ; }
-          else SCM_error(96) ; }
-      else SCM_error(97) ; }
-  else SCM_error(98) ;
+{ int index;
+  char c;
+  if (!(SCM_stringp(x))) SCM_error(98) ;
+  if (!(SCM_mutable_stringp(x)))  SCM_error(97) ;
+  if (SCM_fixnump(y)) SCM_error(96) ;
+  index = SCM_fixnum2int(y) ;
+  if ( !(( 0<=index ) & (index<SCM_string2size(x))) ) SCM_error(95) ;
+  if (!(SCM_charp(z))) SCM_error(94) ;
+  c = SCM_string2Cstring(x)[index] ;
+  SCM_string2Cstring(x)[index] = (char) SCM_char2int(z) ;
+  return (SCM_int2char((int) c)) ;
 }
 
 /***********************************************************************
@@ -1188,10 +1175,12 @@ SCM SCM_error (unsigned int code) {
   SCM_report_usage() ;
   fprintf(stderr,"Abort on error %d.\n",code) ; fflush(stderr) ;
   exit(code) ;
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 /* Produce a report and abort.						*/
-SCM SCM_report_error(unsigned int code, char *file, unsigned int line) {
+void SCM_report_error(unsigned int code, char *file, unsigned int line) {
   fflush(stdout) ; /* Flush normal output */
   fprintf(stderr,"Error %u occurred in file %s at line %u.\n",code,file,line) ;
   SCM_error(code) ;
@@ -1203,6 +1192,8 @@ SCM SCM_Exit (SCM x) {
     { SCM_report_usage() ;
       exit((unsigned int) SCM_fixnum2int(x)) ; }
   else SCM_error(20) ;
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 /***********************************************************************
@@ -1566,6 +1557,8 @@ SCM SCM_invoke0 (SCM function)
   SCM_error(204) ; 
  default: SCM_error(205) ;
 }
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 SCM SCM_invoke1 (SCM function, SCM v1)
@@ -1606,6 +1599,8 @@ SCM SCM_invoke1 (SCM function, SCM v1)
   SCM_invoke_stack_slice(function,v1) ;
  default: SCM_error(214) ;
 }
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 SCM SCM_invoke2 (SCM function, SCM v1, SCM v2)
@@ -1656,6 +1651,8 @@ SCM SCM_invoke2 (SCM function, SCM v1, SCM v2)
   SCM_error(224) ; 
  default: SCM_error(225) ;
 }
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 SCM SCM_invoke3 (SCM function, SCM v1, SCM v2, SCM v3)
@@ -1718,6 +1715,8 @@ SCM SCM_invoke3 (SCM function, SCM v1, SCM v2, SCM v3)
   SCM_error(234) ;
  default: SCM_error(235) ; 
 }
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 SCM SCM_invoke4 (SCM function, SCM v1, SCM v2, SCM v3, SCM v4)
@@ -1794,6 +1793,8 @@ SCM SCM_invoke4 (SCM function, SCM v1, SCM v2, SCM v3, SCM v4)
   SCM_error(244) ;
  default: SCM_error(245) ; 
 }
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 /* The polyadic invoker							*/
@@ -1890,6 +1891,8 @@ SCM SCM_invokeN (SCM function, int number, SCM args[])
     else SCM_error(257) ; } 
  default: SCM_error(258) ;  
 }
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 /************************************************************************
@@ -1947,6 +1950,8 @@ SCM SCM_call (SCM fun, SCM frame) {
   default: { SCM_error(205) ;
            }
   }
+  /* Not reached. Silence compiler -Wreturn-type warning. */
+  return (SCM) NULL;
 }
 
 /* List is a polyadic function which receives its arguments in a C vector.
@@ -2029,7 +2034,7 @@ static struct SCM_primitive SCM_APPLY_object =
   {{SCM_FUNCTION_TAG, (SCM) NULL}, SCM_Apply };
 SCM SCM_APPLY = (SCM) &(SCM_APPLY_object) ;
 
-SCM SCM_listify(SCM frame, SIZE_T arity) {
+void SCM_listify(SCM frame, SIZE_T arity) {
   SIZE_T index = frame->frame.size-2 ;
   SCM result = SCM_empty ;
   for ( ; arity<index ; index-- ) 

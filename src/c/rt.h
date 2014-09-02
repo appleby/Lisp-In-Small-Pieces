@@ -529,7 +529,7 @@ extern SCM SCM_ASSOC_DE ;
 
 /* Other resources */
 extern SCM SCM_error (unsigned int code) ;
-extern SCM SCM_report_error(unsigned int code, char *file, unsigned int line);
+extern void SCM_report_error(unsigned int code, char *file, unsigned int line);
 
 /* Run-time utilities.
  * This initializes the heap as well as all the predefined objects. 
@@ -580,6 +580,6 @@ extern SCM SCM_List (SCM frame, SCM nullenv) ;
 
 extern SCM SCM_Apply (SCM frame, SCM nullenv) ;
 
-extern SCM SCM_listify (SCM frame, SIZE_T arity) ;
+extern void SCM_listify (SCM frame, SIZE_T arity) ;
 
 #endif /* RTLIB_SCHEME_H */
