@@ -1461,6 +1461,8 @@ Coming from rtd_scheme.c (modified for the new invokation protocol)
  * Continuations (or so :~)
  * This is not guaranteed to work but it is written in pure C.		*/
 
+static SCM SCM_longjmp_retval = (SCM) NULL;
+
 SCM SCM_Call_CC (SCM f) {
   SCM result ;
   int r, count ;
@@ -1481,8 +1483,7 @@ SCM SCM_Call_CC (SCM f) {
       return SCM_call(f,frame) ;
     }
   }
-  else { SCM value = (SCM) r ;
-         return value ; } ;
+  else return SCM_longjmp_retval ;
 }
 DefineGlobalFunction(CALL_CC,SCM_Call_CC,1,"call/cc") ;
 
@@ -1516,7 +1517,8 @@ void SCM_invoke_stack_slice (SCM function, SCM v1)
                count>=0 ; i--,o++,count-- ) *i=(*o) ; }
       else for ( count=(function->stack_slice).stack_slice_length ;
                 count>=0 ; i++,o++,count-- ) *i=(*o) ;
-      longjmp((save_function->stack_slice).stack_jmp_buf,save_v1) ; 
+      SCM_longjmp_retval = save_v1 ;
+      longjmp((save_function->stack_slice).stack_jmp_buf,1) ; 
     } ; 
 }
 
