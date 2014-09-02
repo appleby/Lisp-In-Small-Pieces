@@ -116,7 +116,7 @@ typedef size_t SIZE_T ;
  * contains small letters. Scheme global variables are in uppercase
  * and prefixed with SCM_V_. Legal characters of Scheme that are illegal 
  * for C are mapped on legal C characters. For instance, pair? becomes
- * SCM_V_PAIRP while symbol->string becomes SCM_V_SYMBOL2STRING.
+ * SCM_V_PAIRP while symbol->string becomes SCM_V_SYMBOL2STRING.       */
 
 /***********************************************************************
  * SCM_object (see below) is the type of all Scheme objects
