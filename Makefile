@@ -658,7 +658,7 @@ test.chap6.bgl :
 	    "     'wait)))" \
 	    "(define (bench factor)" \
 	    "  (let loop ((factor factor))" \
-	    "    (let ((v (eval '(primes 2 (lambda (x) #f) 50))))" \
+	    "    (let ((v (eval '(primes 2 (lambda (x) #f) 500))))" \
 	    "      (if (> factor 1)" \
 	    "        (loop (- factor 1))" \
 	    "        (display v)))))" \
@@ -681,7 +681,7 @@ test.chap6.ml :
 	    "                    max;;" \
 	    "let bench factor =" \
 	    "  let rec loop factor =" \
-	    "    let v = primes 2 (fun x -> false) 50 in" \
+	    "    let v = primes 2 (fun x -> false) 500 in" \
 	    "      if (factor > 1) then" \
 	    "        loop (factor-1)" \
 	    "      else" \

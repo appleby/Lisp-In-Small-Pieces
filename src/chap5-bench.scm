@@ -29,7 +29,7 @@
                                         max ) )
                               (filter n) ) ) ) ) ) )
            'wait ) ) )
-  (display (primes 2 (lambda (x) f) 50)) )
+  (display (primes 2 (lambda (x) f) 500)) )
 
 ;;; With interpreted-chap5a on blaye: 62. seconds
 ;;; With interpreted-chap5d on blaye: 58. seconds
