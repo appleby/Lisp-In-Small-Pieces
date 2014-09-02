@@ -993,7 +993,7 @@ SCM SCM_show (SCM x, FILE *stream) {
       fputs("()",stream) ;
       break ; } ;
     case SCM_CLOSURE_TAG: {
-      fprintf(stream,"#<Closure:x%x>",(void*)(x->closure).behavior) ;
+      fprintf(stream,"#<Closure:%p>",(void *)(x->closure).behavior) ;
       break ; } ;
     case SCM_PRIMITIVE_TAG: {
       fputs("#<Primitive:",stream) ;
@@ -1019,7 +1019,7 @@ SCM SCM_show (SCM x, FILE *stream) {
       fputs("#<EndOfFile>",stream) ;
       break ; } ;
     case SCM_BOX_TAG: {         /* Should be invisible ? */
-      fprintf(stream,"#<Box:x%x>",(void*)(x)) ;
+      fprintf(stream,"#<Box:%p>",(void*)(x)) ;
       break ; } ;
     case SCM_STRING_TAG: {
       fputc('"',stream) ;
@@ -1046,26 +1046,26 @@ SCM SCM_show (SCM x, FILE *stream) {
       fputs("#<Port>",stream) ; /* Indicate the port number */
       break ; } ;
     case SCM_STACK_SLICE_TAG: {
-      fprintf(stream,"#<Stack_Slice:x%x>",(void*)(x)) ; 
+      fprintf(stream,"#<Stack_Slice:%p>",(void*)(x)) ; 
       break ; } ;
     case SCM_CONTINUATION_TAG: {
-      fprintf(stream,"#<Continuation:x%x>",(void*)(x)) ;
+      fprintf(stream,"#<Continuation:%p>",(void*)(x)) ;
       break ; } ;
     case SCM_PROCESS_TAG: {
-      fprintf(stream,"#<Process:x%x>",(void*)(x)) ;
+      fprintf(stream,"#<Process:%p>",(void*)(x)) ;
       break ; } ;
     case SCM_MODULE_TAG: {
-      fprintf(stream,"#<Module:x%x>",(void*)(x)) ;
+      fprintf(stream,"#<Module:%p>",(void*)(x)) ;
       break ; } ;
     case SCM_ROOT_TAG: {
-      fprintf(stream,"#<Roots:x%x>",(void*)(x)) ;
+      fprintf(stream,"#<Roots:%p>",(void*)(x)) ;
       break ; } ;
     case SCM_FRAME_TAG: {
       SIZE_T i, size = x->frame.size ;
       SCM next_frame = x->frame.next ;
-      fprintf(stream,"#<Frame:x%x[",(void*)(x)) ;
+      fprintf(stream,"#<Frame:%p[",(void*)(x)) ;
       for (i=0; i<size; i++) {
-        fprintf(stream,"(%d)=",i) ;
+        fprintf(stream,"(%lu)=",i) ;
         SCM_show(x->frame.value[i],stream) ;
         fprintf(stream,", ") ;
       }
@@ -1076,7 +1076,7 @@ SCM SCM_show (SCM x, FILE *stream) {
       fprintf(stream,">") ;
       break ; }
     case SCM_FUNCTION_TAG: {
-      fprintf(stream,"#<Function:x%x>",(void*)(x)) ;
+      fprintf(stream,"#<Function:%p>",(void*)(x)) ;
       break ; } ;
     default: 
       SCM_error(73) ;
