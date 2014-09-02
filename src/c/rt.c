@@ -1211,7 +1211,7 @@ SCM SCM_Exit (SCM x) {
 #define DefineImmediateObject(name,tag)                     \
 struct SCM_immediate_object SCM_CONC(name,_object) =        \
   {{tag, (SCM) NULL}} ;                                     \
-SCM name = (SCM) &(SCM_CONC(name,_object)) ;
+SCM name = (SCM) &(SCM_CONC(name,_object))
 
 DefineImmediateObject(SCM_true,  SCM_TRUE_TAG) ;
 SCM SCM_T = (SCM) &(SCM_true_object) ;
@@ -1225,7 +1225,7 @@ DefineImmediateObject(SCM_eof,   SCM_EOF_TAG) ;
 #define DefinePort(name,way)                              \
 static struct SCM_port SCM_CONC(name,_object) =           \
   {{SCM_PORT_TAG, (SCM) NULL}, way, (SCM) NULL, NULL} ;   \
-SCM name = (SCM) &(SCM_CONC(name,_object)) ;
+SCM name = (SCM) &(SCM_CONC(name,_object))
 
 #define InitPortStream(name,stream) SCM_CONC(name,_object).file = stream
 
@@ -1257,7 +1257,7 @@ static struct SCM_string SCM_CONC(name,_string) =                 \
 static struct SCM_primitive SCM_CONC(name,_object) =              \
   {{SCM_PRIMITIVE_TAG, (SCM) NULL},                               \
      C_function, arity, (SCM) &(SCM_CONC(name,_string)) } ;	  \
-SCM SCM_CONC(SCM_,name) = (SCM) &(SCM_CONC(name,_object)) ;
+SCM SCM_CONC(SCM_,name) = (SCM) &(SCM_CONC(name,_object))
 
 DefineGlobalFunction(PAIRP,SCM_PairP,1,"pair?") ;
 DefineGlobalFunction(NULLP,SCM_NullP,1,"null?") ;
