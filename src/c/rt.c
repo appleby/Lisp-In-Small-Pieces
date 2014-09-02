@@ -1966,7 +1966,7 @@ SCM SCM_LIST = (SCM) &(SCM_LIST_object) ;
 SCM SCM_The_Dynamic_Environment = (SCM) &(SCM_nullenv_object) ;
 
 struct SCM_frame SCM_nullframe_object =
-  {{SCM_FRAME_TAG, (SCM) NULL}, (SCM) NULL, (SIZE_T) 0, (SCM) NULL} ;  
+  {{SCM_FRAME_TAG, (SCM) NULL}, (SCM) NULL, (SIZE_T) 0, {(SCM) NULL}} ;  
 SCM SCM_The_Null_Frame = (SCM) &(SCM_nullframe_object) ;
 
 SCM SCM_Bind_DE (SCM key, SCM value, SCM thunk) {
