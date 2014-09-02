@@ -608,8 +608,6 @@ TEST_CHAP6 = test.chap6a test.chap6b test.chap6c test.chap6d \
 
 bench.chap6 : bench.chap6a bench.chap6b bench.chap6c bench.chap6d bench.chap6e
 
-test.chap6.bgl : test.chap6a.bgl
-
 # Fast interpretation, code is precompiled into (lambda (sr k)..)
 test.chap6a : src/chap6a.scm
 	echo \
@@ -624,19 +622,25 @@ bench.chap6a : src/chap6a.scm
 	    '(bench6a 1 (call-with-input-file "src/chap5-bench.scm" read))' \
 	| ${SCHEME}
 
+# 2014 Note: The file bigloo/compapp.scm was not included in the
+# source tarball from the author's site. One could likely re-create
+# `compile-bigloo-application' and get this target working again, if
+# one so desired. I do not so desire. Leaving this code here in case
+# my mood changes.
+#
 # Compiled bench with Bigloo
-test.chap6a.bgl : o/${HOSTTYPE}/rtbook.a o/${HOSTTYPE}/bglchap6a
-	${TIME} o/${HOSTTYPE}/bglchap6a 10
+# test.chap6a.bgl : o/${HOSTTYPE}/rtbook.a o/${HOSTTYPE}/bglchap6a
+# 	${TIME} o/${HOSTTYPE}/bglchap6a 10
 
-o/${HOSTTYPE}/bglchap6a : src/chap6a.scm bigloo/compapp.scm
-	echo \
-	    '(load "bigloo/compapp.scm")' \
-	    '(define the-bench (call-with-input-file "src/chap5-bench.scm" read))' \
-	    '(compile-bigloo-application '\
-	    '  "${BIGLOO}" "o/${HOSTTYPE}/" "bglchap6a" ' \
-	    "  `(bench6a (string->number (cadr command-options)) ',the-bench)" \
-	    '  "src/chap6a.scm")' \
-	| ${SCHEME}
+# o/${HOSTTYPE}/bglchap6a : src/chap6a.scm bigloo/compapp.scm
+# 	echo \
+# 	    '(load "bigloo/compapp.scm")' \
+# 	    '(define the-bench (call-with-input-file "src/chap5-bench.scm" read))' \
+# 	    '(compile-bigloo-application '\
+# 	    '  "${BIGLOO}" "o/${HOSTTYPE}/" "bglchap6a" ' \
+# 	    "  `(bench6a (string->number (cadr command-options)) ',the-bench)" \
+# 	    '  "src/chap6a.scm")' \
+# 	| ${SCHEME}
 
 # Testing the same fast interpreter with Bigloo (intepreted)
 test.chap6.bgl :
