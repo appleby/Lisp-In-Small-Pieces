@@ -399,7 +399,7 @@ extern SCM SCM_stdin, 		/* stdin */
   SCM_stdout, 			/* stdout */
   SCM_stderr ;			/* stderr */
 extern SCM SCM_options ;	/* the list of options for the command */
-extern void *SCM_Cstack_bottom ;	/* the address of the bottom 
+extern char *SCM_Cstack_bottom ;	/* the address of the bottom 
                                            of the stack (useful to copy
                                            stack slices). */
 

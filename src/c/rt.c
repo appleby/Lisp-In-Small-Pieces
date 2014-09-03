@@ -1248,7 +1248,7 @@ SCM SCM_options ;
  * change under this line. The second variable says if the stack grows
  * downward (as normal in Un*x) or up. This parameter is automatically
  * set, if necessary, in SCM_initialize.				*/
-void *SCM_Cstack_bottom = (void*) NULL ;
+char *SCM_Cstack_bottom = (char*) NULL ;
 SCM_stack_growing_type SCM_stack_grows = DOWN ;
 
 /***********************************************************************
@@ -1322,11 +1322,11 @@ void SCM_initialize (int argc, char *argv[])
 { int i ;
   /* Check that the C stack bottom is already set. 
      It must be set just after main() if possible. */
-  if ( SCM_Cstack_bottom == ((void*) NULL) )
+  if ( SCM_Cstack_bottom == ((char*) NULL) )
     { fprintf(stderr,"Initialization error: SCM_Cstack_bottom not set.\n") ;
       SCM_error(1) ; } ;
   /* Determine the way the stack grows. */
-  if ( SCM_Cstack_bottom < ((void*) &i) ) SCM_stack_grows = UP ;
+  if ( SCM_Cstack_bottom < ((char*) &i) ) SCM_stack_grows = UP ;
   /* Initialize port streams. */
   InitPortStream(SCM_stdin,  stdin);
   InitPortStream(SCM_stdout, stdout);
@@ -1479,7 +1479,7 @@ SCM SCM_Call_CC (SCM f) {
   SCM result ;
   int r, count ;
   char *i, *o ;
-  void *current_stack_ptr = (void*) &result ;
+  char *current_stack_ptr = (char*) &result ;
   SIZE_T stack_length = abs(SCM_Cstack_bottom - current_stack_ptr) ;
   result = SCM_make_stack_slice(stack_length) ;
   (result->stack_slice).stack_slice_length = stack_length ;
@@ -1506,8 +1506,8 @@ void SCM_invoke_stack_slice (SCM function, SCM v1)
        insensitive to the value of STEP. 
        SCM mark ;
        char *current_stack_ptr = (char*) &mark ; */
-  void *current_stack_ptr ;
-  current_stack_ptr = (void*) &current_stack_ptr ;
+  char *current_stack_ptr ;
+  current_stack_ptr = (char*) &current_stack_ptr ;
   /* This test tries to check if both the stack and frame pointers 
      will not be overwritten when copying back the stack_slice.
      This works on Sony News with cc (and gcc???). */

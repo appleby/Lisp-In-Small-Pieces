@@ -200,7 +200,7 @@ int main(int argc, char *argv[]) { ")
   (format out "
 /* Mark the (approximate) bottom of the stack */
 char *current_stack_ptr ;
-SCM_Cstack_bottom = (void*) &current_stack_ptr ;
+SCM_Cstack_bottom = (char*) &current_stack_ptr ;
 SCM_initialize(argc,argv) ;
 expression();
 exit(0);
