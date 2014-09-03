@@ -524,6 +524,7 @@ static void initialize_allocator()
 }
 
 void staticize_allocator() {
+  zone_static_end = (SCM) NULL;
 }
 
 /* Reports some statistics on the evaluation				*/
