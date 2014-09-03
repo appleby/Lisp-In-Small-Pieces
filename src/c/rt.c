@@ -945,6 +945,16 @@ DefFloatPred(SCM_Float_LeP,<=,48)
  * To avoid printing circular structures, SCM_show can only print a
  * limited amount of objects specified in the following global variable.*/
 
+static char *SCM_thunkptr2str(char *buf, SCM (*behavior)()) {
+  size_t i = 0;
+  size_t r = sizeof *buf; /* Bytes remaining in buf. */
+  size_t w = 0;           /* Bytes written so far.   */
+  unsigned char *p = (unsigned char *) &behavior ;
+  for ( ; i < sizeof p && w < r; i++)
+    w += sprintf(buf + i, "%02x", p[i]);
+  return buf;
+}
+
 static int SCM_show_limit = 0 ;
 
 static void SCM_show (SCM x, FILE *stream) {
@@ -985,7 +995,9 @@ static void SCM_show (SCM x, FILE *stream) {
       fputs("()",stream) ;
       break ; } ;
     case SCM_CLOSURE_TAG: {
-      fprintf(stream,"#<Closure:%p>",(void *)(x->closure).behavior) ;
+      static char buf[(2 * sizeof (unsigned char *)) + 1];
+      fprintf(stream,"#<Closure:0x%s>",
+	      SCM_thunkptr2str(buf, (x->closure).behavior)) ;
       break ; } ;
     case SCM_PRIMITIVE_TAG: {
       fputs("#<Primitive:",stream) ;
