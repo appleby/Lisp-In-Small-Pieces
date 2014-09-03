@@ -184,7 +184,7 @@ SCM SCM_~A = (SCM) &(SCM_undef_object) ;"
   (let ((mcode (car m))
         (mvars (cdr m)) )
     (format out "
-static SCM 
+static void 
 expression () { " )
   (generate-local-temporaries out mvars)
   (format out "
