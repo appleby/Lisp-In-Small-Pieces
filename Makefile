@@ -808,10 +808,10 @@ export CaFLAGS = -I${LiSP_TOPDIR}/src/c ${CFLAGS}
 
 o/${HOSTTYPE}/chap6f-bench.c : src/chap6f.scm src/chap5-bench.scm
 	echo \
-	    '(loadq "src/chap6f.scm")' \
-	    '(compile-file "src/chap5-bench.scm" "o/${HOSTTYPE}/tt.c")' \
-	| ${SCHEME} -sch 8
-	-indent o/${HOSTTYPE}/tt.c
+	    '(load "src/chap6f.scm")' \
+	    '(compile-file "src/chap5-bench.scm" "$@")' \
+	| ${SCHEME}
+	-indent $@
 
 # The runtime in C for that compiler. Generates a lot of warnings...
 # superseded by the new library src/c/scheme*.[ch] (but this one
@@ -819,8 +819,8 @@ o/${HOSTTYPE}/chap6f-bench.c : src/chap6f.scm src/chap5-bench.scm
 o/${HOSTTYPE}/rt.o : src/c/rt.c src/c/rt.h
 	cd o/${HOSTTYPE} ; ${CC} -c ${CaFLAGS} ../../src/c/rt.c
 o/${HOSTTYPE}/chap6f-bench : o/${HOSTTYPE}/chap6f-bench.c
-o/${HOSTTYPE}/chap6f-bench : src/c/rt.h o/${HOSTTYPE}/rt.o
-	cd o/${HOSTTYPE} ; ${CC} -o tt ${CaFLAGS} chap6f-bench.c rt.o
+o/${HOSTTYPE}/chap6f-bench : o/${HOSTTYPE}/rt.o
+	${CC} -o $@ ${CaFLAGS} $^
 
 ########### end of chap6f which was superseded by chap10. (obsolete)
 
