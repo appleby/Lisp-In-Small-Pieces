@@ -202,7 +202,7 @@
 (define r.global r.init)
 (define s.global s.init)
 
-(define (chapter4-interpreter)
+(define (chapter4a-scheme)
   (define (toplevel s)
     (evaluate (read)
               r.global 

@@ -349,10 +349,11 @@
 ;;;oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; Testing
 
-(define (chapter62-interpreter)
+(define (chapter6c-scheme)
   (define (toplevel)
     (set! *env* sr.init)
     ((meaning (read) r.init #t) display)
+    (newline)
     (toplevel) )
   (toplevel) )
 

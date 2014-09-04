@@ -734,10 +734,11 @@
 ;;;oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; Testing
 
-(define (chapter63-interpreter)
+(define (chapter6d-scheme)
   (define (toplevel)
     (set! *env* sr.init)
     (display ((meaning (read) r.init #t)))
+    (newline)
     (toplevel) )
   (toplevel) )
 

@@ -97,9 +97,10 @@
          (evaluate-begin (function-body f) env k) )
       (wrong "Incorrect arity" (function-variables f) v*) ) )
 
-(define (chap3j-interpreter)
+(define (chapter3j-scheme)
   (letrec ((k.init (make-bottom-cont 
                     'void (lambda (v) (display v)
+				      (newline)
                                       (toplevel) ) ))
            (toplevel (lambda () (evaluate (read) r.init k.init))) )
      (toplevel) ) )

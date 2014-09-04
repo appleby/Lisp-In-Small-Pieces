@@ -672,11 +672,12 @@
 
 ;;; Testing
 
-(define (chapter61-interpreter)
+(define (chapter6a-scheme)
   (define (compile e) (meaning e r.init))
   (define (run c) (c sr.init display))
   (define (toplevel)
     (run (compile (read)))
+    (newline)
     (toplevel) )
   (toplevel) )
 

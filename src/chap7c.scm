@@ -436,7 +436,7 @@ STACK = ~A~%" message (length *pc*)
 
 ;;;oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
-(define (chapter7c-interpreter)
+(define (chapter7c-scheme)
   (define (toplevel)
     (define e (read))
     (set! *env* sr.init)
@@ -452,6 +452,7 @@ STACK = ~A~%" message (length *pc*)
                (set! *exit* exit)
                (run) ))
     (display *val*)
+    (newline)
     (toplevel) )
   (toplevel) )
 

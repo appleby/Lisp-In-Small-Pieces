@@ -255,12 +255,13 @@
                 originals
                 combinator-names ) ) ) )
 
-(define (chapter7a-interpreter)
+(define (chapter7a-scheme)
   (define (toplevel)
     (set! *env* sr.init)
     (set! *val* #f)
     ((meaning (read) r.init #t))
     (display *val*)
+    (newline)
     (toplevel) )
   (toplevel) )
 

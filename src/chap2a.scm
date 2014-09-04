@@ -209,9 +209,10 @@
 (definitial-function list 
   (lambda (values) values) )
 
-(define (chapter2-scheme)
+(define (chapter2a-scheme)
   (define (toplevel)
     (display (f.evaluate (read) env.global fenv.global))
+    (newline)
     (toplevel) )
   (toplevel) )
 

@@ -187,11 +187,12 @@
       (resume f (car v*))
       (wrong "Continuations expect one argument" v* r k) ) )
 
-(define (chapter3-interpreter)
+(define (chapter3f-scheme)
   (define (toplevel)
     (evaluate (read) 
               r.init 
               (make-bottom-cont 'void display) )
+    (newline)
     (toplevel) )
   (toplevel) )
 

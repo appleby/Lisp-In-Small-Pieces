@@ -76,6 +76,7 @@
 (define (chapter1d-scheme)
   (define (toplevel)
     (display (evaluate (read) env.global))
+    (newline)
     (toplevel) )
   (display "Welcome to Scheme")(newline)
   (call/cc (lambda (end)

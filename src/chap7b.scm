@@ -332,13 +332,14 @@
                 originals
                 combinator-names ) ) ) )
 
-(define (chapter7b-interpreter)
+(define (chapter7b-scheme)
   (define (toplevel)
     (set! *env* sr.init)
     (set! *val* #f)
     (set! *stack-index* 0)
     ((meaning (read) r.init #t))
     (display *val*)
+    (newline)
     (toplevel) )
   (toplevel) )
 

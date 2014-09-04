@@ -206,6 +206,7 @@
 (define (chapter1-scheme)
   (define (toplevel)
      (display (evaluate (read) env.global))
+     (newline)
      (toplevel) )
   (toplevel) )
 

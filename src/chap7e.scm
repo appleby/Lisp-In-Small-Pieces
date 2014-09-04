@@ -225,7 +225,7 @@
 
 ;;;oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
-(define (chapter7e-interpreter)
+(define (chapter7e-scheme)
   (define (toplevel)
     (let* ((e (read))
            (code (make-code-segment (meaning e r.init #t)))
@@ -235,6 +235,7 @@
            (start-pc (length (code-prologue))) )
       (run-machine start-pc code constants global-names dynamics)
       (display *val*)
+      (newline)
       (toplevel) ) )
   (toplevel) ) 
 

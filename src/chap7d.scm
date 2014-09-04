@@ -652,9 +652,10 @@
 (define (make-code-segment m)
   (apply vector (append (code-prologue) m (RETURN))) )
 
-(define (chapter7d-interpreter)
+(define (chapter7d-scheme)
   (define (toplevel)
     (display ((stand-alone-producer7d (read)) 100))
+    (newline)
     (toplevel) )
   (toplevel) ) 
 
