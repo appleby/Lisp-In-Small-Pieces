@@ -789,7 +789,7 @@ dynext.test.chap6f : test.chap6f
 test.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
 	echo \
 	    '(load "src/chap6f.scm")' \
-	    '(test-scheme "src/scheme.tst")' \
+	    '(test-scheme6f "src/scheme.tst")' \
 	| ${SCHEME}
 
 # start an interpreter to interactively compile towards C.
@@ -798,7 +798,7 @@ test.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
 # C.  This test fails on continuation used out of their dynamic
 # extent (no full continuation a la Scheme).
 start.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
-	@(echo '(load "src/chap6f.scm") (scheme)' ; tee ) | ${SCHEME}
+	@(echo '(load "src/chap6f.scm") (scheme6f)' ; tee ) | ${SCHEME}
 
 # A little bench to appreciate the compiler speed. (obsolete)
 bench.chap6f : o/${HOSTTYPE}/chap6f-bench

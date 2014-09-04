@@ -1127,7 +1127,7 @@ SCM_The_Environment=~A,
 ;;;oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooNEW
 ;;; Testing
 
-(define (scheme)
+(define (scheme6f)
   (interpreter 
    "Expression to compile? "  
    "Compilation " 
@@ -1148,7 +1148,7 @@ SCM_The_Environment=~A,
           (lambda (out)
             (compile->C out e) ) ) ) ) ) )
 
-(define (test-scheme file)
+(define (test-scheme6f file)
   (call/cc
    (lambda (finish)
      (define native-read read)
