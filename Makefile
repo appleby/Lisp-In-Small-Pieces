@@ -907,11 +907,11 @@ test.chap7g : src/chap7h.scm src/chap7g.scm
 	    '(and (test-scheme7g "src/scheme.tst")' \
 	    '     (test-scheme7g "src/chap7d.tst")' \
 	    '     (test-scheme7g "src/chap5c.tst"))' \
-	    '(compile-file "tmp.si/foo.scm" "o/foo.so")' \
+	    '(compile-file "si/foo.scm" "o/foo.so")' \
 	    '(run-application 100 "o/foo.so")' \
-	    '(compile-file "tmp.si/fact.scm" "o/fact.so")' \
-	    '(compile-file "tmp.si/fib.scm" "o/fib.so")' \
-	    '(compile-file "tmp.si/after.scm" "o/after.so")' \
+	    '(compile-file "si/fact.scm" "o/fact.so")' \
+	    '(compile-file "si/fib.scm" "o/fib.so")' \
+	    '(compile-file "si/after.scm" "o/after.so")' \
 	    '(build-application' \
 	    '  "o/a.out" "o/fact.so" "o/fib.so" "o/foo.so" "o/after.so")' \
 	    '(run-application 400 "o/a.out")' \
@@ -1115,7 +1115,7 @@ tmp.test.chap8j :
 	    '(load "src/chap7g.scm")' \
 	    '(load "src/chap8h.scm")' \
 	    '(load "src/chap8j.scm")' \
-	    '(and (run-application 400 "tmp.si/a.out")' \
+	    '(and (run-application 400 "o/a.out")' \
 	    "     'done)" \
 	    ; cat src/chap8j.tst ) \
 	| ${SCHEME}

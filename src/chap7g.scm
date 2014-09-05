@@ -227,7 +227,7 @@
 ;;;ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; rename exported variables. It is even possible to swap variables as in:
 ;;; (build-application-renaming-variables 
-;;;     "tmp.si/na.out" "tmp.si/a.out" '((fib fact) (fact fib)) )
+;;;     "o/na.out" "o/a.out" '((fib fact) (fact fib)) )
 
 (define (build-application-renaming-variables 
          new-application-name application-name substitutions )
