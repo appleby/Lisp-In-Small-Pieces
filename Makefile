@@ -844,7 +844,6 @@ test.chap6h : src/chap6d.scm src/chap6h.scm
 
 ##################################### Chap 7 ##############################
 # Bytecode compilation
-
 TEST_CHAP7 = test.chap7a test.chap7b test.chap7c test.chap7d test.chap7e \
 	     test.chap7g test.chap7h shallow.test.chap7i
 
@@ -908,11 +907,11 @@ test.chap7g : src/chap7h.scm src/chap7g.scm
 	    '(and (test-scheme7g "src/scheme.tst")' \
 	    '     (test-scheme7g "src/chap7d.tst")' \
 	    '     (test-scheme7g "src/chap5c.tst"))' \
-	    '(compile-file "tmp.si/foo")' \
+	    '(compile-file "tmp.si/foo" "tmp.si/foo")' \
 	    '(run-application 100 "tmp.si/foo.so")' \
-	    '(compile-file "tmp.si/fact")' \
-	    '(compile-file "tmp.si/fib")' \
-	    '(compile-file "tmp.si/after")' \
+	    '(compile-file "tmp.si/fact" "tmp.si/fact")' \
+	    '(compile-file "tmp.si/fib" "tmp.si/fib")' \
+	    '(compile-file "tmp.si/after" "tmp.si/after")' \
 	    '(build-application' \
 	    '  "tmp.si/a.out" "tmp.si/fact" "tmp.si/fib" "tmp.si/foo" "tmp.si/after")' \
 	    '(run-application 400 "tmp.si/a.out")' \
@@ -1098,7 +1097,7 @@ test.chap8j : src/chap8h.scm si/reflisp.scm
 	    '        (lambda (out)' \
 	    "          (write \`((lambda (reflisp-code) ,e) ',e) out)" \
 	    '          (newline out))))))' \
-	    '(compile-file "tmp.si/tmp")' \
+	    '(compile-file "tmp.si/tmp" "tmp.si/tmp")' \
 	    '(build-application "tmp.si/a.out" "tmp.si/tmp")' \
 	    '(display `(byte-size is ,(vector-length *code*)))' \
 	    '(newline)' \

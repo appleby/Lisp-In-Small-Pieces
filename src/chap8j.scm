@@ -40,7 +40,7 @@
 (define-method  (show (e activation-frame) . stream)
   (call-next-method) )
 
-;;; (compile-file "si/reflisp")			
+;;; (compile-file "si/reflisp" "si/reflisp")			
 ;;; (run-application 400 "si/reflisp.so")
 
 ;;; To know the length of the interpreter: (vector-length *code*)
