@@ -907,11 +907,11 @@ test.chap7g : src/chap7h.scm src/chap7g.scm
 	    '(and (test-scheme7g "src/scheme.tst")' \
 	    '     (test-scheme7g "src/chap7d.tst")' \
 	    '     (test-scheme7g "src/chap5c.tst"))' \
-	    '(compile-file "tmp.si/foo" "tmp.si/foo")' \
+	    '(compile-file "tmp.si/foo.scm" "tmp.si/foo.so")' \
 	    '(run-application 100 "tmp.si/foo.so")' \
-	    '(compile-file "tmp.si/fact" "tmp.si/fact")' \
-	    '(compile-file "tmp.si/fib" "tmp.si/fib")' \
-	    '(compile-file "tmp.si/after" "tmp.si/after")' \
+	    '(compile-file "tmp.si/fact.scm" "tmp.si/fact.so")' \
+	    '(compile-file "tmp.si/fib.scm" "tmp.si/fib.so")' \
+	    '(compile-file "tmp.si/after.scm" "tmp.si/after.so")' \
 	    '(build-application' \
 	    '  "tmp.si/a.out" "tmp.si/fact" "tmp.si/fib" "tmp.si/foo" "tmp.si/after")' \
 	    '(run-application 400 "tmp.si/a.out")' \
@@ -1097,7 +1097,7 @@ test.chap8j : src/chap8h.scm si/reflisp.scm
 	    '        (lambda (out)' \
 	    "          (write \`((lambda (reflisp-code) ,e) ',e) out)" \
 	    '          (newline out))))))' \
-	    '(compile-file "tmp.si/tmp" "tmp.si/tmp")' \
+	    '(compile-file "tmp.si/tmp.scm" "tmp.si/tmp.so")' \
 	    '(build-application "tmp.si/a.out" "tmp.si/tmp")' \
 	    '(display `(byte-size is ,(vector-length *code*)))' \
 	    '(newline)' \

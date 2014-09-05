@@ -42,16 +42,13 @@
   (set! g.current '())
   (set! *quotations* '())
   (set! *dynamic-variables* '())
-  (let* ((complete-filename (string-append infile ".scm"))
-         (e               `(begin . ,(read-file complete-filename)))
+  (let* ((e               `(begin . ,(read-file infile)))
          (code            (make-code-segment (meaning e r.init #t)))
          (global-names    (map car (reverse g.current)))
          (constants       (apply vector *quotations*))
-         (dynamics        *dynamic-variables*)
-         (ofilename       (string-append outfile ".so")) )
-    (write-result-file ofilename 
-                       (list ";;; Bytecode object file for " 
-                             complete-filename )
+         (dynamics        *dynamic-variables*))
+    (write-result-file outfile 
+                       (list ";;; Bytecode object file for " infile )
                        dynamics global-names constants code
                        (length (code-prologue)) ) ) )
 
@@ -341,7 +338,7 @@
      (lambda ()
        (call-with-output-file "tmp.si/tmp.scm"
          (lambda (out) (write (skip-read) out)) )
-       (compile-file "tmp.si/tmp" "tmp.si/tmp")
+       (compile-file "tmp.si/tmp.scm" "tmp.si/tmp.so")
        (set! *debug* #f)
        (run-tested-application 100 "tmp.si/tmp.so")
        (check *val*) ) )
