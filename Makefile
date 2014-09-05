@@ -348,7 +348,7 @@ endif
 GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 
 # Test only parts of the grand tour of tests.
-TMP_ALL_TESTS = ${TEST_CHAP9} ${TEST_CHAP10}
+TMP_ALL_TESTS = $(filter-out ${BROKEN_TESTS}, ${TEST_CHAP7} ${TEST_CHAP8})
 
 tmp.grand.test : WHICH_TESTS = ${TMP_ALL_TESTS}
 grand.test : WHICH_TESTS = ${GRAND_TESTS}
