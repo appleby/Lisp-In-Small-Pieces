@@ -1527,7 +1527,7 @@ mkdir :
 
 # Clean or recursively clean directories.
 clean ::
-	-rm -rf o/${HOSTTYPE}
+	-rm -rf o/*
 	-rm chap10*.log
 
 # Create tags for editing sources with Gnu Emacs.
