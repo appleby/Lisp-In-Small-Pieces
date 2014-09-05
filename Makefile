@@ -1531,6 +1531,5 @@ clean ::
 	-rm chap10*.log
 
 # Create tags for editing sources with Gnu Emacs.
-tags : TAGS
-TAGS :
+tags : 
 	etags */?*.scm
