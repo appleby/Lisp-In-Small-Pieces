@@ -57,8 +57,8 @@
                ))
 ;;; prints (720 (bar . -34) (1 2 ... #t))
 
-;;; reload fib
-(load "tmp.si/fib")
+;;; reload fib.so
+(load "tmp.si/fib.so")
 
 ;;; prints 89.
 (display ((global-value 'fib) 10))

@@ -913,7 +913,7 @@ test.chap7g : src/chap7h.scm src/chap7g.scm
 	    '(compile-file "tmp.si/fib.scm" "o/fib.so")' \
 	    '(compile-file "tmp.si/after.scm" "o/after.so")' \
 	    '(build-application' \
-	    '  "o/a.out" "o/fact" "o/fib" "o/foo" "o/after")' \
+	    '  "o/a.out" "o/fact.so" "o/fib.so" "o/foo.so" "o/after.so")' \
 	    '(run-application 400 "o/a.out")' \
 	    '(build-application-renaming-variables' \
 	    '  "o/na.out" "o/a.out"' \
@@ -1098,7 +1098,7 @@ test.chap8j : src/chap8h.scm si/reflisp.scm
 	    "          (write \`((lambda (reflisp-code) ,e) ',e) out)" \
 	    '          (newline out))))))' \
 	    '(compile-file "o/tmp.scm" "o/tmp.so")' \
-	    '(build-application "o/a.out" "o/tmp")' \
+	    '(build-application "o/a.out" "o/tmp.so")' \
 	    '(display `(byte-size is ,(vector-length *code*)))' \
 	    '(newline)' \
 	    '(and (run-application 400 "o/a.out")' \
