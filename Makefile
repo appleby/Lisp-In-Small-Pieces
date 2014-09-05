@@ -907,18 +907,18 @@ test.chap7g : src/chap7h.scm src/chap7g.scm
 	    '(and (test-scheme7g "src/scheme.tst")' \
 	    '     (test-scheme7g "src/chap7d.tst")' \
 	    '     (test-scheme7g "src/chap5c.tst"))' \
-	    '(compile-file "tmp.si/foo.scm" "tmp.si/foo.so")' \
-	    '(run-application 100 "tmp.si/foo.so")' \
-	    '(compile-file "tmp.si/fact.scm" "tmp.si/fact.so")' \
-	    '(compile-file "tmp.si/fib.scm" "tmp.si/fib.so")' \
-	    '(compile-file "tmp.si/after.scm" "tmp.si/after.so")' \
+	    '(compile-file "tmp.si/foo.scm" "o/foo.so")' \
+	    '(run-application 100 "o/foo.so")' \
+	    '(compile-file "tmp.si/fact.scm" "o/fact.so")' \
+	    '(compile-file "tmp.si/fib.scm" "o/fib.so")' \
+	    '(compile-file "tmp.si/after.scm" "o/after.so")' \
 	    '(build-application' \
-	    '  "tmp.si/a.out" "tmp.si/fact" "tmp.si/fib" "tmp.si/foo" "tmp.si/after")' \
-	    '(run-application 400 "tmp.si/a.out")' \
+	    '  "o/a.out" "o/fact" "o/fib" "o/foo" "o/after")' \
+	    '(run-application 400 "o/a.out")' \
 	    '(build-application-renaming-variables' \
-	    '  "tmp.si/na.out" "tmp.si/a.out"' \
+	    '  "o/na.out" "o/a.out"' \
 	    "  '((fib fact) (fact fib)))" \
-	    '(run-application 400 "tmp.si/na.out")' \
+	    '(run-application 400 "o/na.out")' \
 	    "(assoc 'long-goto (disassemble *code*))" \
 	| ${SCHEME}
 
@@ -1093,15 +1093,15 @@ test.chap8j : src/chap8h.scm si/reflisp.scm
 	    '  (lambda (in)' \
 	    '    (let ((e (read in)))' \
 	    '      (call-with-output-file' \
-	    '        "tmp.si/tmp.scm"' \
+	    '        "o/tmp.scm"' \
 	    '        (lambda (out)' \
 	    "          (write \`((lambda (reflisp-code) ,e) ',e) out)" \
 	    '          (newline out))))))' \
-	    '(compile-file "tmp.si/tmp.scm" "tmp.si/tmp.so")' \
-	    '(build-application "tmp.si/a.out" "tmp.si/tmp")' \
+	    '(compile-file "o/tmp.scm" "o/tmp.so")' \
+	    '(build-application "o/a.out" "o/tmp")' \
 	    '(display `(byte-size is ,(vector-length *code*)))' \
 	    '(newline)' \
-	    '(and (run-application 400 "tmp.si/a.out")' \
+	    '(and (run-application 400 "o/a.out")' \
 	    "     'done)" \
 	    ; cat src/chap8j.tst ) \
 	| ${SCHEME}

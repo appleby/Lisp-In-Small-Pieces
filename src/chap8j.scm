@@ -40,8 +40,8 @@
 (define-method  (show (e activation-frame) . stream)
   (call-next-method) )
 
-;;; (compile-file "si/reflisp.scm" "si/reflisp.so")			
-;;; (run-application 400 "si/reflisp.so")
+;;; (compile-file "si/reflisp.scm" "o/reflisp.so")			
+;;; (run-application 400 "o/reflisp.so")
 
 ;;; To know the length of the interpreter: (vector-length *code*)
 ;;; Actually 1270 bytes (with procedure->definition and others)

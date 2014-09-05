@@ -336,11 +336,11 @@
              e ) ) )
      (setup-wrong-functions error)
      (lambda ()
-       (call-with-output-file "tmp.si/tmp.scm"
+       (call-with-output-file "o/tmp.scm"
          (lambda (out) (write (skip-read) out)) )
-       (compile-file "tmp.si/tmp.scm" "tmp.si/tmp.so")
+       (compile-file "o/tmp.scm" "o/tmp.so")
        (set! *debug* #f)
-       (run-tested-application 100 "tmp.si/tmp.so")
+       (run-tested-application 100 "o/tmp.so")
        (check *val*) ) )
    equal? ) )
 
