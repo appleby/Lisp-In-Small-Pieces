@@ -227,99 +227,28 @@ check.results :
 	    then echo '*** Tests successfully passed ***' ; \
 	    else echo '*** *** Abnormal results **** ***' ; exit 1 ; fi
 
-o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test1
-o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test2
-o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test3
-o/${HOSTTYPE}/book.bigloo.test : o/${HOSTTYPE}/book.bigloo.test4
-o/${HOSTTYPE}/book.bigloo.test1 : o/${HOSTTYPE}/book.bigloo
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.bigloo \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.bigloo.test2 : o/${HOSTTYPE}/book.bigloo
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.bigloo \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.bigloo.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.bigloo test.chap1 | tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.bigloo.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.bigloo test.chap2a | tee ${RESULTS}
-	${MAKE} check.results
+o/${HOSTTYPE}/book.bigloo.test :
+	${MAKE} SCHEME=o/${HOSTTYPE}/book.bigloo book.interpreter.test
+o/${HOSTTYPE}/book.gsi.test :
+	${MAKE} SCHEME=o/${HOSTTYPE}/book.gsi book.interpreter.test
+o/${HOSTTYPE}/book.mit.test :
+	${MAKE} SCHEME=o/${HOSTTYPE}/book.mit book.interpreter.test
+o/${HOSTTYPE}/book.guile.test :
+	${MAKE} SCHEME=o/${HOSTTYPE}/book.guile book.interpreter.test
 
-o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test1
-o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test2
-o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test3
-o/${HOSTTYPE}/book.gsi.test : o/${HOSTTYPE}/book.gsi.test4
-o/${HOSTTYPE}/book.gsi.test1 : o/${HOSTTYPE}/book.gsi
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsi \
-		| tee ${RESULTS}
+book.interpreter.test : book.interpreter.test1 book.interpreter.test2 \
+			book.interpreter.test3 book.interpreter.test4
+book.interpreter.test1 : ${SCHEME}
+	echo '(test "src/syntax.tst")' | ${SCHEME} | tee ${RESULTS}
 	${MAKE} check.results
-o/${HOSTTYPE}/book.gsi.test2 : o/${HOSTTYPE}/book.gsi
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.gsi \
-		| tee ${RESULTS}
+book.interpreter.test2 : ${SCHEME}
+	echo '(test "meroonet/oo-tests.scm")' | ${SCHEME} | tee ${RESULTS}
 	${MAKE} check.results
-o/${HOSTTYPE}/book.gsi.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.gsi test.chap1 | tee ${RESULTS}
+book.interpreter.test3 : ${SCHEME}
+	${MAKE} SCHEME=${SCHEME} test.chap1 | tee ${RESULTS}
 	${MAKE} check.results
-o/${HOSTTYPE}/book.gsi.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.gsi test.chap2a | tee ${RESULTS}
-	${MAKE} check.results
-
-o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test1
-o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test2
-o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test3
-o/${HOSTTYPE}/book.gsc.test : o/${HOSTTYPE}/book.gsc.test4
-o/${HOSTTYPE}/book.gsc.test1 : o/${HOSTTYPE}/book.gsc
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.gsc \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.gsc.test2 : o/${HOSTTYPE}/book.gsc
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.gsc \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.gsc.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.gsc test.chap1 | tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.gsc.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.gsc test.chap2a | tee ${RESULTS}
-	${MAKE} check.results
-
-o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test1
-o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test2
-o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test3
-o/${HOSTTYPE}/book.mit.test : o/${HOSTTYPE}/book.mit.test4
-o/${HOSTTYPE}/book.mit.test1 : o/${HOSTTYPE}/book.mit
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.mit \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.mit.test2 : o/${HOSTTYPE}/book.mit
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.mit \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.mit.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.mit test.chap1 | tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.mit.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.mit test.chap2a | tee ${RESULTS}
-	${MAKE} check.results
-
-o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test1
-o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test2
-o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test3
-o/${HOSTTYPE}/book.guile.test : o/${HOSTTYPE}/book.guile.test4
-o/${HOSTTYPE}/book.guile.test1 : o/${HOSTTYPE}/book.guile
-	echo "(test \"src/syntax.tst\")" | o/${HOSTTYPE}/book.guile \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.guile.test2 : o/${HOSTTYPE}/book.guile
-	echo "(test \"meroonet/oo-tests.scm\")" | o/${HOSTTYPE}/book.guile \
-		| tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.guile.test3 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.guile test.chap1 | tee ${RESULTS}
-	${MAKE} check.results
-o/${HOSTTYPE}/book.guile.test4 :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.guile test.chap2a | tee ${RESULTS}
+book.interpreter.test4 : ${SCHEME}
+	${MAKE} SCHEME=${SCHEME} test.chap2a | tee ${RESULTS}
 	${MAKE} check.results
 
 ########################## All the tests
