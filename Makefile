@@ -817,6 +817,13 @@ test.chap7d : src/chap6d.scm src/chap7d.scm src/chap7f.scm
 	    '(test-scheme7d "src/scheme.tst")' \
 	| ${SCHEME}
 
+bench.chap7d : src/chap6d.scm src/chap7d.scm src/chap7f.scm
+	echo \
+	    '(load "src/chap6d.scm")' \
+	    '(load "src/chap7d.scm")' \
+	    '(bench7d 1 (call-with-input-file "src/chap5-bench.scm" read))' \
+	| ${SCHEME}
+
 # added bind-exit, dynamic variables and error handling (first version
 # with dynenv register) in the bytecode compiler.
 test.chap7e : src/chap7d.scm src/chap7e.scm

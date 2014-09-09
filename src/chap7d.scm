@@ -754,4 +754,22 @@
 (define finish-pc 'wait)
 (define *exit* 'wait)
 
+(define (bench7d factor e)
+  (set! g.current (original.g.current))
+  (set! *quotations* '())
+  (let* ((stack-size 500)
+         (start-pc (length (code-prologue)))
+	 (code (make-code-segment (meaning e r.init #t)))
+	 (constants (apply vector *quotations*))
+         (global-names (map car (reverse g.current)))
+	 (start (get-internal-run-time)))
+    (let loop ((factor factor))
+      (run-machine stack-size start-pc code constants global-names )
+      (let ((duration (- (get-internal-run-time) start)))
+	(when (<= factor 1)
+	  (display (list duration *val*))
+	  (newline) ) )
+      (if (> factor 1)
+          (loop (- factor 1)) ) ) ) )
+
 ;;; end of chap7d.scm
