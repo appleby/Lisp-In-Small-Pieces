@@ -1044,20 +1044,6 @@ test.chap8j : src/chap8h.scm si/reflisp.scm
 	    ; cat src/chap8j.tst ) \
 	| ${SCHEME}
 
-tmp.test.chap8j :
-	( echo \
-	    '(load "src/chap8a.scm")' \
-	    '(load "src/chap6d.scm")' \
-	    '(load "src/chap7d.scm")' \
-	    '(load "src/chap7h.scm")' \
-	    '(load "src/chap7g.scm")' \
-	    '(load "src/chap8h.scm")' \
-	    '(load "src/chap8j.scm")' \
-	    '(and (run-application 400 "o/a.out")' \
-	    "     'done)" \
-	    ; cat src/chap8j.tst ) \
-	| ${SCHEME}
-
 # a direct test of the reflective interpreter
 test.reflisp : si/reflisp.scm src/chap8k.scm
 	( echo \
