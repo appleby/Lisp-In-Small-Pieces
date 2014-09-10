@@ -37,12 +37,12 @@ Failing GRAND_TESTS
 
 The following tests from the `grand.test` target are known to fail.
 
-| Scheme | Failing Tests             |
-| ------ | ------------------------- |
-| bigloo | test.reflisp, test.chap8j |
-| gambit | test.reflisp              |
-| mit    | test.reflisp              |
-| guile  | test.reflisp              |
+| Scheme | Failing Tests |
+| ------ | ------------- |
+| bigloo | test.reflisp  |
+| gambit | test.reflisp  |
+| mit    | test.reflisp  |
+| guile  | test.reflisp  |
 
 Note that `test.reflisp` was not supported for gambit and mit-scheme even in
 the original sources. Attempting to compile the `monitor` macro in

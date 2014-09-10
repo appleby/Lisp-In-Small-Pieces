@@ -276,10 +276,6 @@ GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}" \
 # attempting to compile with anyting other than bigloo).
 BROKEN_TESTS = test.reflisp
 
-ifeq (${SCHEME}, o/${HOSTTYPE}/book.bigloo)
-    BROKEN_TESTS += big.test.chap8j
-endif
-
 GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
 
 # Test only parts of the grand tour of tests.
