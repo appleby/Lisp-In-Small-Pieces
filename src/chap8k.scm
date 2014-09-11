@@ -123,12 +123,30 @@
       (handler #f `(list ,e)))
     body))
 
+(define (mit-monitor handler body)
+  (bind-condition-handler ()
+    (lambda (e)
+      (display `(error**** ,e)) (newline)
+      (handler #f `(list ,e)))
+    body))
+
+(define (guile-monitor handler body)
+  (catch #t
+    body
+    (lambda (key . args)
+      (display `(error**** ,key ,@args)) (newline)
+      (handler #f `(list ,key ,@args)))))
+
 (define-macro (monitor handler . body)
   (case book-interpreter-support
     ((bigloo)
      `(bigloo-monitor ,handler (lambda () . ,body))  )
     ((gsi)
      `(gsi-monitor ,handler (lambda () . ,body)) )
+    ((mit)
+     `(mit-monitor ,handler (lambda () . ,body)))
+    ((guile)
+     `(guile-monitor ,handler (lambda () . ,body)))
     (else (display `(*** monitor simulation not supported ***))
           (newline)
           (/ 3 0) ) ) )
