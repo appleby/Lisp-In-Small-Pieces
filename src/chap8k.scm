@@ -123,16 +123,26 @@
       (handler #f `(list ,e)))
     body))
 
-(define-syntax monitor
+;; (define-syntax monitor
+;;   (case book-interpreter-support
+;;     ((bigloo)
+;;      (syntax-rules ()
+;;        ((monitor handler . body)
+;;         (bigloo-monitor handler (lambda () . body)) ) )  )
+;;     ((gsi)
+;;      (syntax-rules ()
+;;        ((monitor handler . body)
+;;         (gsi-monitor handler (lambda () . body)) ) ) )
+;;     (else (display `(*** monitor simulation not supported ***))
+;;           (newline)
+;;           (/ 3 0) ) ) )
+
+(define-macro (monitor handler . body)
   (case book-interpreter-support
     ((bigloo)
-     (syntax-rules ()
-       ((monitor handler . body)
-        (bigloo-monitor handler (lambda () . body)) ) )  )
+     `(bigloo-monitor ,handler (lambda () . ,body))  )
     ((gsi)
-     (syntax-rules ()
-       ((monitor handler . body)
-        (gsi-monitor handler (lambda () . body)) ) ) )
+     `(gsi-monitor ,handler (lambda () . ,body)) )
     (else (display `(*** monitor simulation not supported ***))
           (newline)
           (/ 3 0) ) ) )
