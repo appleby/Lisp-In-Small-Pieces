@@ -32,8 +32,8 @@ Running the code
 4. Run `make grand.test` to run the test suite. This will take several minutes,
    but at the end you should see a message that says "All tests passed."
 
-Failing `grand.test`s
----------------------
+Failing grand.tests
+-------------------
 
 The `grand.test` Make target is a wrapper that runs the tests for all
 the code that actually appears in the book. There are 54 total
@@ -71,11 +71,12 @@ The Makefile also includes a few tests which aren't run by the
 were not included in the book. Here are some that I know are failing;
 there may be others:
 
-- test.chap10i
-- test.chap10e.c
+- `test.chap10i`
+- `test.chap10e.c`
 
-Note that for test.chap10i, a comment in the Makefile warns that it's an
-untested variant. Not sure if it's worth trying to get it working...
+Note that for `test.chap10i`, a comment in the Makefile warns that
+it's an untested variant. Not sure if it's worth trying to get it
+working...
 
     # chap10i.scm : *Untested* variants for function invokation since
     # it requires a change in SCM_invoke (in scheme.c).
