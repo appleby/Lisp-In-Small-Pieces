@@ -32,32 +32,44 @@ Running the code
 4. Run `make grand.test` to run the test suite. This will take several minutes,
    but at the end you should see a message that says "All tests passed."
 
-Failing GRAND_TESTS
--------------------
+Failing `grand.test`s
+---------------------
 
-The following tests from the `grand.test` target are known to fail.
+The `grand.test` Make target is a wrapper that runs the tests for all
+the code that actually appears in the book. There are 54 total
+sub-targets included in the `grand.test` target, of which one target
+is failing, namely `test.reflisp`.
 
-| Scheme | Failing Tests |
-| ------ | ------------- |
-| bigloo | test.reflisp  |
-| gambit | test.reflisp  |
-| mit    | test.reflisp  |
-| guile  | test.reflisp  |
+The `test.reflisp` target is a test of the reflective interpreter from
+chapter 8 of the book, and comes with the following disclaimer/warning
+at the top of src/chap8k.scm:
 
-Note that `test.reflisp` was not supported for gambit and mit-scheme even in
-the original sources. Attempting to compile the `monitor` macro in
-`src/chap8k.scm` would intentionally generate a divide-by-zero error if the
-scheme version was anything other than bigloo, scheme2c, or scm.
+    ;;; Adaptation of the reflective interpreter to Scheme->C, Bigloo or
+    ;;; SCM.  This is very messy, very hacky and poses a lot of problems
+    ;;; with hygienic macros so expansion is done by hand.
 
-The reflective interpreter is doing some interesting things, and I suspect that
-it will take some digging to find the correct fix. I plan to revisit these
-failing tests when I get to the corresponding chapter in the book.
+Most of the hacks are related to the fact that the reflective
+interpreter redefines (and allows modification of) special forms like
+`quote`, `if`, `set!`, and `lambda`.
+
+I'm not planning to fix the `test.reflisp` target since:
+
+1. While it is an interesting oddity, I suspect it'll take more time
+   than I want to spend to figure out the correct hoops to jump
+   through to get it working (and it may not even be possible for all
+   Schemes).
+2. There is already a working test of the reflective interpreter in
+   `test.chap8j`. That target runs exactly the same reflisp code, but
+   runs it in the byte-code interpreter of chapter 7 rather than on
+   the native scheme.
 
 Other Known Failing Tests
 -------------------------
 
-The Makefile includes quite a few tests which aren't run by the grand.test
-target. Here are some that I know are failing; there may be others:
+The Makefile also includes a few tests which aren't run by the
+`grand.test` target. Mostly these are tests for code variants that
+were not included in the book. Here are some that I know are failing;
+there may be others:
 
 - test.chap10i
 - test.chap10e.c
@@ -65,10 +77,8 @@ target. Here are some that I know are failing; there may be others:
 Note that for test.chap10i, a comment in the Makefile warns that it's an
 untested variant. Not sure if it's worth trying to get it working...
 
-```
-# # chap10i.scm : *Untested* variants for function invokation since
-# # it requires a change in SCM_invoke (in scheme.c).
-```
+    # chap10i.scm : *Untested* variants for function invokation since
+    # it requires a change in SCM_invoke (in scheme.c).
 
 Unknown Failing Tests?
 ----------------------
