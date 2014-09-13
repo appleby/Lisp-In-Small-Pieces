@@ -21,15 +21,23 @@ Running the code
 2. Clone this repo.
     `git clone https://github.com/appleby/Lisp-In-Small-Pieces.git`
 
-3. Build the interpreter for the book. Edit the Makefile and set the
-   `SCHEME` variable to the version of scheme you want. The supported
-   values for `SCHEME` are
-   `o/${HOSTTYPE}/book.{bigloo,gsi,mit,guile}`.  So, e.g., to build
-   the Gambit interpreter, set `SCHEME = o/${HOSTTYPE}/book.gsi`. Then
-   run `make` to build the interpreter. If everything goes well, you
-   should have an executable in `o/${HOSTTYPE}/book.gsi`.
+3. Edit the Makefile and set the `SCHEME` variable to the scheme
+   interpreter you want. The supported values for `SCHEME` are
 
-4. Run `make grand.test` to run the test suite. This will take several minutes,
+        o/${HOSTTYPE}/book.bigloo
+        o/${HOSTTYPE}/book.gsi
+        o/${HOSTTYPE}/book.mit
+        o/${HOSTTYPE}/book.guile
+
+   So, e.g., to build the Gambit interpreter, set `SCHEME =
+   o/${HOSTTYPE}/book.gsi`.
+
+4. Run `make` to build the interpreter. If everything goes well, you
+   should have an executable in `o/${HOSTTYPE}/book.<whatever>`. Note
+   that most of these are just shell scripts that must be run from the
+   toplevel directory.
+
+5. Run `make grand.test` to run the test suite. This will take several minutes,
    but at the end you should see a message that says "All tests passed."
 
 Failing grand.tests
