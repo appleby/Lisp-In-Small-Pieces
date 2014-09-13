@@ -128,7 +128,7 @@ TODO
 
 
 [README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
-[failing-grandtests]: https://github.com/appleby/Lisp-In-Small-Pieces#failing-grand.tests
+[failing-grand.tests]: https://github.com/appleby/Lisp-In-Small-Pieces#failing-grandtests
 
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
 [LiSP-2ndEdition]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz
