@@ -5,8 +5,8 @@ This repository contains source code from the book
 [Lisp In Small Pieces][LiSP] by Christian Queinnec, updated to work
 with modern versions of Bigloo, Gambit, Mit-scheme, and
 Guile. Specifically, the following versions are known to pass the
-included test suite, with a [few exceptions][failing-tests] noted
-below.
+included test suite, with one exception
+[noted below][failing-grand.tests].
 
 - [bigloo][] 4.1a
 - [gambit][] 4.7.2
@@ -120,7 +120,7 @@ TODO
 
 
 [README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
-[failing-tests]: https://github.com/appleby/Lisp-In-Small-Pieces#failing-grand_tests
+[failing-grand.tests]: https://github.com/appleby/Lisp-In-Small-Pieces#failing-grand.tests
 
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
 [LiSP-2ndEdition]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz
