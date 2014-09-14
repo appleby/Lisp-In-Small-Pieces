@@ -125,6 +125,7 @@ TODO
 * ~~Maybe: Clean up formatting of the Makefile~~
 * Maybe: Remove unused/unsupported/deprecated targets from the Makefile.
 * Maybe: Get C files to compile without warnings
+* Maybe: Remove GNU-only features from the Makefile.
 
 
 [README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
