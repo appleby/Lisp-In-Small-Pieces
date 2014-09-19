@@ -24,11 +24,11 @@
 (define (prepare expression)
   (really-prepare (macroexpand expression)) )
 
-(define-abbreviation (while condition . body)         \[\hfill\em{LOOP}\]
+(define-abbreviation (while condition . body)        ; \[\hfill\em{LOOP}\]
   `(if ,condition (begin (begin . ,body) 
                          (while ,condition . ,body) )) )
 
-(define-abbreviation (incredible x)               \[\hfill\em{BAD TASTE}\]
+(define-abbreviation (incredible x)               ; \[\hfill\em{BAD TASTE}\]
   (call/cc (lambda (k) `(quote (,k ,x)))) )
 
 (define-abbreviation (define-immediate-abbreviation call . body)
