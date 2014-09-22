@@ -9,7 +9,7 @@ included test suite, with one exception
 [noted below][failing-grand.tests].
 
 - [bigloo][] 4.1a
-- [gambit][] 4.7.2
+- [gambit][] 4.7.3
 - [mit-scheme][] 9.2
 - [guile][] 2.0.11
 
