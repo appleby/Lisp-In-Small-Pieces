@@ -267,13 +267,8 @@ ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} \
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}" \
 		   WHICH_TESTS="${WHICH_TESTS}"
 
-# 2014 Note: BROKEN_TESTS represent tests that are still not passing
-# in SCHEMEs that have otherwise been "fixed" (Bigloo, Gambit, and
-# MIT). These are test for which I was not able to find a quick fix,
-# and may require a non-trivial effort to get them working.  In the
-# case of test.reflisp, this test was previously only supported in
-# Bigloo, (src/chap8k.scm generated a divide-by-zero error when
-# attempting to compile with anyting other than bigloo).
+# 2014 Note: BROKEN_TESTS represent tests from the GRAND_TESTS that
+# are known to fail. See the README.md file for more info.
 BROKEN_TESTS = test.reflisp
 
 GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
