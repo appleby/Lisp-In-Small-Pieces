@@ -363,7 +363,7 @@ SCM SCM_callep (SCM f) {
 
 SCM SCM_signal_error (unsigned long code, unsigned long line, char *file) {
   fflush(stdout);
-  fprintf(stderr,"Error %u, Line %u, File %s.\n",code,line,file);
+  fprintf(stderr,"Error %lu, Line %lu, File %s.\n",code,line,file);
   exit(code);
 }
 
@@ -379,7 +379,7 @@ SCM SCM_prin (SCM x);
 
 void SCM_prin_list (SCM x) {
   if ( SCM_FixnumP(x) ) {
-    fprintf(stdout," . %d",SCM_Fixnum2int(x));
+    fprintf(stdout," . %ld",SCM_Fixnum2int(x));
   } else {
     switch SCM_2tag(x) {
     case SCM_NULL_TAG: {
@@ -402,7 +402,7 @@ void SCM_prin_list (SCM x) {
 
 SCM SCM_prin (SCM x) {
   if ( SCM_FixnumP(x) ) {
-    fprintf(stdout,"%d",SCM_Fixnum2int(x));
+    fprintf(stdout,"%ld",SCM_Fixnum2int(x));
   } else {
     switch SCM_2tag(x) {
     case SCM_NULL_TAG: {
