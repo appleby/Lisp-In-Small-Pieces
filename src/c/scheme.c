@@ -22,10 +22,10 @@
 #include "scheme.h"
 
 /* Identify this library.
+ *
+ * static char *rcsid =
+ *  "@(#)$Id: scheme.c,v 4.0 1995/07/10 06:52:28 queinnec Exp $";
  */
-
-static char *rcsid = 
-  "@(#)$Id: scheme.c,v 4.0 1995/07/10 06:52:28 queinnec Exp $";
 
 /* Static allocation of the basic constants #t, #f, nil and the pseudo
  * value `undefined' that appears as value of uninitialized variables.
