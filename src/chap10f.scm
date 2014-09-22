@@ -78,7 +78,7 @@
 ;;; syntaxes such as #<closure...> etc.
 
 (define (compile-and-run Cfile)
-  (let* ((log (string-append *a.out* ".log"))
+  (let* ((log (string-append test-dir *a.out* ".log"))
          (dir (string-append test-dir "${HOSTTYPE}"))
          (cmd (string-append 
                "cd " dir "; "
