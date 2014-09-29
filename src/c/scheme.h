@@ -229,7 +229,7 @@ typedef union SCM_object           *SCM;
     fields }
 
 /* This is a hack to silence gcc warnings about empty macro args when compiling
- * with the -ansi and -pedantic flags. The seconds argument of SCM_DefineClosure
+ * with the -ansi and -pedantic flags. The second argument of SCM_DefineClosure
  * is often empty. Rather than omit the arg altogether, we can instead use
  * SCM_Empty to avoid the compiler warnings. See the following link for info:
  * 
