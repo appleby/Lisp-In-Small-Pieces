@@ -23,10 +23,9 @@
 #include "scheme.h"
 
 /* Identify this library.
+ * static char *rcsid =
+ *  "@(#)$Id: schemeklib.c,v 4.0 1995/07/10 06:52:31 queinnec Exp $";
  */
-
-static char *rcsid = 
-  "@(#)$Id: schemeklib.c,v 4.0 1995/07/10 06:52:31 queinnec Exp $";
 
 /* Global constants
  */
