@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <setjmp.h>
 
 /* Machine dependences
@@ -149,7 +150,7 @@
 
 #define SCM_FixnumP(x)    ((unsigned long)(x) & (unsigned long)1)
 #define SCM_Fixnum2int(x) ((long)(x)>>1)
-#define SCM_Int2fixnum(i) ((SCM)(((i)<<1) | 1))
+#define SCM_Int2fixnum(i) ((SCM)((intptr_t)(((i)<<1) | 1)))
 
 /* Scheme values are received through a SCM pointer. If this pointer has
  * a lower bit set to one then it is a fixnum that can be interpreted with
