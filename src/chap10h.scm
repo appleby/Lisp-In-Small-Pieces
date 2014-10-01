@@ -92,6 +92,29 @@
 ;;;ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 ;;; This is very restrictive and can be extended.
 
+;; The addition of arguments->C-with-casts is a hack to avoid a gcc
+;; warning about passing a SCM pointer to system(3). There are several
+;; less-hackish ways to fix this, but all require more code and would
+;; cause the code in this repo to diverge needlessly from the code
+;; presented in the book. We could ignore the warning, but this code
+;; is isolated enough that fixing it doesn't cause too much of a mess
+;; and it helps soothe the soul.
+(define-generic (arguments->C-with-casts (e) casts out))
+
+(define-method (arguments->C-with-casts (e Arguments) casts out)
+  (between-parentheses out
+    (format out (car casts)))
+  (->C (Arguments-first e) out)
+  (arguments->C-with-casts (Arguments-others e) (cdr casts) out) )
+
+(define-method (arguments->C-with-casts (e No-Argument) casts out)
+  #t )
+
+(define (repeat x n)
+  (if (zero? n)
+      '()
+      (cons x (repeat x (- n 1))) ) )
+
 (define-syntax defforeignprimitive
   (syntax-rules (int string)
     ((defforeignprimitive name int (Cname string) arity)
@@ -103,8 +126,11 @@
                         (between-parentheses out
                           (format out "~A" Cname)
                           (between-parentheses out
-                            (arguments->C (Predefined-Application-arguments e)
-                                          out ) ) ) ) ) )))
+			    (let ((args (Predefined-Application-arguments e)))
+			      (arguments->C-with-casts
+			        args
+				(repeat "const char *" (number-of args))
+				out )) ) ) ) ) )))
        (set! g.init (cons v g.init))
        'name ) ) ) )
 
