@@ -1178,8 +1178,7 @@ src/c/chap10ex.c : src/chap10ex.scm src/chap10e.scm
 	| ${SCHEME}
 
 	size o/${HOSTTYPE}/chap10e
-	emacs -batch -l el/c-indent.el
-	mv o/chap10e.c src/c/chap10ex.c
+	indent -kr o/chap10e.c -o $@
 
 # This is the best I can to show the expanded version of the file.
 # It needs to be hacked a little by hand before being inserted in
