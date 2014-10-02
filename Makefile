@@ -1076,7 +1076,7 @@ test.chap9c : src/chap9c.scm
 # Chapter on compilation -> C
 
 TEST_CHAP10 = test.chap10a test.chap10c dynext.test.chap10e test.chap10k \
-	      dynext.test.chap10je test.chap10jk
+	      dynext.test.chap10je test.chap10jk dynext.test.chap10n
 
 # chap10a.scm: objectification
 # chap10b.scm: small interpreter for objectified code
