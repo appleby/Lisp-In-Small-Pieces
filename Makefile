@@ -1141,7 +1141,12 @@ test.chap10e : o/${HOSTTYPE}/schemelib.o
 long.dynext.test.chap10n :
 	if ${YOU_HAVE_TIME} ; then ${MAKE} test.chap10n ; else : ; fi
 dynext.test.chap10n : test.chap10n
+test.chap10n : src/chap10a.scm src/chap10c.scm
+test.chap10n : src/chap10g.scm src/chap10e.scm
+test.chap10n : src/chap10h.scm src/chap10f.scm
 test.chap10n : src/chap10m.scm src/chap10n.scm
+test.chap10n : o/${HOSTTYPE}/scheme.o
+test.chap10n : o/${HOSTTYPE}/schemelib.o
 	echo \
 	    '(load "src/chap10a.scm")' \
 	    '(load "src/chap10c.scm")' \
