@@ -1189,47 +1189,52 @@ o/chap10ex.E : o/chap10ex.c src/c/scheme.h
 	${CC} ${CFLAGS} -Isrc/c -E $< -o $@
 	indent -kr $@
 
+# 2014 Note: The file bigloo/compapp.scm was not included in the
+# source tarball from the author's site. One could likely re-create
+# `compile-bigloo-application' and get these targets working again, if
+# one so desired.
+#
 # Compile this compiler with Bigloo
 #
 # I patched a little the o/${HOSTTYPE}/LiSPbookc.bgl file because of
 # a bug on write on strings containing \". To be solved.
-o/${HOSTTYPE}/LiSPbookc :
-	H_DIR=`pwd`/src/c/ ; export H_DIR ; \
-	A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE ; \
-	echo \
-	'(load "bigloo/compapp.scm")' \
-	"'(set! *verbose* #t)" \
-	'(compile-bigloo-application' \
-	'  "${BIGLOO}" "o/${HOSTTYPE}/" "LiSPbookc"' \
-	" '(begin" \
-	'    (set! *h-dir* "$$H_DIR")' \
-	'    (set! *rtbook-library* "$$A_FILE")' \
-	'    (compiler-entry-point command-options))' \
-	'  "src/chap10a.scm"' \
-	'  "src/chap10c.scm"' \
-	'  "src/chap10g.scm"' \
-	'  "src/chap10e.scm"' \
-	'  "src/chap10h.scm"' \
-	'  "src/chap10f.scm")' \
-    | ${SCHEME}
-
+# o/${HOSTTYPE}/LiSPbookc :
+# 	H_DIR=`pwd`/src/c/ ; export H_DIR ; \
+# 	A_FILE=`pwd`/o/${HOSTTYPE}/rtbook.a ; export A_FILE ; \
+# 	echo \
+# 	'(load "bigloo/compapp.scm")' \
+# 	"'(set! *verbose* #t)" \
+# 	'(compile-bigloo-application' \
+# 	'  "${BIGLOO}" "o/${HOSTTYPE}/" "LiSPbookc"' \
+# 	" '(begin" \
+# 	'    (set! *h-dir* "$$H_DIR")' \
+# 	'    (set! *rtbook-library* "$$A_FILE")' \
+# 	'    (compiler-entry-point command-options))' \
+# 	'  "src/chap10a.scm"' \
+# 	'  "src/chap10c.scm"' \
+# 	'  "src/chap10g.scm"' \
+# 	'  "src/chap10e.scm"' \
+# 	'  "src/chap10h.scm"' \
+# 	'  "src/chap10f.scm")' \
+#     | ${SCHEME}
+#
 # The following entries do not work since the rtbook.a library is
 # not sufficient: IO operations are missing.
 #
 # Compile the compiler with itself (stage 2)
-o/${HOSTTYPE}/LiSPbookc2 : o/${HOSTTYPE}/LiSPbookc ${TIME}
-	o/${HOSTTYPE}/LiSPbookc o/${HOSTTYPE}/LiSPbookc.bgl -v -o
-	o/${HOSTTYPE}/LiSPbookc2 -C o/${HOSTTYPE}/LiSPbookc2.c
-
+# o/${HOSTTYPE}/LiSPbookc2 : o/${HOSTTYPE}/LiSPbookc ${TIME}
+# 	o/${HOSTTYPE}/LiSPbookc o/${HOSTTYPE}/LiSPbookc.bgl -v \
+# 	   -o o/${HOSTTYPE}/LiSPbookc2 -C o/${HOSTTYPE}/LiSPbookc2.c
+#
 # Recompile the compiler with itself (stage 3)
-o/${HOSTTYPE}/LiSPbookc3 : o/${HOSTTYPE}/LiSPbookc2
-	${TIME} o/${HOSTTYPE}/LiSPbookc2 o/${HOSTTYPE}/LiSPbookc.bgl -v \
-	    -o o/${HOSTTYPE}/LiSPbookc3 -C o/${HOSTTYPE}/LiSPbookc3.c
-
-LiSPbookc.compare : o/${HOSTTYPE}/LiSPbookc3
-	ls -l o/${HOSTTYPE}/LiSPbookc*[23].c
-	diff o/${HOSTTYPE}/LiSPbookc*[23].c | wc
-	size o/${HOSTTYPE}/LiSPbookc*[23]
+# o/${HOSTTYPE}/LiSPbookc3 : o/${HOSTTYPE}/LiSPbookc2
+# 	${TIME} o/${HOSTTYPE}/LiSPbookc2 o/${HOSTTYPE}/LiSPbookc.bgl -v \
+# 	    -o o/${HOSTTYPE}/LiSPbookc3 -C o/${HOSTTYPE}/LiSPbookc3.c
+#
+# LiSPbookc.compare : o/${HOSTTYPE}/LiSPbookc3
+# 	ls -l o/${HOSTTYPE}/LiSPbookc*[23].c
+# 	diff o/${HOSTTYPE}/LiSPbookc*[23].c | wc
+# 	size o/${HOSTTYPE}/LiSPbookc*[23]
 
 # chap10i.scm : *Untested* variants for function invokation since it
 # requires a change in SCM_invoke (in scheme.c).  This test is very
