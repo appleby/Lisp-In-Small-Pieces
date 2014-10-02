@@ -1185,14 +1185,9 @@ o/chap10ex.c : o/${HOSTTYPE}/schemelib.o
 # This is the best I can to show the expanded version of the file.
 # It needs to be hacked a little by hand before being inserted in
 # the book.
-src/c/chap10ex.E : perl/indent-E.prl perl/preindent.prl
-src/c/chap10ex.E : src/c/chap10ex.c src/c/scheme.h
-	perl/preindent.prl < src/c/scheme.h > /tmp/scheme.h
-	cp src/c/chap10ex.c /tmp/chap10ex.c
-	cd /tmp ; ${CC} ${CFLAGS} -E chap10ex.c -o chap10ex.E
-	perl/indent-E.prl < /tmp/chap10ex.E > src/c/chap10ex.E
-	rm /tmp/scheme.h /tmp/chap10ex.[Ec]
-	indent src/c/chap10ex.E
+o/chap10ex.E : o/chap10ex.c src/c/scheme.h
+	${CC} ${CFLAGS} -Isrc/c -E $< -o $@
+	indent -kr $@
 
 # Compile this compiler with Bigloo
 #
