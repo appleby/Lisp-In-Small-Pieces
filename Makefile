@@ -1240,25 +1240,25 @@ o/chap10ex.E : o/chap10ex.c src/c/scheme.h
 # requires a change in SCM_invoke (in scheme.c).  This test is very
 # long... but it fails on continuations that are used out of their
 # dynamic extent or multiply.
-long.dynext.test.chap10i :
-	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap10i ; else : ; fi
-dynext.test.chap10i : test.chap10i
-test.chap10i : src/chap10a.scm src/chap10c.scm
-test.chap10i : src/chap10g.scm src/chap10e.scm
-test.chap10i : src/chap10h.scm src/chap10f.scm src/chap10i.scm
-test.chap10i : o/${HOSTTYPE}/scheme.o
-test.chap10i : o/${HOSTTYPE}/schemelib.o
-	echo \
-	    '(load "src/chap10a.scm")' \
-	    '(load "src/chap10c.scm")' \
-	    '(load "src/chap10g.scm")' \
-	    '(load "src/chap10e.scm")' \
-	    '(load "src/chap10h.scm")' \
-	    '(load "src/chap10f.scm")' \
-	    '(load "src/chap10i.scm")' \
-	    '(and (test-scheme10e "src/scheme.tst")' \
-	    '     (test-scheme10e "src/chap10e.tst"))' \
-	| ${SCHEME}
+# long.dynext.test.chap10i :
+# 	if ${YOU_HAVE_TIME} ; then ${MAKE} dynext.test.chap10i ; else : ; fi
+# dynext.test.chap10i : test.chap10i
+# test.chap10i : src/chap10a.scm src/chap10c.scm
+# test.chap10i : src/chap10g.scm src/chap10e.scm
+# test.chap10i : src/chap10h.scm src/chap10f.scm src/chap10i.scm
+# test.chap10i : o/${HOSTTYPE}/scheme.o
+# test.chap10i : o/${HOSTTYPE}/schemelib.o
+# 	echo \
+# 	    '(load "src/chap10a.scm")' \
+# 	    '(load "src/chap10c.scm")' \
+# 	    '(load "src/chap10g.scm")' \
+# 	    '(load "src/chap10e.scm")' \
+# 	    '(load "src/chap10h.scm")' \
+# 	    '(load "src/chap10f.scm")' \
+# 	    '(load "src/chap10i.scm")' \
+# 	    '(and (test-scheme10e "src/scheme.tst")' \
+# 	    '     (test-scheme10e "src/chap10e.tst"))' \
+# 	| ${SCHEME}
 
 # as for various interpreters, try our usual bench.
 # Compile it and run it.
