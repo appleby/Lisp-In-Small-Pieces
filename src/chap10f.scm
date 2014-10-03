@@ -72,7 +72,7 @@
 (define (show-C-expression e)
   ;;(set! objectify-error (lambda a (error 'test-expression "~A~%" a)))
   ;;(set! evaluate-error objectify-error)
-  (unveil (compile->C e (current-output-port))) )
+  (show (compile->C e (current-output-port))) )
 
 ;;; Pass the output of a.out through a sed to eliminate unreadable
 ;;; syntaxes such as #<closure...> etc.
