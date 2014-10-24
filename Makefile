@@ -1427,22 +1427,22 @@ test.chap10jk : src/chap10j.scm src/chap10p.scm
 	    '     (test-scheme10k "src/chap10j.tst"))' \
 	| ${SCHEME}
 
-# Compare time between o/$HOSTTYPE/c10ex.c and c10kex.c
-# They have been modified from src/c/chap10[k]ex.c to repeat the
+# Compare time between o/$HOSTTYPE/c10ex and c10kex
+# They have been modified from o/chap10[k]ex.c to repeat the
 # computation 10000 times so their duration can be better estimated.
 # Pay attention to the precise timing command.
 compare.chap10 : o/${HOSTTYPE}/c10ex o/${HOSTTYPE}/c10kex
 compare.chap10 :
-	csh -c "time o/${HOSTTYPE}/c10ex"
-	csh -c "time o/${HOSTTYPE}/c10kex"
-bCFLAGS = -I../../src/c -ansi -pedantic -O
-o/${HOSTTYPE}/c10ex : src/c/c10ex.c ${all-o}
-	cd o/${HOSTTYPE} ; \
-	${CC} ${bCFLAGS} -o c10ex ../../src/c/c10ex.c scheme.o schemelib.o
+	${TIME} o/${HOSTTYPE}/c10ex
+	${TIME} o/${HOSTTYPE}/c10kex
 
-o/${HOSTTYPE}/c10kex : src/c/c10kex.c ${all-o}
-	cd o/${HOSTTYPE} ; \
-	${CC} ${bCFLAGS} -o c10kex ../../src/c/c10kex.c scheme.o schemeklib.o
+bCFLAGS = -I../../src/c -ansi -pedantic -O
+
+o/${HOSTTYPE}/c10ex : src/c/c10ex.c $(filter-out %schemeklib.o, ${all-o})
+	${CC} ${bCFLAGS} -o $@ $^
+
+o/${HOSTTYPE}/c10kex : src/c/c10kex.c $(filter-out %schemelib.o, ${all-o})
+	${CC} ${bCFLAGS} -o $@ $^
 
 ######################################################### Common entries
 
