@@ -1362,8 +1362,10 @@ chap10k.bench : src/chap5-bench.scm
 
 # Generate the C code corresponding to the running example of
 # chapter 10.  The C code will be left in o/chap10kex.c
-chap10k.example : src/c/chap10kex.c
-src/c/chap10kex.c : src/chap10ex.scm src/chap10e.scm
+chap10k.example : o/chap10kex.c
+o/chap10kex.c : src/chap10ex.scm src/chap10e.scm
+o/chap10kex.c : o/${HOSTTYPE}/scheme.o
+o/chap10kex.c : o/${HOSTTYPE}/schemelib.o
 	echo \
 	    '(load "src/chap10a.scm")' \
 	    '(load "src/chap10c.scm")' \
@@ -1380,8 +1382,7 @@ src/c/chap10kex.c : src/chap10ex.scm src/chap10e.scm
 	| ${SCHEME}
 
 	size o/${HOSTTYPE}/chap10e
-	emacs -batch -l el/c-indent.el
-	mv o/chap10e.c src/c/chap10kex.c
+	indent -kr o/chap10e.c -o $@
 
 # chap10j.scm contains an initialization analysis. It can be grafted
 # to chap10e or chap10k without differences. As the others, it is
