@@ -49,7 +49,7 @@ export HOSTTYPE := $(shell uname -m)
 # see entries o/${HOSTTYPE}/book.{bigloo,gsc} below to regenerate
 # them. You can also directly use an interpreter and load on the fly
 # Meroonet and the test-suite driver every time.  This is what the
-# MIT-based definition or the Gambit (gsi) based definition does.
+# MIT, Gambit, and Guile-based definitions do.
 
 # The pre-compiled version of Gambit (book.gsc) is not supported due
 # to issues compiling scheme files with gsc when passing the -:s flag.
@@ -253,6 +253,17 @@ book.interpreter.test4 : ${SCHEME}
 # that it ends at the expected point. Some test have a name starting
 # with long. That means that it is a very long long test, so it is
 # only run if the variable YOU_HAVE_TIME is true (not false).
+
+# Moore's law has been kind to us. Tests that apparently took hours to
+# run on the original author's machine 20 years ago now complete in
+# less than a minute. I'm leaving the long- prefixes and YOU_HAVE_TIME
+# alone since they're still usefull, but unless you're really
+# impatient, you probably don't want to disable the "long" tests. For
+# reference, the entire grand.test suite takes about 6 minutes to
+# complete even with the slower interpreters on my 5-year-old (as of
+# late 2014) laptop. When using a pre-compiled interpreter
+# (i.e. SCHEME = book.bigloo) the entire suite finishes in less than 3
+# minutes. -- appleby
 
 YOU_HAVE_TIME = true
 
