@@ -123,8 +123,8 @@ TODO
 * ~~Maybe: Remove unused code, like the included syntax-case files.~~
 * ~~Maybe: Move common code out of `<interpreter>/book.scm`.~~
 * ~~Maybe: Clean up formatting of the Makefile~~
-* Maybe: Remove unused/unsupported/deprecated targets from the Makefile.
-* Maybe: Get C files to compile without warnings
+* ~~Maybe: Remove unused/unsupported/deprecated targets from the Makefile.~~
+* ~~Maybe: Get C files to compile without warnings.~~
 * Maybe: Remove GNU-only features from the Makefile.
 
 

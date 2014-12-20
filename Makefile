@@ -1320,25 +1320,6 @@ test.chap10k : src/chap10k.scm
 	    '     (test-scheme10k "src/chap10e.tst"))' \
 	| ${SCHEME}
 
-# Test chap10k by direct interpretation (obsolete)
-test.chap10l : src/chap10l.scm
-	echo \
-	    '(load "src/chap10a.scm")' \
-	    '(load "src/chap10b.scm")' \
-	    '(load "src/chap10c.scm")' \
-	    '(load "src/chap10d.scm")' \
-	    '(load "src/chap10g.scm")' \
-	    '(load "src/chap10e.scm")' \
-	    '(load "src/chap10h.scm")' \
-	    '(load "src/chap10f.scm")' \
-	    '(load "src/chap10k.scm")' \
-	    '(load "src/chap10m.scm")' \
-	    '(load "src/chap10l.scm")' \
-	    '(and (test-scheme10b "src/scheme.tst")' \
-	    '     (test-scheme10b "src/chap10k.tst")' \
-	    '     (test-scheme10b "src/chap10e.tst"))' \
-	| ${SCHEME}
-
 # as for various interpreters, try our usual bench.
 chap10k.bench : o/${HOSTTYPE}/scheme.o
 chap10k.bench : o/${HOSTTYPE}/schemeklib.o
