@@ -17,9 +17,12 @@
 ;;; to run the source files of the book. I did not try to compile it yet.
 ;;; Under Unix, start gsi as:
 ;;;          gsi '(include "gambit/book.scm")'
+;;;
+;;; See mit-scheme/mit-book.scm for a fully-commented version of this
+;;; file that can be used as a template for ports to other scheme's.
 
 ;;; Gambit-specific code.
-;;; 
+
 ;;; Last-pair and reverse! are need to run the book sources and are included in
 ;;; both Bigloo and Mit-Scheme, but missing in Gambit.
 
@@ -39,20 +42,10 @@
        r ) )
   (nreverse l '()) )
 
-;;; End of Gambit-specific code.
-
 ;;; General definitions.
-;;;
-;;; All the definitions below are needed to run the source files of the book.
-;;; When porting to another scheme, you'll need to provide equivalents for
-;;; these.
 
-;;; This variable is used in chap8k.scm to determine the underlying
-;;; Scheme interpreter.
 (define book-interpreter-support 'gsi)
 
-;;; Printed when the toplevel loop is started. See START in
-;;; ../common/book.scm.
 (define book-interpreter-name "Gambit")
 
 (define (system command)
@@ -60,12 +53,9 @@
 
 (define flush-buffer force-output)
 
-;;; Needed by (test "src/syntax.tst")
 (define (get-internal-run-time)
   (time->seconds (current-time)))
 
-;;; Called from internal DISPALY-STATUS definition in both INTERPRETER and
-;;; SUITE-TEST in src/tester.scm.
 (define (display-exception values)
   (let ((exc (car values)))
       (display exc)
@@ -94,19 +84,6 @@
              (display ", TYPEID = ")
              (display (type-exception-type-id exc)) ) ) ) )
 
-;;; The test-driver should try to catch errors of the underlying Scheme system.
-;;; This is non-portable and difficult in many implementations. If do not
-;;; succeed writing it, you can still run the programs of the book but you will
-;;; not be able to run all the test-suites since some tests (for instance in
-;;; meroonet/oo-tests.scm) require errors to be caught when signalled by
-;;; list-tail with a non-numeric second argument.
-
-;;; Returns a toplevel that handles exceptions.
-;;;
-;;; Used in:
-;;;     START and TEST in ../common/book.scm
-;;;     INTERPRETER and SUITE-TEST in ../src/tester.scm
-;;;
 (define (make-toplevel read print-or-check err)
  (set! tester-error   err)
  (set! meroonet-error err)
@@ -122,4 +99,3 @@
       (let* ((e (read))
              (r (eval e)) )
         (print-or-check r) ) ) ) ) )
-;;; End of General definitions.

@@ -15,8 +15,6 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
-
-
 ;;; NOTE: I'm not sure whether the following comments are any longer relevant.
 
 ;(display "starting hack.scm")(newline)           ;; DEBUG

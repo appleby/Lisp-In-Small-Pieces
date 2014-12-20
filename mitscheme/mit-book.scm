@@ -46,9 +46,6 @@
            (lambda (exp env)
              (apply transformer (cdr exp))) ) ) ) ) ) )
 
-;;; End of Mit-Scheme-specific code.
-
-
 ;;; General definitions.
 ;;;
 ;;; All the definitions below are needed to run the source files of the book.
@@ -101,5 +98,3 @@
         (lambda ()
           (let ((e (read)))
             (print-or-check (eval e user-initial-environment)) ) ) ) ) )
-
-;;; End of General definitions.

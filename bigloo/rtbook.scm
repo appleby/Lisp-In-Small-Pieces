@@ -16,6 +16,9 @@
 ;;; This file defines some functions that should be included in programs
 ;;; compiled with the interpreter of the book.
 
+;;; See mit-scheme/mit-book.scm for a fully-commented version of this
+;;; file that can be used as a template for ports to other scheme's.
+
 (module rtbook
         (eval (export-all))
         ;; Time utility
@@ -127,9 +130,6 @@
 ;;; Include an eval so exported global variables can also appear as symbols.
 (eval ''hack)
 
-;;; This variable is used in chap8k.scm to determine the underlying Scheme
-;;; interpreter.
-
 (define book-interpreter-support 'bigloo)
 
 (define book-interpreter-name "Bigloo")
@@ -144,7 +144,6 @@
 
 (define flush-buffer flush-output-port)
 
-;;; Needed by src/tester.scm
 (define display-exception display)
 
 (define (make-toplevel read print-or-check err)
