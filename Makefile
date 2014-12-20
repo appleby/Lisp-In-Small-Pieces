@@ -30,10 +30,10 @@ BIGLOO = bigloo
 
 # If you decide to build a specialized interpreter on top of Gambit
 # then indicate the correct command to invoke the Gambit compiler.
-#
-# 2014 Note: The default binary name is ``gsc'', but that name
-# conflicts with the ghostscript binary on my Archlinux system, so
-# the gambit compiler has been renamed to gambitc.
+
+# The default binary name is ``gsc'', but that name conflicts with the
+# ghostscript binary on my Archlinux system, so the gambit compiler
+# has been renamed to gambitc. -- appleby
 
 GSC = gambitc
 
@@ -54,15 +54,14 @@ export HOSTTYPE := $(shell uname -m)
 # Meroonet and the test-suite driver every time.  This is what the
 # MIT-based definition or the Gambit (gsi) based definition does.
 
-# 2014 Note: book.gsc, the pre-compiled version of Gambit is not
-# supported due to issues compiling scheme files with gsc when
-# passing the -:s flag.  See the comment for the book.gsc target
-# below.
+# The pre-compiled version of Gambit (book.gsc) is not supported due
+# to issues compiling scheme files with gsc when passing the -:s flag.
+# See the comment for the book.gsc target below.
 #
 # SCHEME = o/${HOSTTYPE}/book.gsc
 #
 # These schemes are the only known-working options. See the
-# README.md file for more info.
+# README.md file for more info. -- appleby
 #
 #SCHEME = o/${HOSTTYPE}/book.bigloo
 #SCHEME = o/${HOSTTYPE}/book.gsi
@@ -213,7 +212,7 @@ o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 # http://comments.gmane.org/gmane.lisp.scheme.gambit/6980
 # https://mercure.iro.umontreal.ca/pipermail/gambit-list/2013-October/007106.html
 #
-# TODO: check back on this and see if a fix has landed -- ma.
+# TODO: check back on this and see if a fix has landed -- appleby.
 o/${HOSTTYPE}/book-gsc.o : o/${HOSTTYPE}/book-gsc.c
 	cd o/${HOSTTYPE} ; ${GSC} -:s -obj book-gsc.c
 o/${HOSTTYPE}/book-gsc_.o : o/${HOSTTYPE}/book-gsc.c
@@ -267,8 +266,8 @@ ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} \
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}" \
 		   WHICH_TESTS="${WHICH_TESTS}"
 
-# 2014 Note: BROKEN_TESTS represent tests from the GRAND_TESTS that
-# are known to fail. See the README.md file for more info.
+# BROKEN_TESTS represent tests from the GRAND_TESTS that are known to
+# fail. See the README.md file for more info. -- appleby
 BROKEN_TESTS = test.reflisp
 
 GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
@@ -548,11 +547,10 @@ bench.chap6a : src/chap6a.scm
 	    '(bench6a 1 (call-with-input-file "src/chap5-bench.scm" read))' \
 	| ${SCHEME}
 
-# 2014 Note: The file bigloo/compapp.scm was not included in the
-# source tarball from the author's site. One could likely re-create
+# The file bigloo/compapp.scm was not included in the source tarball
+# from the author's site. One could re-create
 # `compile-bigloo-application' and get this target working again, if
-# one so desired. I do not so desire. Leaving this code here in case
-# my mood changes.
+# one so desired. I do not so desire. -- appleby
 #
 # Compiled bench with Bigloo
 # test.chap6a.bgl : o/${HOSTTYPE}/rtbook.a o/${HOSTTYPE}/bglchap6a
@@ -1189,11 +1187,11 @@ o/chap10ex.E : o/chap10ex.c src/c/scheme.h
 	${CC} ${CFLAGS} -Isrc/c -E $< -o $@
 	indent -kr $@
 
-# 2014 Note: The file bigloo/compapp.scm was not included in the
-# source tarball from the author's site. One could likely re-create
+# The file bigloo/compapp.scm was not included in the source tarball
+# from the author's site. One could likely re-create
 # `compile-bigloo-application' and get these targets working again, if
-# one so desired.
-#
+# one so desired. -- appleby
+
 # Compile this compiler with Bigloo
 #
 # I patched a little the o/${HOSTTYPE}/LiSPbookc.bgl file because of

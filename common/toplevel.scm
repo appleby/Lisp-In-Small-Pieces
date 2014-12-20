@@ -14,10 +14,10 @@
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
 ;;; This function loads a file expanded with syntax-expand.
-;;;
-;;; 2014 Note: This function is not needed anymore, since the built-in load can
+
+;;; This function is not needed anymore, since the built-in load can
 ;;; now do syntax-case expansion. Leaving this here for now since the verbose
-;;; loading might prove useful for debugging.
+;;; loading might prove useful for debugging. -- appleby
 
 (define *syntax-case-load-verbose?* #f)
 
