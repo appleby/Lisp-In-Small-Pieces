@@ -29,7 +29,7 @@ BIGLOO = bigloo
 # then indicate the correct command to invoke the Gambit compiler.
 
 # The default binary name is ``gsc'', but that name conflicts with the
-# ghostscript binary on my Archlinux system, so the gambit compiler
+# ghostscript binary on my Archlinux system, where the gambit compiler
 # has been renamed to gambitc. -- appleby
 
 GSC = gambitc
