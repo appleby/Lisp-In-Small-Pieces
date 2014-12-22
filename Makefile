@@ -107,8 +107,8 @@ RANLIB = ranlib
 # This is the C compiler I used as well as its preferred flags.
 # You need it if you want to test the Scheme towards C compiler.
 
-CC = gcc
-CFLAGS = -ansi -pedantic -Wall -O
+export CC = gcc
+export CFLAGS = -ansi -pedantic -Wall -O
 
 # This is perl. I use it for checking results of tests. It is not
 # mandatory to setup this variable.

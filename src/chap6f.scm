@@ -1222,7 +1222,7 @@ SCM_The_Environment=~A,
                     (check '***) ) ) ) ) ) ) ) ) ) ) 
 
 (define *compile-format*
-  "cd /tmp ; gcc ${CaFLAGS} chap6f.c ${LiSP_TOPDIR}/o/${HOSTTYPE}/rt.o" )
+  "cd /tmp ; ${CC} ${CaFLAGS} chap6f.c ${LiSP_TOPDIR}/o/${HOSTTYPE}/rt.o" )
 
 ;;; Skip these tests
 (define *tests-to-skip*

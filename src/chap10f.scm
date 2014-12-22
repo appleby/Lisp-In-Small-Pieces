@@ -29,7 +29,7 @@
 
 (define Cfile (string-append *a.out* ".c"))
 
-(define *cc+cflags* "gcc -ansi -pedantic -g ")
+(define *cc+cflags* "${CC} -ansi -pedantic -g ")
 
 (define (appear? s e)
   (or (eq? s e)
