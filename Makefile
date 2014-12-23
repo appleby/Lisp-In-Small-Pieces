@@ -276,7 +276,7 @@ GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 grand.test :
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 
-do.grand.test :
+do.grand.test : ${SCHEME}
 	@rm -f ${FAILURES}
 	@for test in ${GRAND_TESTS} ; do \
 	    ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) \
