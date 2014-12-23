@@ -273,7 +273,7 @@ GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} \
 
 GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 
-grand.test tmp.grand.test:
+grand.test :
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 
 do.grand.test :
