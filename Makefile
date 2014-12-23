@@ -79,9 +79,6 @@ SCHEME = o/${HOSTTYPE}/book.guile
 
 TIME = time
 
-# This is the make utility.
-MAKE = make
-
 # A temporary file used to store temporary results. Put it in a
 # place where it will disappear automatically sometime.
 
