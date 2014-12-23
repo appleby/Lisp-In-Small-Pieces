@@ -41,7 +41,16 @@ GSC = gambitc
 # this definition, it will be automatically inherited from your
 # shell.
 
-export HOSTTYPE := $(shell uname -m)
+# This is a hack for GNU/BSD make compatibility. We define a temporary
+# variable, then export it on the next line because BSD make doesn't allow !=
+# assignments in an `export' directive. The temp variable must have a different
+# name from the variable we actually want to export; otherwise, GNU make will
+# complain about a recursively defined variable (again BSD make doesn't allow
+# := assignments in an export). A similar dance is done below for defining and
+# exporting SHELL. -- appleby
+
+__HOSTTYPE__ != uname -m
+export HOSTTYPE=${__HOSTTYPE__}
 
 # Choose a Scheme interpreter. This interpreter must contain
 # Meroonet, hygienic macros and a test-suite driver. It is better to
@@ -65,23 +74,12 @@ export HOSTTYPE := $(shell uname -m)
 #SCHEME = o/${HOSTTYPE}/book.mit
 SCHEME = o/${HOSTTYPE}/book.guile
 
-# Guile and Mit-scheme's EVAL take a mandatory environment argument.
-ifeq (${SCHEME}, o/${HOSTTYPE}/book.mit)
-    EVAL_ENVIRONMENT = user-initial-environment
-else ifeq (${SCHEME}, o/${HOSTTYPE}/book.guile)
-    EVAL_ENVIRONMENT = (interaction-environment)
-endif
-
-# This variable allows to measure time.
-# I personnally use Gnu time but time will do also.
+# This variable allows to measure time.  I personnally use Gnu time but time
+# will do also.
 
 TIME = time
 
-# This is the make utility. This makefile uses a couple of GNU-make
-# specific features. If you want to port to BSD make, just search
-# for '$(shell' and '$(filter-out' and replace those with
-# BSD-make-equivalent features.
-
+# This is the make utility.
 MAKE = make
 
 # A temporary file used to store temporary results. Put it in a
@@ -107,21 +105,26 @@ RANLIB = ranlib
 # This is the C compiler I used as well as its preferred flags.
 # You need it if you want to test the Scheme towards C compiler.
 
-export CC = gcc
-export CFLAGS = -ansi -pedantic -Wall -O
+# On BSD, you probably want to set CC=gcc48, or whatever version of gcc you
+# have installed. Note that it's not enough to specify CC=gcc48 on the make
+# command line. The `export' clause here will override it. -- appleby
+
+export CC=gcc
+export CFLAGS=-ansi -pedantic -Wall -O
 
 # This is perl. I use it for checking results of tests. It is not
 # mandatory to setup this variable.
 
 PERL = perl
 
-# Absolute path to LiSP source root.
-export LiSP_TOPDIR = ${CURDIR}
+# Absolute path to LiSP source root. -- appleby
+export LiSP_TOPDIR=${PWD}
 
 # Set the SHELL explicitly. Mit-scheme's run-shell-command respects
-# this variable, and some shell commands will fail if using a
-# non-standard shell (e.g. fish).
-export SHELL := $(shell which sh)
+# this variable, and some shell commands will fail if using a non-standard
+# shell (e.g. fish). -- appleby
+__SHELL__ != which sh
+export SHELL=${__SHELL__}
 
 # This part of the Makefile defines how to run and test the programs
 # of the book.
@@ -267,30 +270,18 @@ book.interpreter.test4 : ${SCHEME}
 
 YOU_HAVE_TIME = true
 
-ALL_GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} \
-		  ${TEST_CHAP5} ${TEST_CHAP6} ${TEST_CHAP7} ${TEST_CHAP8} \
-		  ${TEST_CHAP9} ${TEST_CHAP10}
+GRAND_TESTS = ${TEST_CHAP1} ${TEST_CHAP2} ${TEST_CHAP3} ${TEST_CHAP4} \
+	      ${TEST_CHAP5} ${TEST_CHAP6} ${TEST_CHAP7} ${TEST_CHAP8} \
+	      ${TEST_CHAP9} ${TEST_CHAP10}
 
-GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}" \
-		   WHICH_TESTS="${WHICH_TESTS}"
+GRAND_TEST_FLAGS = SCHEME="${SCHEME}" YOU_HAVE_TIME="${YOU_HAVE_TIME}"
 
-# BROKEN_TESTS represent tests from the GRAND_TESTS that are known to
-# fail. See the README.md file for more info. -- appleby
-BROKEN_TESTS = test.reflisp
-
-GRAND_TESTS = $(filter-out ${BROKEN_TESTS}, ${ALL_GRAND_TESTS})
-
-# Test only parts of the grand tour of tests.
-TMP_ALL_TESTS = $(filter-out ${BROKEN_TESTS}, ${TEST_CHAP7} ${TEST_CHAP8})
-
-tmp.grand.test : WHICH_TESTS = ${TMP_ALL_TESTS}
-grand.test : WHICH_TESTS = ${GRAND_TESTS}
 grand.test tmp.grand.test:
 	${TIME} nice ${MAKE} do.grand.test ${GRAND_TEST_FLAGS}
 
 do.grand.test :
 	@rm -f ${FAILURES}
-	@for test in ${WHICH_TESTS} ; do \
+	@for test in ${GRAND_TESTS} ; do \
 	    ( echo Testing $$test ... ; ${MAKE} $$test ${GRAND_TEST_FLAGS} ) \
 	    | tee ${RESULTS} ; echo Checking results of $$test ... ; \
 	    ${PERL} perl/check.prl ${RESULTS} $$test ; \
@@ -443,7 +434,7 @@ test.chap4 : src/chap4.scm src/chap4a.scm src/chap4.tst
 	    '     (suite-test' \
 	    '       "src/chap4.tst" "?? " "== " #t' \
 	    '       (lambda (read check err)' \
-	    "         (lambda () (check (eval (read) ${EVAL_ENVIRONMENT}))))" \
+	    "         (lambda () (check (eval (read)))))" \
 	    '       naive-match))' \
 	| ${SCHEME}
 
@@ -736,7 +727,7 @@ start.chap6f : o/${HOSTTYPE}/rt.o src/chap6f.scm
 bench.chap6f : o/${HOSTTYPE}/chap6f-bench
 	${TIME} o/${HOSTTYPE}/chap6f-bench
 
-export CaFLAGS = -I${LiSP_TOPDIR}/src/c ${CFLAGS}
+export CaFLAGS=-I${LiSP_TOPDIR}/src/c ${CFLAGS}
 
 o/${HOSTTYPE}/chap6f-bench.c : src/chap6f.scm src/chap5-bench.scm
 	echo \
@@ -752,7 +743,7 @@ o/${HOSTTYPE}/rt.o : src/c/rt.c src/c/rt.h
 	cd o/${HOSTTYPE} ; ${CC} -c ${CaFLAGS} ../../src/c/rt.c
 o/${HOSTTYPE}/chap6f-bench : o/${HOSTTYPE}/chap6f-bench.c
 o/${HOSTTYPE}/chap6f-bench : o/${HOSTTYPE}/rt.o
-	${CC} -o $@ ${CaFLAGS} $^
+	${CC} -o $@ ${CaFLAGS} o/${HOSTTYPE}/chap6f-bench.c o/${HOSTTYPE}/rt.o
 
 ########### end of chap6f which was superseded by chap10. (obsolete)
 
@@ -892,7 +883,7 @@ test.chap7i : src/chap7h.scm
 
 TEST_CHAP8 = test.chap8a test.chap8b test.chap8c test.chap8d evalf.test.chap8e \
 	     evalf.test.chap8f evalf.test.chap8g test.chap8h test.chap8i \
-	     big.test.chap8j test.reflisp
+	     big.test.chap8j
 
 # add eval/ce (as a special form) to the naive interpreter of chapter 1.
 test.chap8a : src/chap8a.scm src/chap1.scm
@@ -1046,6 +1037,8 @@ test.chap8j : src/chap8h.scm si/reflisp.scm
 	| ${SCHEME}
 
 # a direct test of the reflective interpreter
+#
+# This is a known-failing test. See README.md for more info. -- appleby
 test.reflisp : si/reflisp.scm src/chap8k.scm
 	( echo \
 	    '(load "src/chap8a.scm")' \
@@ -1192,7 +1185,7 @@ o/chap10ex.c : o/${HOSTTYPE}/schemelib.o
 # It needs to be hacked a little by hand before being inserted in
 # the book.
 o/chap10ex.E : o/chap10ex.c src/c/scheme.h
-	${CC} ${CFLAGS} -Isrc/c -E $< -o $@
+	${CC} ${CFLAGS} -Isrc/c -E o/chap10ex.c -o $@
 	indent -kr $@
 
 # The file bigloo/compapp.scm was not included in the source tarball
@@ -1425,11 +1418,13 @@ compare.chap10 :
 
 bCFLAGS = -I../../src/c -ansi -pedantic -O
 
-o/${HOSTTYPE}/c10ex : src/c/c10ex.c $(filter-out %schemeklib.o, ${all-o})
-	${CC} ${bCFLAGS} -o $@ $^
+c10ex-deps = src/c/c10ex.c o/${HOSTTYPE}/scheme.o o/${HOSTTYPE}/schemelib.o
+o/${HOSTTYPE}/c10ex : ${c10ex-deps}
+	${CC} ${bCFLAGS} -o $@ ${c10ex-deps}
 
-o/${HOSTTYPE}/c10kex : src/c/c10kex.c $(filter-out %schemelib.o, ${all-o})
-	${CC} ${bCFLAGS} -o $@ $^
+c10kex-deps = src/c/c10ex.c o/${HOSTTYPE}/scheme.o o/${HOSTTYPE}/schemeklib.o
+o/${HOSTTYPE}/c10kex : ${c10kex-deps}
+	${CC} ${bCFLAGS} -o $@ ${c10kex-deps}
 
 ######################################################### Common entries
 
