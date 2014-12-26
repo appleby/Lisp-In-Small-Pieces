@@ -196,11 +196,11 @@ o/${HOSTTYPE}/book-gsc.scm : mkdir gambit/book.scm
 	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm \
 	    > o/${HOSTTYPE}/book-gsc.scm
 
-o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
+o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm
 	cd o/${HOSTTYPE} ; ${GSC} -:s -expansion book-gsc.scm > book-gsc.escm
 	more o/${HOSTTYPE}/book-gsc.escm
 
-o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
+o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm
 	cd o/${HOSTTYPE} ; ${GSC} -:s -link -verbose -report book-gsc.scm
 
 # I can't figure out how to get gsc to compile with the -:s flag.
