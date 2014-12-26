@@ -203,13 +203,13 @@ o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm gambit/hooks.gsi
 	cd o/${HOSTTYPE} ; ${GSC} -:s -link -verbose -report book-gsc.scm
 
-# Due to a bug in gsc, compiling with the -:s appears to be broken.
+# I can't figure out how to get gsc to compile with the -:s flag.
 # See the following threads for more info:
 #
 # http://comments.gmane.org/gmane.lisp.scheme.gambit/6980
 # https://mercure.iro.umontreal.ca/pipermail/gambit-list/2013-October/007106.html
 #
-# TODO: check back on this and see if a fix has landed -- appleby.
+# TODO: check back on this. -- appleby.
 o/${HOSTTYPE}/book-gsc.o : o/${HOSTTYPE}/book-gsc.c
 	cd o/${HOSTTYPE} ; ${GSC} -:s -obj book-gsc.c
 o/${HOSTTYPE}/book-gsc_.o : o/${HOSTTYPE}/book-gsc.c
