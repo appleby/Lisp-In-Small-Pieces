@@ -25,15 +25,6 @@ default.work : build.interpreter
 
 BIGLOO = bigloo
 
-# If you decide to build a specialized interpreter on top of Gambit
-# then indicate the correct command to invoke the Gambit compiler.
-
-# The default binary name is ``gsc'', but that name conflicts with the
-# ghostscript binary on my Archlinux system, where the gambit compiler
-# has been renamed to gambitc. -- appleby
-
-GSC = gambitc
-
 # If you decide to build multiple specialized interpreters on
 # multiple machines, then you must give different HOSTTYPE for all
 # these CPU-different machines. Very often, HOSTTYPE is set up for
@@ -52,22 +43,13 @@ GSC = gambitc
 __HOSTTYPE__ != uname -m
 export HOSTTYPE=${__HOSTTYPE__}
 
-# Choose a Scheme interpreter. This interpreter must contain
-# Meroonet, hygienic macros and a test-suite driver. It is better to
-# build a specialized interpreter with these facilities compiled in,
-# see entries o/${HOSTTYPE}/book.{bigloo,gsc} below to regenerate
-# them. You can also directly use an interpreter and load on the fly
-# Meroonet and the test-suite driver every time.  This is what the
-# MIT, Gambit, and Guile-based definitions do.
-
-# The pre-compiled version of Gambit (book.gsc) is not supported due
-# to issues compiling scheme files with gsc when passing the -:s flag.
-# See the comment for the book.gsc target below.
-#
-# SCHEME = o/${HOSTTYPE}/book.gsc
-#
-# These schemes are the only known-working options. See the
-# README.md file for more info. -- appleby
+# Choose a Scheme interpreter. This interpreter must contain Meroonet,
+# hygienic macros and a test-suite driver. It is better to build a
+# specialized interpreter with these facilities compiled in.  See the
+# target o/${HOSTTYPE}/book.bigloo below for an example of a
+# pre-compiled interpreter. You can also directly use an interpreter
+# and load on the fly Meroonet and the test-suite driver every time.
+# This is what the MIT, Gambit, and Guile-based definitions do.
 #
 #SCHEME = o/${HOSTTYPE}/book.bigloo
 #SCHEME = o/${HOSTTYPE}/book.gsi
@@ -188,16 +170,6 @@ o/${HOSTTYPE}/book.gsi : mkdir
 	echo "#!/bin/sh" > o/${HOSTTYPE}/book.gsi
 	echo "exec gsi -:s,d- gambit/book.scm" >> o/${HOSTTYPE}/book.gsi
 	chmod a=rwx o/${HOSTTYPE}/book.gsi
-
-# Compile for Gambit
-#
-# I can't figure out how to get gsc to compile with the -:s flag.
-# See the following threads for more info:
-#
-# http://comments.gmane.org/gmane.lisp.scheme.gambit/6980
-# https://mercure.iro.umontreal.ca/pipermail/gambit-list/2013-October/007106.html
-o/${HOSTTYPE}/book.gsc : mkdir gambit/gambitc-book.scm
-	${GSC} -:s -exe -o $@ gambit/gambitc-book.scm
 
 check.results :
 	@if grep -i '= done' ${RESULTS} ; \
