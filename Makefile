@@ -190,33 +190,14 @@ o/${HOSTTYPE}/book.gsi : mkdir
 	chmod a=rwx o/${HOSTTYPE}/book.gsi
 
 # Compile for Gambit
-# Gambit rules to find files are relative to previous ones (as in
-# Mac) so change pathnames to absolute pathnames.
-o/${HOSTTYPE}/book-gsc.scm : mkdir gambit/book.scm
-	sed -e "s;include \";include \"`pwd`/;" < gambit/book.scm \
-	    > o/${HOSTTYPE}/book-gsc.scm
-
-o/${HOSTTYPE}/book-gsc.escm : o/${HOSTTYPE}/book-gsc.scm
-	cd o/${HOSTTYPE} ; ${GSC} -:s -expansion book-gsc.scm > book-gsc.escm
-	more o/${HOSTTYPE}/book-gsc.escm
-
-o/${HOSTTYPE}/book-gsc.c : o/${HOSTTYPE}/book-gsc.scm
-	cd o/${HOSTTYPE} ; ${GSC} -:s -link -verbose -report book-gsc.scm
-
+#
 # I can't figure out how to get gsc to compile with the -:s flag.
 # See the following threads for more info:
 #
 # http://comments.gmane.org/gmane.lisp.scheme.gambit/6980
 # https://mercure.iro.umontreal.ca/pipermail/gambit-list/2013-October/007106.html
-#
-# TODO: check back on this. -- appleby.
-o/${HOSTTYPE}/book-gsc.o : o/${HOSTTYPE}/book-gsc.c
-	cd o/${HOSTTYPE} ; ${GSC} -:s -obj book-gsc.c
-o/${HOSTTYPE}/book-gsc_.o : o/${HOSTTYPE}/book-gsc.c
-	cd o/${HOSTTYPE} ; ${GSC} -:s -obj book-gsc_.c
-o/${HOSTTYPE}/book.gsc : o/${HOSTTYPE}/book-gsc.o
-o/${HOSTTYPE}/book.gsc : o/${HOSTTYPE}/book-gsc_.o
-	cd o/${HOSTTYPE} ; ${GSC} -:s -exe -o book.gsc book-gsc.o book-gsc_.o
+o/${HOSTTYPE}/book.gsc : mkdir gambit/gambitc-book.scm
+	${GSC} -:s -exe -o $@ gambit/gambitc-book.scm
 
 check.results :
 	@if grep -i '= done' ${RESULTS} ; \
