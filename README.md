@@ -6,7 +6,7 @@ This repository contains source code from the book
 with modern versions of Bigloo, Gambit, Mit-scheme, and
 Guile. Specifically, the following versions are known to pass the
 included test suite, with one exception
-[noted below][failing-grand.tests].
+[noted below][failing-test.reflisp].
 
 - [bigloo][] 4.1a
 - [gambit][] 4.7.3
@@ -19,7 +19,7 @@ Running the code
 1. Install one of the above mentioned schemes
 
 2. Clone this repo.
-    `git clone https://github.com/appleby/Lisp-In-Small-Pieces.git`
+    `git clone http://github.com/appleby/Lisp-In-Small-Pieces.git`
 
 3. Edit the Makefile and set the `SCHEME` variable to the scheme
    interpreter you want. The supported values for `SCHEME` are
@@ -36,13 +36,8 @@ Running the code
    take a while, but at the end you should see a message that says
    "All tests passed."
 
-Failing grand.tests
--------------------
-
-The `grand.test` Make target is a wrapper that runs the tests for all
-the code that actually appears in the book. There are 54 total
-sub-targets included in the `grand.test` target, of which one target
-is failing, namely `test.reflisp`.
+Failing test.reflisp
+--------------------
 
 The `test.reflisp` target is a test of the reflective interpreter from
 chapter 8 of the book, and comes with the following disclaimer/warning
@@ -93,17 +88,6 @@ More Info
 ---------
 
 For (a lot) more info, see the [original README][README] file.
-
-TODO
-----
-
-* ~~Maybe: Remove unused code, like the included syntax-case files.~~
-* ~~Maybe: Move common code out of `<interpreter>/book.scm`.~~
-* ~~Maybe: Clean up formatting of the Makefile~~
-* ~~Maybe: Remove unused/unsupported/deprecated targets from the Makefile.~~
-* ~~Maybe: Get C files to compile without warnings.~~
-* ~~Maybe: Remove GNU-only features from the Makefile.~~
-
 
 [README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
 [failing-grand.tests]: https://github.com/appleby/Lisp-In-Small-Pieces#failing-grandtests
