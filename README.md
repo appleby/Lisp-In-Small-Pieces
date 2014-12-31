@@ -6,7 +6,7 @@ This repository contains source code from the book
 with modern versions of Bigloo, Gambit, Mit-scheme, and
 Guile. Specifically, the following versions are known to pass the
 included test suite, with one exception
-[noted below][failing-test.reflisp].
+[noted below][failing-testreflisp].
 
 - [bigloo][] 4.1a
 - [gambit][] 4.7.3
