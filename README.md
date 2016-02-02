@@ -9,7 +9,7 @@ included test suite, with one exception
 [noted below][failing-test.reflisp].
 
 - [bigloo][] 4.2c
-- [gambit][] 4.8.2
+- [gambit][] 4.8.3
 - [mit-scheme][] 9.2
 - [guile][] 2.0.11
 
