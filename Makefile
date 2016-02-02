@@ -210,7 +210,7 @@ book.interpreter.test4 : ${SCHEME}
 # Moore's law has been kind to us. Tests that apparently took hours to
 # run on the original author's machine 20 years ago now complete in
 # less than a minute. I'm leaving the long- prefixes and YOU_HAVE_TIME
-# alone since they're still usefull, but unless you're really
+# alone since they're still useful, but unless you're really
 # impatient, you probably don't want to disable the "long" tests. For
 # reference, the entire grand.test suite takes about 6 minutes to
 # complete even with the slower interpreters on my 5-year-old (as of
