@@ -13,17 +13,20 @@ Setting up an environment
 If you want to run the code in this repo, you have the following
 options, listed in decreasing order of likeliness-to-work:
 
-1. Use Vagrant + Virtualbox
+1. Use Virtualbox with Vagrant (preferred method)
 2. Use Virtualbox without Vagrant
-3. Install dependencies yourself without using the provided virtual
+3. Use VMware (with or without Vagrant)
+4. Install dependencies yourself without using the provided virtual
    machines.
 
 If you have a reasonable internet connection and don't mind
 downloading ~500MB of virtual machine, then options 1 and 2 are the
-easiest, and provide the only tested and known-working environment.
+easiest, and provide the only tested and known-working
+environment. The virtual machines are Arch Linux x86_64 systems with
+all required dependencies pre-installed.
 
 
-### Using Vagrant + Virtualbox (Preferred Method)
+### Using Virtualbox with Vagrant (Preferred Method)
 
 Using [Vagrant][vagrant] is the easiest way to get up and running with
 an environment suitable for running the code in this repo. Assuming
@@ -39,11 +42,10 @@ vagrant ssh
 ```
 
 You should now be logged in to the vagrant box. Vagrant should have
-mounted the directory on the host filesystem from which the box was
-launched on `/vagrant` in the vagrant guest. Therefore, you should be
-able to run `cd /vagrant` on the vagrant box to get to the
-appleby/Lisp-In-Small-Pieces source files. Alternatively, you can also
-just run `git clone` on the vagrant box to clone the repo there.
+mounted the Lisp-In-Small-Pieces source directory on `/vagrant` in the
+vagrant guest. Therefore, you should be able to run `cd /vagrant` on
+the vagrant box to get to the source files. Alternatively, you can
+also just run `git clone` on the vagrant box to clone the repo there.
 
 You can now skip to the section [Running the Code](#running-the-code).
 
@@ -61,6 +63,31 @@ ssh with user `vagrant` and password `vagrant`.
 You can now skip to the section [Running the Code](#running-the-code).
 
 
+### Using VMware
+
+In addition to the Virtualbox-compatible VMs mentioned above,
+VMware-compatible versions are also available. However, I don't test
+the VMware versions, not even to make sure they boot.  The VMware
+versions are produced by the same [Packer][packer] build as the
+Virtualbox versions. In so far as the Packer build was successful, the
+VMware versions are expected to be equivalent to the Virtualbox
+machines. They are provided as a convenience for people who already
+have VMware installed and don't want to install Virtualbox.
+
+The steps for getting set up with a VMware-based environment, either
+with or without Vagrant, are essentially the same as the steps for
+Virtualbox described above, just substituting VMware for Virtualbox
+everywhere. The one exception is that VMware Tools are not installed
+on the guest, so Vagrant will not be able to mount the
+Lisp-In-Small-Pieces sources on `/vagrant` in the VMware guest. You
+will have to `git clone` the repository once you've logged in to the
+guest.
+
+Also note that you need to [purchase a license][vagrant-vmware] in
+order to use the VMware provider with Vagrant, whereas the Virtualbox
+provider is free.
+
+
 ### Installing Dependencies Yourself
 
 This method is not recommended, but is provided for curmudgeons like
@@ -71,9 +98,10 @@ downloading the virtual machine image in the first place, but at least
 you'll sleep secure knowing you didn't take the easy way out.
 
 Here are the dependencies required to run the `grand.test` target,
-including the version numbers that are installed in the above virtual
-machines. The exact version numbers are neither required nor
-sufficient for a working build. They are included only for reference.
+including the version numbers that are installed in the above
+mentioned virtual machines. The exact version numbers are not a hard
+requirement, nor a guarantee of a working build. They are included
+only for reference.
 
 - GCC 5.3.0
 - GNU Make 4.1
@@ -85,8 +113,8 @@ sufficient for a working build. They are included only for reference.
 - One or more of the following schemes
   - bigloo 4.2c
   - gambit 4.8.3
-  - mit-scheme 9.2
   - guile 2.0.11
+  - mit-scheme 9.2
 
 In addition to the above required dependencies, the following optional
 dependencies are needed by certain tests which are not included in the
@@ -160,7 +188,7 @@ Guile was not supported in the original sources.
 More Info
 ---------
 
-For (a lot) more info, see the [original README][README] file.
+For a lot more info, see the [original README][README] file.
 
 
 [README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
@@ -174,3 +202,5 @@ For (a lot) more info, see the [original README][README] file.
 [mit-scheme]: http://www.gnu.org/software/mit-scheme/
 [guile]: http://www.gnu.org/software/guile/
 [vagrant]: https://www.vagrantup.com/
+[vagrant-vmware]: https://www.vagrantup.com/vmware/
+[packer]: https://www.packer.io/
