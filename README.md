@@ -13,11 +13,11 @@ Setting up an environment
 If you want to run the code in this repo, you have the following
 options, listed in decreasing order of likeliness-to-work:
 
-1. Use Virtualbox with Vagrant (preferred method)
-2. Use Virtualbox without Vagrant
-3. Use VMware (with or without Vagrant)
-4. Install dependencies yourself without using the provided virtual
-   machines.
+1. [Use Virtualbox with Vagrant (preferred method)](#using-virtualbox-with-vagrant-preferred-method)
+2. [Use Virtualbox without Vagrant](#using-virtualbox-without-vagrant)
+3. [Use VMware (with or without Vagrant)](#using-vmware)
+4. [Install dependencies yourself without using the provided virtual
+   machines](#installing-dependencies-yourself)
 
 If you have a reasonable internet connection and don't mind
 downloading ~500MB of virtual machine, then options 1 and 2 are the
@@ -75,13 +75,13 @@ machines. They are provided as a convenience for people who already
 have VMware installed and don't want to install Virtualbox.
 
 The steps for getting set up with a VMware-based environment, either
-with or without Vagrant, are essentially the same as the steps for
-Virtualbox described above, just substituting VMware for Virtualbox
-everywhere. The one exception is that VMware Tools are not installed
-on the guest, so Vagrant will not be able to mount the
-Lisp-In-Small-Pieces sources on `/vagrant` in the VMware guest. You
-will have to `git clone` the repository once you've logged in to the
-guest.
+with or without Vagrant, are essentially the same as the
+[steps for Virtualbox described above](#using-virtualbox-with-vagrant-preferred-method),
+just substituting VMware for Virtualbox everywhere. The one exception
+is that VMware Tools are not installed on the guest, so Vagrant will
+not be able to mount the Lisp-In-Small-Pieces sources on `/vagrant` in
+the VMware guest. You will have to `git clone` the repository once
+you've logged in to the guest.
 
 Also note that you need to [purchase a license][vagrant-vmware] in
 order to use the VMware provider with Vagrant, whereas the Virtualbox
