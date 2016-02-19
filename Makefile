@@ -41,11 +41,22 @@ export HOSTTYPE = $(shell uname -m)
 # pre-compiled interpreter. You can also directly use an interpreter
 # and load on the fly Meroonet and the test-suite driver every time.
 # This is what the MIT, Gambit, and Guile-based definitions do.
+
+# The original Makefile defines only the SCHEME variable. MYSCHEME is
+# a shorthand form that is easier to override on the make command
+# line.
 #
-#SCHEME = o/${HOSTTYPE}/book.bigloo
-#SCHEME = o/${HOSTTYPE}/book.gsi
-#SCHEME = o/${HOSTTYPE}/book.mit
-SCHEME = o/${HOSTTYPE}/book.guile
+# The default value for MYSCHEME is bigloo because the Bigloo
+# interpreter is the only one that is pre-compiled with Meroonet and
+# other support code, and is quite a bit faster at executing the
+# included test suite than any other interpreter.  -- appleby
+
+MYSCHEME = bigloo
+# MYSCHEME = gsi
+# MYSCHEME = guile
+# MYSCHEME = mit
+
+SCHEME = o/${HOSTTYPE}/book.${MYSCHEME}
 
 # This variable allows to measure time.  I personnally use Gnu time but time
 # will do also.

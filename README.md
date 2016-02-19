@@ -133,20 +133,24 @@ Running the Code
 1. Clone this repo.
     `git clone http://github.com/appleby/Lisp-In-Small-Pieces.git`
 
-2. Edit the Makefile and set the `SCHEME` variable to the scheme
-   interpreter you want. The supported values for `SCHEME` are
-
-        o/${HOSTTYPE}/book.bigloo
-        o/${HOSTTYPE}/book.gsi
-        o/${HOSTTYPE}/book.mit
-        o/${HOSTTYPE}/book.guile
-
-   So, e.g., to build the Gambit interpreter, set `SCHEME =
-   o/${HOSTTYPE}/book.gsi`.
+2. Edit the Makefile and set the `MYSCHEME` variable to the scheme
+   interpreter you want. The supported values for `MYSCHEME` are:
+   `bigloo`, `gsi`, `guile`, and `mit`.
 
 3. Run `make grand.test` to run the test suite. Running the tests will
    take a while, but at the end you should see a message that says
    "All tests passed."
+
+If you want to temporarily try running the tests with a different
+scheme interpreter, you can set the `MYSCHEME` variable when invoking
+make, like so: `make MYSCHEME=guile grand.test`.  Or, equivalently,
+`make grand.test.with.guile`. Of course, you can replace `guile` in
+the previous examples with any valid value for `MYSCHEME`.
+
+If you don't want to run the full test suite, but only the tests for a
+particular chapter of the book, you can specify the targets you want
+individually. For example, `make test.chap5f`. See the Makefile for a
+list of available targets.
 
 
 Failing test.reflisp
