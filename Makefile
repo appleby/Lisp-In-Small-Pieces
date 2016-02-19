@@ -32,16 +32,7 @@ BIGLOO = bigloo
 # this definition, it will be automatically inherited from your
 # shell.
 
-# This is a hack for GNU/BSD make compatibility. We define a temporary
-# variable, then export it on the next line because BSD make doesn't allow !=
-# assignments in an `export' directive. The temp variable must have a different
-# name from the variable we actually want to export; otherwise, GNU make will
-# complain about a recursively defined variable (again BSD make doesn't allow
-# := assignments in an export). A similar dance is done below for defining and
-# exporting SHELL. -- appleby
-
-__HOSTTYPE__ != uname -m
-export HOSTTYPE=${__HOSTTYPE__}
+export HOSTTYPE = $(shell uname -m)
 
 # Choose a Scheme interpreter. This interpreter must contain Meroonet,
 # hygienic macros and a test-suite driver. It is better to build a
@@ -102,8 +93,7 @@ export LiSP_TOPDIR=${PWD}
 # Set the SHELL explicitly. Mit-scheme's run-shell-command respects
 # this variable, and some shell commands will fail if using a non-standard
 # shell (e.g. fish). -- appleby
-__SHELL__ != which sh
-export SHELL=${__SHELL__}
+export SHELL=/bin/sh
 
 # This part of the Makefile defines how to run and test the programs
 # of the book.
