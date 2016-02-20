@@ -32,7 +32,7 @@ BIGLOO = bigloo
 # this definition, it will be automatically inherited from your
 # shell.
 
-export HOSTTYPE = $(shell uname -m)
+export HOSTTYPE := $(shell uname -m)
 
 # Choose a Scheme interpreter. This interpreter must contain Meroonet,
 # hygienic macros and a test-suite driver. It is better to build a
