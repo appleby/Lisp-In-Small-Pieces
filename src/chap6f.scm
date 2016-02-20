@@ -1200,7 +1200,7 @@ SCM_The_Environment=~A,
                 (pp e stderr-port)
                 (format stderr-port "~%===> Compiling towards C...")
                 (flush-buffer stderr-port)
-                (call-with-output-file "/tmp/chap6f.c"
+                (call-with-output-file "o/chap6f.c"
                   (lambda (out) (compile->C out e)) )
                 (format stderr-port "~%===> C compilation...")
                 (flush-buffer stderr-port)
@@ -1208,21 +1208,21 @@ SCM_The_Environment=~A,
                 (unless (= status 0) (static-wrong "Cannot compile"))
                 (format stderr-port "~%===> Run...~%")
                 (flush-buffer stderr-port)
-                (set! status (system "/tmp/a.out > /tmp/chap6f.result"))
+                (set! status (system "o/a.out > o/chap6f.result"))
                 (unless (= status 0) (static-wrong "Cannot run"))
-                (system "cat /tmp/chap6f.result")
+                (system "cat o/chap6f.result")
                 (format stderr-port "~%===> Check result...")
                 (flush-buffer stderr-port)
                 (if (= status 0)
                     (if (eq? expected-result '---)
-                        ;; Don't read /tmp/chap6f.result if needless
+                        ;; Don't read o/chap6f.result if needless
                         (check '---)
                         (check (call-with-input-file 
-                                   "/tmp/chap6f.result" native-read )) )
+                                   "o/chap6f.result" native-read )) )
                     (check '***) ) ) ) ) ) ) ) ) ) ) 
 
 (define *compile-format*
-  "cd /tmp ; ${CC} ${CaFLAGS} chap6f.c ${LiSP_TOPDIR}/o/${HOSTTYPE}/rt.o" )
+  "cd ./o ; ${CC} ${CaFLAGS} chap6f.c ${HOSTTYPE}/rt.o" )
 
 ;;; Skip these tests
 (define *tests-to-skip*

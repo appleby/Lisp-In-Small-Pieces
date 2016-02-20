@@ -66,12 +66,12 @@ TIME = time
 # A temporary file used to store temporary results. Put it in a
 # place where it will disappear automatically sometime.
 
-RESULTS = /tmp/result
+RESULTS = o/test.results
 
 # A temporary file used to store the names of failing tests when
 # running the grand.test target.
 
-FAILURES = /tmp/failures
+FAILURES = o/test.failures
 
 # Make an archive grouping *.o files
 # You need it if you want to test the Scheme towards C compiler.

@@ -79,8 +79,9 @@
 
 (define (compile-and-run Cfile)
   (let* ((log (string-append test-dir *a.out* ".log"))
+	 (ttlog (string-append test-dir "ttlog"))
          (dir (string-append test-dir "${HOSTTYPE}"))
-         (cmd (string-append 
+         (cmd (string-append
                "cd " dir "; "
                *cc+cflags* " -I../../src/c "
                (string-append "../" Cfile)
@@ -88,11 +89,11 @@
          (status (system cmd)) )
     (unless (= status 0)
       (evaluate-error "C compilation aborted.") )
-    (set! status 
+    (set! status
           (system (string-append "cd " dir "; ./"
-                                 *a.out* " > /tmp/ttlog " )) )
-    (system (string-append 
-             "sed -e 's:#<:<:g' -e 's:@::g' < /tmp/ttlog >" log) )
+                                 *a.out* " > ../ttlog " )) )
+    (system (string-append
+             "sed -e 's:#<:<:g' -e 's:@::g' < " ttlog " > " log) )
     (unless (= status 0)
       (evaluate-error "C execution arborted" status) )
     (call-with-input-file log read) ) )
@@ -144,7 +145,7 @@
         (compiler-option-error "C compilation failed!") )
       #t ) ) )
 
-(define *default-cfile* "/tmp/tmp.c")
+(define *default-cfile* "o/tmp.c")
 (define *h-dir* "src/c/scheme.h")
 (define *rtbook-library* "o/HOSTTYPE/rtbook.a")
 
