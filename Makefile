@@ -243,13 +243,13 @@ do.grand.test : ${SCHEME}
 	    cat ${FAILURES} ) || echo "All tests passed."
 
 grand.test.with.bigloo : o/${HOSTTYPE}/book.bigloo
-	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo TIME=time
+	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo
 grand.test.with.gsi : o/${HOSTTYPE}/book.gsi
-	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.gsi TIME=time
+	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.gsi
 grand.test.with.mit : o/${HOSTTYPE}/book.mit
-	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.mit TIME=time
+	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.mit
 grand.test.with.guile : o/${HOSTTYPE}/book.guile
-	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.guile TIME=time
+	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.guile
 
 ##################################### Chap 1 ##############################
 
