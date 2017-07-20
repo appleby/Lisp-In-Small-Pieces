@@ -181,25 +181,29 @@
 ;;; For testing purposes, allow to override memq.
 (define *memq* memq)
 
-(define vowel<= 
-  (let ((vowels '(#\a #\e #\i #\o #\u)))
+(define vowel<=
+  (let ((vowels (list #\a #\e #\i #\o #\u)))
     (lambda (c1 c2)
       (*memq* c2 (*memq* c1 vowels)) ) ) )
 
-(define vowel1<= 
-  (let ((vowels '(#\a #\e)))
+(define vowel1<=
+  (let ((vowels (list #\a #\e)))
     (lambda (c1 c2)
       (*memq* c2 (*memq* c1 vowels)) ) ) )
 
-(define vowel2<= 
-  (lambda (c1 c2)
-    (case c1
-     ((#\a) (*memq* c2 '(#\a #\e #\i #\o #\u)))
-     ((#\e) (*memq* c2 '(#\e #\i #\o #\u)))
-     ((#\i) (*memq* c2 '(#\i #\o #\u)))
-     ((#\o) (*memq* c2 '(#\o #\u)))
-     ((#\u) (eq? c2 #\u))
-     (else  #f) ) ) )
+(define vowel2<=
+  (let ((aeiou (list #\a #\e #\i #\o #\u))
+	(eiou (list #\e #\i #\o #\u))
+	(iou (list #\i #\o #\u))
+	(ou (list #\o #\u)))
+    (lambda (c1 c2)
+      (case c1
+	((#\a) (*memq* c2 aeiou))
+	((#\e) (*memq* c2 eiou))
+	((#\i) (*memq* c2 iou))
+	((#\o) (*memq* c2 ou))
+	((#\u) (eq? c2 #\u))
+	(else  #f) ) ) ) )
 
 (define quote82 (cons #\u '()))
 (define quote81 (cons #\o quote82))
