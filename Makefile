@@ -251,6 +251,31 @@ grand.test.with.mit : o/${HOSTTYPE}/book.mit
 grand.test.with.guile : o/${HOSTTYPE}/book.guile
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.guile
 
+
+########################## Release tests
+# Run all tests for all schemes. This includes all tests from the
+# test.interpreters and grand.test targets. -- appleby
+ALL_SCHEMES = bigloo guile gsi mit
+ALL_TESTS = ${GRAND_TESTS}
+
+test.release:
+	${TIME} ${MAKE} -s do.test.release
+
+do.test.release: test.interpreters
+	@for scheme in ${ALL_SCHEMES} ; do \
+		${MAKE} test.all MYSCHEME=$$scheme || exit 1; \
+	done; echo "Finished test.release."
+
+test.all: ${SCHEME}
+	@for test in ${ALL_TESTS} ; do \
+		${PERL} -e "print 'Testing $$test with ${MYSCHEME}...'" ; \
+		${MAKE} $$test MYSCHEME=${MYSCHEME} > ${RESULTS} 2>/dev/null ; \
+		${PERL} perl/check.prl ${RESULTS} $$test > /dev/null ; \
+		if [ $$? -eq 0 ] ; \
+		   then echo ok ; \
+		   else echo fail; exit 1; fi ; \
+	done; echo "All tests passed."
+
 ##################################### Chap 1 ##############################
 
 TEST_CHAP1 = test.chap1
