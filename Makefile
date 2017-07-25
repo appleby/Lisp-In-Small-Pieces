@@ -1136,7 +1136,7 @@ test.chap10n : o/${HOSTTYPE}/schemelib.o
 	| ${SCHEME}
 
 # Generate the C code corresponding to the running example of
-# chapter 10. The C code will be left in o/chap10e.c
+# chapter 10. The C code will be left in o/chap10ex.c
 chap10e.example : o/chap10ex.c
 o/chap10ex.c : src/chap10ex.scm src/chap10e.scm
 o/chap10ex.c : o/${HOSTTYPE}/scheme.o
