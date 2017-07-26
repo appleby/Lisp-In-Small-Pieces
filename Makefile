@@ -109,6 +109,12 @@ export SHELL=/bin/sh
 # This part of the Makefile defines how to run and test the programs
 # of the book.
 
+# Build the necessary directories where will go specialized interpreters.
+MKDIR_TARGET = o/${HOSTTYPE}/mkdir_done
+${MKDIR_TARGET}:
+	mkdir -p o/${HOSTTYPE}
+	touch $@
+
 ##################################### Build specialized interpreters.
 # Rebuild a Bigloo interpreter with Meroonet and tester in it.
 # Adapted to Bigloo 4.1a. Due to name conflicts, the compilation of
@@ -124,15 +130,13 @@ o/${HOSTTYPE}/rtbook.a : o/${HOSTTYPE}/rtbook.o common/pp.scm common/format.scm
 	cd o/${HOSTTYPE} ; ${AR} cvr rtbook.a rtbook.o
 	-${RANLIB} o/${HOSTTYPE}/rtbook.a
 
-o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.scm bigloo/hack.scm src/tester.scm
-
-	-[ -d o/${HOSTTYPE} ] || ${MAKE} mkdir
+o/${HOSTTYPE}/rtbook.o : bigloo/rtbook.scm bigloo/hack.scm src/tester.scm ${MKDIR_TARGET}
 	${BIGLOO} -c -v -call/cc -cg -w -o o/${HOSTTYPE}/rtbook.o bigloo/rtbook.scm
 	-rm bigloo/rtbook.[co] o/${HOSTTYPE}/rtbook.c
 
 # Default work for the distribution, create some sub-directories
 # where will go compilation products.
-build.interpreter : mkdir
+build.interpreter : ${MKDIR_TARGET}
 	@if [ "X${SCHEME}" = X ] ; \
 	    then echo "*** Unbound SCHEME variable, see Makefile" ; exit 1 ; \
 	    else : ; fi
@@ -147,7 +151,7 @@ test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test \
     o/${HOSTTYPE}/book.gsi.test o/${HOSTTYPE}/book.guile.test
 
 MIT_BAND_FILE=o/${HOSTTYPE}/book.mit.com
-${MIT_BAND_FILE} : mkdir
+${MIT_BAND_FILE} : ${MKDIR_TARGET}
 	echo "(disk-save \"${MIT_BAND_FILE}\" \"${MIT_BAND_FILE}\")" \
 	| mit-scheme --batch-mode --no-init-file --load mitscheme/book.scm
 
@@ -160,14 +164,14 @@ o/${HOSTTYPE}/book.mit : ${MIT_BAND_FILE}
 
 # Makes a command to run guile. Must be run from the current
 # directory.
-o/${HOSTTYPE}/book.guile : mkdir
+o/${HOSTTYPE}/book.guile : ${MKDIR_TARGET}
 	echo "#!/bin/sh" > $@
 	echo "exec guile -q -l guile/book.scm" >> $@
 	chmod a=rwx $@
 
 # Makes a command for Gambit interpreter similar to the others.
 # This command has to be run from the current directory.
-o/${HOSTTYPE}/book.gsi : mkdir
+o/${HOSTTYPE}/book.gsi : ${MKDIR_TARGET}
 	echo "#!/bin/sh" > o/${HOSTTYPE}/book.gsi
 	echo "exec gsi -:s,d- gambit/book.scm" >> o/${HOSTTYPE}/book.gsi
 	chmod a=rwx o/${HOSTTYPE}/book.gsi
@@ -1403,11 +1407,6 @@ o/${HOSTTYPE}/c10kex : ${c10kex-deps}
 	${CC} ${bCFLAGS} -o $@ ${c10kex-deps}
 
 ######################################################### Common entries
-
-# Build the necessary directories where will go specialized interpreters.
-mkdir :
-	-[ -d o ] || mkdir o
-	-[ -d o/${HOSTTYPE} ] || mkdir o/${HOSTTYPE}
 
 # Clean or recursively clean directories.
 clean ::
