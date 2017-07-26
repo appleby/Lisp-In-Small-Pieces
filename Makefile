@@ -83,6 +83,9 @@ AR = ar
 
 RANLIB = ranlib
 
+# Only needed for test.chap6.ml. -- appleby
+CAMLLIGHT = camllight
+
 # This is the C compiler I used as well as its preferred flags.
 # You need it if you want to test the Scheme towards C compiler.
 
@@ -596,7 +599,7 @@ test.chap6.ml :
 	    "  in" \
 	    "    loop factor;; " \
 	    "bench 100;;" \
-	    | ${TIME} camllight
+	    | ${TIME} ${CAMLLIGHT}
 
 # patch to chap6a.scm to define new global variables on the fly:
 test.chap6b : src/chap6a.scm src/chap6b.scm
