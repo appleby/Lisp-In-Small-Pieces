@@ -570,7 +570,7 @@ test.chap6.bgl :
 	    "        (loop (- factor 1))" \
 	    "        (display v)))))" \
 	    "(bench 100)" \
-	| ${TIME} bigloo -i
+	| ${TIME} ${BIGLOO} -i
 
 # Compare also with CAML light
 test.chap6.ml :
