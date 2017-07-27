@@ -261,27 +261,55 @@ grand.test.with.guile : o/${HOSTTYPE}/book.guile
 
 ########################## Release tests
 # Run all tests for all schemes. This includes all tests from the
-# test.interpreters and grand.test targets. -- appleby
+# test.interpreters and grand.test targets, plus a handful of other
+# targets. -- appleby
 ALL_SCHEMES = bigloo guile gsi mit
-ALL_TESTS = ${GRAND_TESTS}
+EXTRA_TESTS = chap10e.example chap10k.example o/chap10ex.E test.chap10e.c
+MISC_TARGETS = test.chap6.bgl test.chap6.ml compare.chap10
+
+define ok-or-fail =
+	${PERL} -e "printf '%-40s', '"${1}"'" ; \
+	${2} ; \
+	if [ $$? -eq 0 ] ; \
+	   then echo ok ; \
+	   else echo fail; exit 1; fi
+endef
 
 test.release:
-	${TIME} ${MAKE} -s do.test.release
+	@${TIME} ${MAKE} -s do.test.release
 
-do.test.release: test.interpreters
+do.test.release: ${MKDIR_TARGET}
+	@${MAKE} test.misc
 	@for scheme in ${ALL_SCHEMES} ; do \
-		${MAKE} test.all MYSCHEME=$$scheme || exit 1; \
+	    ${MAKE} clean || exit 1; \
+	    ${MAKE} test.interpreter MYSCHEME=$$scheme || exit 1; \
+	    ${MAKE} test.extra MYSCHEME=$$scheme || exit 1; \
+	    ${MAKE} test.grand MYSCHEME=$$scheme || exit 1; \
 	done; echo "Finished test.release."
 
-test.all: ${SCHEME}
-	@for test in ${ALL_TESTS} ; do \
-		${PERL} -e "print 'Testing $$test with ${MYSCHEME}...'" ; \
-		${MAKE} $$test MYSCHEME=${MYSCHEME} > ${RESULTS} 2>/dev/null ; \
-		${PERL} perl/check.prl ${RESULTS} $$test > /dev/null ; \
-		if [ $$? -eq 0 ] ; \
-		   then echo ok ; \
-		   else echo fail; exit 1; fi ; \
+test.interpreter:
+	@$(call ok-or-fail,"Running book.${MYSCHEME}.test",\
+		${MAKE} o/${HOSTTYPE}/book.${MYSCHEME}.test > /dev/null 2>&1)
+
+test.misc:
+	@for target in ${MISC_TARGETS} ; do \
+	    $(call ok-or-fail,"Running $$target",\
+	        ${MAKE} $$target > ${RESULTS} 2>/dev/null) ; \
+	done
+
+test.extra: ${SCHEME}
+	@for target in ${EXTRA_TESTS} ; do \
+	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
+	        ${MAKE} MYSCHEME=${MYSCHEME} $$target > ${RESULTS} 2>/dev/null) ; \
 	done; echo "All tests passed."
+
+test.grand: ${SCHEME}
+	@for target in ${GRAND_TESTS} ; do \
+	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
+	        ${MAKE} MYSCHEME=${MYSCHEME} $$target > ${RESULTS} 2>/dev/null \
+	        && ${PERL} perl/check.prl ${RESULTS} $$target > /dev/null) ; \
+	done; echo "All tests passed."
+
 
 ##################################### Chap 1 ##############################
 
@@ -1276,7 +1304,7 @@ start.chap10e : ${all-o}
 	| ${SCHEME}
 
 # test indepently a compiled file o/chap10e.c.
-test.chap10e.c : ${all-o}
+test.chap10e.c : ${all-o} o/chap10ex.c
 	cd o/${HOSTTYPE} ; \
 	${CC} ${CaFLAGS} ../chap10e.c scheme.o schemelib.o -o chap10e \
 	&& ./chap10e
