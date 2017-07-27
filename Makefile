@@ -272,26 +272,31 @@ define ok-or-fail =
 	${2} ; \
 	if [ $$? -eq 0 ] ; \
 	   then echo ok ; \
-	   else echo fail; exit 1; fi
+	   else echo fail; echo "    ${1}" >> "${FAILURES}"; fi
 endef
 
 test.release:
 	@${TIME} ${MAKE} -s do.test.release
 
-do.test.release: ${MKDIR_TARGET}
+do.test.release:
+	@${MAKE} clean
 	@${MAKE} test.misc
 	@for scheme in ${ALL_SCHEMES} ; do \
-	    ${MAKE} clean || exit 1; \
-	    ${MAKE} test.interpreter MYSCHEME=$$scheme || exit 1; \
-	    ${MAKE} test.extra MYSCHEME=$$scheme || exit 1; \
-	    ${MAKE} test.grand MYSCHEME=$$scheme || exit 1; \
+	    ${MAKE} clean.all.but.failures; \
+	    ${MAKE} test.interpreter MYSCHEME=$$scheme; \
+	    ${MAKE} test.extra MYSCHEME=$$scheme; \
+	    ${MAKE} test.grand MYSCHEME=$$scheme; \
 	done; echo "Finished test.release."
 
-test.interpreter:
+	@if [ -e ${FAILURES} ]; \
+		then echo "The following tests failed:"; cat ${FAILURES}; \
+		else echo "All tests passed."; fi
+
+test.interpreter: ${MKDIR_TARGET}
 	@$(call ok-or-fail,"Running book.${MYSCHEME}.test",\
 		${MAKE} o/${HOSTTYPE}/book.${MYSCHEME}.test > /dev/null 2>&1)
 
-test.misc:
+test.misc: ${MKDIR_TARGET}
 	@for target in ${MISC_TARGETS} ; do \
 	    $(call ok-or-fail,"Running $$target",\
 	        ${MAKE} $$target > ${RESULTS} 2>/dev/null) ; \
@@ -300,15 +305,15 @@ test.misc:
 test.extra: ${SCHEME}
 	@for target in ${EXTRA_TESTS} ; do \
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
-	        ${MAKE} MYSCHEME=${MYSCHEME} $$target > ${RESULTS} 2>/dev/null) ; \
-	done; echo "All tests passed."
+		${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null) ; \
+	done
 
 test.grand: ${SCHEME}
 	@for target in ${GRAND_TESTS} ; do \
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
-	        ${MAKE} MYSCHEME=${MYSCHEME} $$target > ${RESULTS} 2>/dev/null \
+	        ${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null \
 	        && ${PERL} perl/check.prl ${RESULTS} $$target > /dev/null) ; \
-	done; echo "All tests passed."
+	done
 
 
 ##################################### Chap 1 ##############################
@@ -1440,6 +1445,9 @@ o/${HOSTTYPE}/c10kex : ${c10kex-deps}
 ######################################################### Common entries
 
 # Clean or recursively clean directories.
+clean.all.but.failures ::
+	-find o/* -maxdepth 0 \! -path ${FAILURES} -exec rm -rf '{}' \;
+
 clean ::
 	-rm -rf o/*
 
