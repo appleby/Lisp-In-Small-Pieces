@@ -259,7 +259,7 @@ grand.test.with.guile : o/${HOSTTYPE}/book.guile
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.guile
 
 
-########################## Release tests
+########################## (Really) All the tests
 # Run all tests for all schemes. This includes all tests from the
 # test.interpreters and grand.test targets, plus a handful of other
 # targets. -- appleby
@@ -275,40 +275,40 @@ define ok-or-fail =
 	   else echo fail; echo "    ${1}" >> "${FAILURES}"; fi
 endef
 
-test.release:
-	@${TIME} ${MAKE} -s do.test.release
+all.test:
+	@${TIME} ${MAKE} -s do.all.test
 
-do.test.release:
+do.all.test:
 	@${MAKE} clean
-	@${MAKE} test.misc
+	@${MAKE} misc.test
 	@for scheme in ${ALL_SCHEMES} ; do \
 	    ${MAKE} clean.all.but.failures; \
-	    ${MAKE} test.interpreter MYSCHEME=$$scheme; \
-	    ${MAKE} test.extra MYSCHEME=$$scheme; \
-	    ${MAKE} test.grand MYSCHEME=$$scheme; \
-	done; echo "Finished test.release."
+	    ${MAKE} interpreter.test MYSCHEME=$$scheme; \
+	    ${MAKE} extra.test MYSCHEME=$$scheme; \
+	    ${MAKE} grand.test.quiet MYSCHEME=$$scheme; \
+	done; echo "Finished test.all."
 
 	@if [ -e ${FAILURES} ]; \
 		then echo "The following tests failed:"; cat ${FAILURES}; \
 		else echo "All tests passed."; fi
 
-test.interpreter: ${MKDIR_TARGET}
+interpreter.test: ${MKDIR_TARGET}
 	@$(call ok-or-fail,"Running book.${MYSCHEME}.test",\
 		${MAKE} o/${HOSTTYPE}/book.${MYSCHEME}.test > /dev/null 2>&1)
 
-test.misc: ${MKDIR_TARGET}
+misc.test: ${MKDIR_TARGET}
 	@for target in ${MISC_TARGETS} ; do \
 	    $(call ok-or-fail,"Running $$target",\
 	        ${MAKE} $$target > ${RESULTS} 2>/dev/null) ; \
 	done
 
-test.extra: ${SCHEME}
+extra.test: ${SCHEME}
 	@for target in ${EXTRA_TESTS} ; do \
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
 		${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null) ; \
 	done
 
-test.grand: ${SCHEME}
+grand.test.quiet: ${SCHEME}
 	@for target in ${GRAND_TESTS} ; do \
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
 	        ${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null \
