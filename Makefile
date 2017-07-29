@@ -266,6 +266,7 @@ grand.test.with.guile : o/${HOSTTYPE}/book.guile
 ALL_SCHEMES = bigloo guile gsi mit
 EXTRA_TESTS = chap10e.example chap10k.example o/chap10ex.E test.chap10e.c
 MISC_TARGETS = test.chap6.bgl test.chap6.ml compare.chap10
+GRAND_BENCH = ${BENCH_CHAP5} ${BENCH_CHAP6} ${BENCH_CHAP7}
 
 define ok-or-fail =
 	${PERL} -e "printf '%-40s', '"${1}"'" ; \
@@ -286,6 +287,7 @@ do.all.test:
 	    ${MAKE} interpreter.test MYSCHEME=$$scheme; \
 	    ${MAKE} extra.test MYSCHEME=$$scheme; \
 	    ${MAKE} grand.test.quiet MYSCHEME=$$scheme; \
+	    ${MAKE} grand.bench.quiet MYSCHEME=$$scheme; \
 	done; echo "Finished test.all."
 
 	@if [ -e ${FAILURES} ]; \
@@ -313,6 +315,12 @@ grand.test.quiet: ${SCHEME}
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
 	        ${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null \
 	        && ${PERL} perl/check.prl ${RESULTS} $$target > /dev/null) ; \
+	done
+
+grand.bench.quiet: ${SCHEME}
+	@for target in ${GRAND_BENCH} ; do \
+	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
+	        ${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null) ; \
 	done
 
 
@@ -460,6 +468,8 @@ test.chap4 : src/chap4.scm src/chap4a.scm src/chap4.tst
 TEST_CHAP5 = test.chap5a loop.test.chap5b test.chap5c test.chap5d test.chap5e \
 	     test.chap5f test.chap5g test.chap5h
 
+BENCH_CHAP5 = bench.chap5a bench.chap5d
+
 bench.chap5 : bench.chap5a
 
 test.chap5a : src/chap5a.scm
@@ -545,6 +555,8 @@ test.chap5h : src/chap5h.scm
 TEST_CHAP6 = test.chap6a test.chap6b test.chap6c test.chap6d \
 	     shared.test.chap6dd test.chap6e dynext.test.chap6f test.chap6g \
 	     test.chap6h
+
+BENCH_CHAP6 = bench.chap6a bench.chap6b bench.chap6c bench.chap6d bench.chap6e bench.chap6f
 
 bench.chap6 : bench.chap6a bench.chap6b bench.chap6c bench.chap6d bench.chap6e
 
@@ -785,6 +797,10 @@ test.chap6h : src/chap6d.scm src/chap6h.scm
 # Bytecode compilation
 TEST_CHAP7 = test.chap7a test.chap7b test.chap7c test.chap7d test.chap7e \
 	     test.chap7g test.chap7h shallow.test.chap7i
+
+BENCH_CHAP7 = bench.chap7d
+
+bench.chap7 : bench.chap7d
 
 # Linearize the intermediate language to make register *val* appear.
 test.chap7a : src/chap6d.scm src/chap7a.scm
