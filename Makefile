@@ -276,48 +276,77 @@ define ok-or-fail =
 	   else echo fail; echo "    ${1}" >> "${FAILURES}"; fi
 endef
 
+define check-failures =
+	if [ -e "${FAILURES}" ]; \
+	   then echo "The following tests failed:"; cat "${FAILURES}"; exit 1; \
+	   else echo "All tests passed."; fi
+endef
+
 all.test:
+	@${MAKE} -s clean
 	@${TIME} ${MAKE} -s do.all.test
 
 do.all.test:
-	@${MAKE} clean
 	@${MAKE} misc.test
 	@for scheme in ${ALL_SCHEMES} ; do \
 	    ${MAKE} clean.all.but.failures; \
+	    ${MAKE} build.interpreter.nospew MYSCHEME=$$scheme; \
 	    ${MAKE} interpreter.test MYSCHEME=$$scheme; \
 	    ${MAKE} extra.test MYSCHEME=$$scheme; \
-	    ${MAKE} grand.test.quiet MYSCHEME=$$scheme; \
-	    ${MAKE} grand.bench.quiet MYSCHEME=$$scheme; \
-	done; echo "Finished test.all."
+	    ${MAKE} grand.test.nospew MYSCHEME=$$scheme; \
+	    ${MAKE} grand.bench.nospew MYSCHEME=$$scheme; \
+	done; echo "Finished all.test."
+	@$(check-failures)
 
-	@if [ -e ${FAILURES} ]; \
-		then echo "The following tests failed:"; cat ${FAILURES}; \
-		else echo "All tests passed."; fi
+# build.interpreter.nospew is like build.interpreter, but only prints
+# pass/fail status.
+build.interpreter.nospew: ${MKDIR_TARGET}
+	@$(call ok-or-fail,"Running ${SCHEME}",\
+		${MAKE} -s ${SCHEME} > ${RESULTS} 2>&1)
 
+# interpreter.test is equivalent to test.interpreters, but for a
+# single $SCHEME, rather than all schemes. Also, this target only
+# prints pass/fail status.
 interpreter.test: ${MKDIR_TARGET}
 	@$(call ok-or-fail,"Running book.${MYSCHEME}.test",\
 		${MAKE} o/${HOSTTYPE}/book.${MYSCHEME}.test > /dev/null 2>&1)
 
+# misc.test includes the few targets that are not included in
+# grand.test and that do not depend on $SCHEME.
 misc.test: ${MKDIR_TARGET}
 	@for target in ${MISC_TARGETS} ; do \
 	    $(call ok-or-fail,"Running $$target",\
 	        ${MAKE} $$target > ${RESULTS} 2>/dev/null) ; \
 	done
 
+# extra.test contains tests not included in the grand.test* targets.
 extra.test: ${SCHEME}
 	@for target in ${EXTRA_TESTS} ; do \
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
 		${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null) ; \
 	done
 
-grand.test.quiet: ${SCHEME}
+# grand.test.quitely is like the grand.test target, but with less
+# output on stdout/stderr.
+grand.test.quietly:
+	@${MAKE} -s clean
+	@${MAKE} -s build.interpreter.nospew
+	@${TIME} ${MAKE} -s grand.test.nospew
+	@$(check-failures)
+
+# grand.test.nospew runs the same tests as the grand.test target, but
+# only prints a single pass/fail status for each test, rather than
+# dumping all test output on stdout/stderr.
+grand.test.nospew: ${SCHEME}
 	@for target in ${GRAND_TESTS} ; do \
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
 	        ${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null \
 	        && ${PERL} perl/check.prl ${RESULTS} $$target > /dev/null) ; \
 	done
 
-grand.bench.quiet: ${SCHEME}
+# grand.bench.nospew is like grand.test.nospew, but runs all
+# benchmarks instead of tests.
+grand.bench.nospew: ${SCHEME}
 	@for target in ${GRAND_BENCH} ; do \
 	    $(call ok-or-fail,"Running $$target with ${MYSCHEME}",\
 	        ${MAKE} $$target MYSCHEME=${MYSCHEME} > ${RESULTS} 2> /dev/null) ; \
