@@ -11,41 +11,36 @@ Setting up an environment
 -------------------------
 
 If you want to run the code in this repo, you have the following
-options, listed in decreasing order of likeliness-to-work:
+options:
 
-1. [Use Virtualbox with Vagrant (preferred method)](#using-virtualbox-with-vagrant-preferred-method)
+1. [Use Virtualbox with Vagrant](#using-virtualbox-with-vagrant)
 2. [Use Virtualbox without Vagrant](#using-virtualbox-without-vagrant)
-3. [Use VMware (with or without Vagrant)](#using-vmware)
+3. [Use Docker](#using-docker)
 4. [Install dependencies yourself without using the provided virtual
    machines](#installing-dependencies-yourself)
 
 If you have a reasonable internet connection and don't mind
-downloading ~500MB of virtual machine, then options 1 and 2 are the
-easiest, and provide the only tested and known-working
-environment. The virtual machines are Arch Linux x86_64 systems with
+downloading ~500MB of virtual machine / docker images, then options
+1-3 are the easiest, and provide the only tested and known-working
+environments. The virtual machines are Arch Linux x86_64 systems with
 all required dependencies pre-installed.
 
 
-### Using Virtualbox with Vagrant (Preferred Method)
+### Using Virtualbox with Vagrant
 
-Using [Vagrant][vagrant] is the easiest way to get up and running with
-an environment suitable for running the code in this repo. Assuming
-you already have vagrant and virtualbox installed, just do the
-following:
+Using [Vagrant][vagrant] is an easy way to get up and running with an
+environment suitable for running the code in this repo. Assuming you
+already have vagrant and virtualbox installed, just do the following:
 
 ``` shell
-git clone https://github.com/appleby/Lisp-In-Small-Pieces.git
-cd Lisp-In-Small-Pieces
-vagrant up
-# Wait for vagrant to download the box and run it.
+mkdir lisp-in-small-pieces
+cd lisp-in-small-pieces
+vagrant init appleby/lisp-in-small-pieces-vm
+vagrant up # Wait for vagrant to download the box and run it.
 vagrant ssh
 ```
 
-You should now be logged in to the vagrant box. Vagrant should have
-mounted the Lisp-In-Small-Pieces source directory on `/vagrant` in the
-vagrant guest. Therefore, you should be able to run `cd /vagrant` on
-the vagrant box to get to the source files. Alternatively, you can
-also just run `git clone` on the vagrant box to clone the repo there.
+You should be logged in to the virtual machine as the `vagrant` user.
 
 You can now skip to the section [Running the Code](#running-the-code).
 
@@ -54,7 +49,7 @@ You can now skip to the section [Running the Code](#running-the-code).
 
 If you want to use a known-working Virtualbox VM but don't want to
 install Vagrant, you can download a tarball that contains an ovf and
-the associated virtual disk [here][vm-latest-release].
+the associated virtual disk [here][latest-release].
 
 Download the virtualbox tarball, extract it, and import the resulting
 ovf into Virtualbox. You can login to the VM either via the console or
@@ -63,30 +58,16 @@ ssh with user `vagrant` and password `vagrant`.
 You can now skip to the section [Running the Code](#running-the-code).
 
 
-### Using VMware
+### Using Docker
 
-In addition to the Virtualbox-compatible VMs mentioned above,
-VMware-compatible versions are also available. However, I don't test
-the VMware versions, not even to make sure they boot.  The VMware
-versions are produced by the same [Packer][packer] build as the
-Virtualbox versions. In so far as the Packer build was successful, the
-VMware versions are expected to be equivalent to the Virtualbox
-machines. They are provided as a convenience for people who already
-have VMware installed and don't want to install Virtualbox.
+``` shell
+docker pull appleby/lisp-in-small-pieces
+docker run -it --rm appleby/lisp-in-small-pieces
+```
 
-The steps for getting set up with a VMware-based environment, either
-with or without Vagrant, are essentially the same as the
-[steps for Virtualbox described above](#using-virtualbox-with-vagrant-preferred-method),
-just substituting VMware for Virtualbox everywhere. The one exception
-is that VMware Tools are not installed on the guest, so Vagrant will
-not be able to mount the Lisp-In-Small-Pieces sources on `/vagrant` in
-the VMware guest. You will have to `git clone` the repository once
-you've logged in to the guest.
+Docker should start the container and drop you into a bash shell.
 
-Also note that you need to [purchase a license][vagrant-vmware] in
-order to use the VMware provider with Vagrant, whereas the Virtualbox
-provider is free.
-
+You can now skip to the section [Running the Code](#running-the-code).
 
 ### Installing Dependencies Yourself
 
@@ -103,17 +84,17 @@ mentioned virtual machines. The exact version numbers are not a hard
 requirement, nor a guarantee of a working build. They are included
 only for reference.
 
-- GCC 5.3.0
-- GNU Make 4.1
-- GNU Binutils 2.25.1 (ar, ranlib, size, ...)
-- GNU coreutils 8.25 (uname, time, chmod, tee, nice, ...)
-- GNU bash 4.3.42 (invoked as `sh`, so any Bourne shell likely OK)
-- GNU grep 2.22
-- Perl 5.22.1
+- GCC 7.1.1
+- GNU Make 4.2.1
+- GNU Binutils 2.28.0 (ar, ranlib, size, ...)
+- GNU coreutils 8.27 (uname, time, chmod, tee, nice, ...)
+- GNU bash 4.4.12 (invoked as `sh`, so any Bourne shell likely OK)
+- GNU grep 3.1
+- Perl 5.26.0
 - One or more of the following schemes
-  - bigloo 4.2c
-  - gambit 4.8.3
-  - guile 2.0.11
+  - bigloo 4.3a
+  - gambit 4.8.8
+  - guile 2.2.2
   - mit-scheme 9.2
 
 In addition to the above required dependencies, the following optional
@@ -131,27 +112,57 @@ Running the Code
 ----------------
 
 1. Clone this repo.
-    `git clone http://github.com/appleby/Lisp-In-Small-Pieces.git`
+    `git clone http://github.com/appleby/lisp-in-small-pieces.git && cd lisp-in-small-pieces`
 
-2. Edit the Makefile and set the `MYSCHEME` variable to the scheme
+2. Edit the `Makefile` and set the `MYSCHEME` variable to the scheme
    interpreter you want. The supported values for `MYSCHEME` are:
    `bigloo`, `gsi`, `guile`, and `mit`.
 
-3. Run `make grand.test` to run the test suite. Running the tests will
-   take a while, but at the end you should see a message that says
-   "All tests passed."
+3. Run `make grand.test` or `make grand.test.quietly` to run the test
+   suite. Running the tests will take a while, but at the end you
+   should see a message that says "All tests passed."
 
 If you want to temporarily try running the tests with a different
 scheme interpreter, you can set the `MYSCHEME` variable when invoking
-make, like so: `make MYSCHEME=guile grand.test`.  Or, equivalently,
-`make grand.test.with.guile`. Of course, you can replace `guile` in
-the previous examples with any valid value for `MYSCHEME`.
+make, like so: `make MYSCHEME=guile grand.test.quietly`.  Of course,
+you can replace `guile` in the previous examples with any valid value
+for `MYSCHEME`.
 
 If you don't want to run the full test suite, but only the tests for a
 particular chapter of the book, you can specify the targets you want
 individually. For example, `make test.chap5f`. See the Makefile for a
 list of available targets.
 
+If you want to run all tests for all schemes, run `make all.test`. You
+probably don't want to run this target though, as it takes quite a
+while to complete. The `all.test` target is mostly useful for testing
+changes to this repo.
+
+What happened to the VMware images?
+-----------------------------------
+
+The VMware images were produced by a HashiCorp Atlas build. Atlas is
+no longer free, so I don't produce the VMware builds anymore. If you
+want, you can run the v0.3 VMware [vagrant box][vagrant]
+or [ovf][releases] and use it with the v0.3 tag in this repo. For
+example, to use the vmware vagrant box, assuming you have a vmware
+vagrant license, etc.
+
+``` shell
+mkdir lisp-in-small-pieces
+cd lisp-in-small-pieces
+vagrant init --box-version 0.3 appleby/lisp-in-small-pieces-vm
+vagrant up --provider vmware
+vagrant ssh
+```
+
+Once you're logged in to the vm:
+
+``` shell
+git clone https://github.com/appleby/lisp-in-small-pieces.git
+cd lisp-in-small-pieces
+git checkout v0.3
+```
 
 Failing test.reflisp
 --------------------
@@ -196,7 +207,9 @@ For a lot more info, see the [original README][README] file.
 
 
 [README]: https://raw.githubusercontent.com/appleby/Lisp-In-Small-Pieces/master/README.orig
-[vm-latest-release]: https://github.com/appleby/Lisp-In-Small-Pieces-VM/releases/latest
+[vagrant]: https://app.vagrantup.com/appleby/boxes/lisp-in-small-pieces-vm
+[releases]: https://github.com/appleby/Lisp-In-Small-Pieces-VM/releases/
+[latest-release]: https://github.com/appleby/Lisp-In-Small-Pieces-VM/releases/latest
 
 [LiSP]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html
 [LiSP-2ndEdition]: http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz
