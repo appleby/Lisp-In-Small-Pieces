@@ -112,7 +112,7 @@ Running the Code
 ----------------
 
 1. Clone this repo.
-    `git clone http://github.com/appleby/lisp-in-small-pieces.git && cd lisp-in-small-pieces`
+    `git clone https://github.com/appleby/lisp-in-small-pieces.git && cd lisp-in-small-pieces`
 
 2. Edit the `Makefile` and set the `MYSCHEME` variable to the scheme
    interpreter you want. The supported values for `MYSCHEME` are:
