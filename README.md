@@ -84,24 +84,24 @@ mentioned virtual machines. The exact version numbers are not a hard
 requirement, nor a guarantee of a working build. They are included
 only for reference.
 
-- GCC 7.1.1
+- GCC 8.2.1
 - GNU Make 4.2.1
-- GNU Binutils 2.28.0 (ar, ranlib, size, ...)
-- GNU coreutils 8.27 (uname, time, chmod, tee, nice, ...)
-- GNU bash 4.4.12 (invoked as `sh`, so any Bourne shell likely OK)
+- GNU Binutils 2.31.1 (ar, ranlib, size, ...)
+- GNU coreutils 8.30 (uname, time, chmod, tee, nice, ...)
+- GNU bash 4.4.23 (invoked as `sh`, so any Bourne shell likely OK)
 - GNU grep 3.1
-- Perl 5.26.0
+- Perl 5.28.0
 - One or more of the following schemes
   - bigloo 4.3a
-  - gambit 4.8.8
-  - guile 2.2.2
+  - gambit 4.9.0
+  - guile 2.2.4
   - mit-scheme 9.2
 
 In addition to the above required dependencies, the following optional
 dependencies are needed by certain tests which are not included in the
 `grand.test` target, but which may be run individually.
 
-- GNU indent 2.2.11
+- GNU indent 2.2.12
 - Caml Light 0.82
 
 Once you have the dependencies installed, you can keep your fingers
