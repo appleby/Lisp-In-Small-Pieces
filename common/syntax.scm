@@ -13,19 +13,23 @@
 ;;; Check the README file before using this file.
 ;;;(((((((((((((((((((((((((((((((( L i S P ))))))))))))))))))))))))))))))))
 
-;;; Two macros that I frequently use:
-(define-syntax unless
-  (syntax-rules ()
-    ((unless condition form ...)
-     (if (not condition) (begin form ...)) ) ) )
+;;; All of bigloo, gambit, guile, and mit-scheme now have WHEN and
+;;; UNLESS defined by default, and gambit complains if you try to
+;;; redefine them.
 
-(define-syntax when
-  (syntax-rules ()
-    ((when condition form ...)
-     (if condition (begin form ...)) ) ) )
+;;; Two macros that I frequently use:
+;; (define-syntax unless
+;;   (syntax-rules ()
+;;     ((unless condition form ...)
+;;      (if (not condition) (begin form ...)) ) ) )
+
+;; (define-syntax when
+;;   (syntax-rules ()
+;;     ((when condition form ...)
+;;      (if condition (begin form ...)) ) ) )
 
 ;;; Since the define-abbreviation is also necessary for the book when non high
-;;; level macros are defined, register define-abbreviation for syntax-case. 
+;;; level macros are defined, register define-abbreviation for syntax-case.
 
 (define-syntax define-abbreviation
   (syntax-rules ()
