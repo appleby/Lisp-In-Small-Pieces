@@ -17,8 +17,8 @@
 
 ;;; Test for chap7e.scm.
 ;;; Be above directories /si/ and /so/ then evaluate:
-;;;     (compile-file "si/fact")
-;;; It generates the file si/fact.so that can be read.
+;;;     (compile-file "si/fact.scm" "o/fact.so")
+;;; It generates the file o/fact.so that can be read.
 
 (set! fact
       (lambda (n)

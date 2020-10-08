@@ -17,11 +17,11 @@
 
 ;;; This file uses some global variables. It tests global variable
 ;;; linking. Compile it with :
-;;;     (compile-file "si/after")
+;;;     (compile-file "si/after.scm" "o/after.so")
 ;;; builds the executable with:
-;;;     (build-application "si/a.out" "si/fact" "si/fib" "si/foo" "si/after")
+;;;     (build-application "o/a.out" "o/fact.so" "o/fib.so" "o/foo.so" "o/after.so")
 ;;; and runs the total program with:
-;;;     (run-application 400 "si/a.out")
+;;;     (run-application 400 "o/a.out")
 
 (set! fib fact)
 
@@ -64,7 +64,7 @@
 ;;; prints (720 (bar . -34) (1 2 ... #t))
 
 ;;; reload fib
-(load "si/fib.so")
+(load "o/fib.so")
 
 ;;; prints 89.
 (display ((global-value 'fib) 10))
