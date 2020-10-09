@@ -52,7 +52,6 @@ export HOSTTYPE := $(shell uname -m)
 # included test suite than any other interpreter.  -- appleby
 
 MYSCHEME = bigloo
-# MYSCHEME = gsi
 # MYSCHEME = guile
 # MYSCHEME = mit
 
@@ -145,13 +144,13 @@ build.interpreter : ${MKDIR_TARGET}
 	    else : ; fi
 
 	case "${SCHEME}" in \
-	    *bigloo|*gsi|*mit|*guile) ${MAKE} ${SCHEME} ;; \
+	    *bigloo|*mit|*guile) ${MAKE} ${SCHEME} ;; \
 	    *) : ;; esac
 
 ######################################## Test interpreters
 
 test.interpreters : o/${HOSTTYPE}/book.bigloo.test o/${HOSTTYPE}/book.mit.test \
-    o/${HOSTTYPE}/book.gsi.test o/${HOSTTYPE}/book.guile.test
+    o/${HOSTTYPE}/book.guile.test
 
 MIT_BAND_FILE=o/${HOSTTYPE}/book.mit.com
 ${MIT_BAND_FILE} : ${MKDIR_TARGET}
@@ -172,13 +171,6 @@ o/${HOSTTYPE}/book.guile : ${MKDIR_TARGET}
 	echo "exec guile -q -l guile/book.scm" >> $@
 	chmod a=rwx $@
 
-# Makes a command for Gambit interpreter similar to the others.
-# This command has to be run from the current directory.
-o/${HOSTTYPE}/book.gsi : ${MKDIR_TARGET}
-	echo "#!/bin/sh" > o/${HOSTTYPE}/book.gsi
-	echo "exec gsi -:s,d- gambit/book.scm" >> o/${HOSTTYPE}/book.gsi
-	chmod a=rwx o/${HOSTTYPE}/book.gsi
-
 check.results :
 	@if grep -i '= done' ${RESULTS} ; \
 	    then echo '*** Tests successfully passed ***' ; \
@@ -186,8 +178,6 @@ check.results :
 
 o/${HOSTTYPE}/book.bigloo.test :
 	${MAKE} SCHEME=o/${HOSTTYPE}/book.bigloo book.interpreter.test
-o/${HOSTTYPE}/book.gsi.test :
-	${MAKE} SCHEME=o/${HOSTTYPE}/book.gsi book.interpreter.test
 o/${HOSTTYPE}/book.mit.test :
 	${MAKE} SCHEME=o/${HOSTTYPE}/book.mit book.interpreter.test
 o/${HOSTTYPE}/book.guile.test :
@@ -251,8 +241,6 @@ do.grand.test : ${SCHEME}
 
 grand.test.with.bigloo : o/${HOSTTYPE}/book.bigloo
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.bigloo
-grand.test.with.gsi : o/${HOSTTYPE}/book.gsi
-	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.gsi
 grand.test.with.mit : o/${HOSTTYPE}/book.mit
 	${MAKE} grand.test SCHEME=o/$$HOSTTYPE/book.mit
 grand.test.with.guile : o/${HOSTTYPE}/book.guile
@@ -263,7 +251,7 @@ grand.test.with.guile : o/${HOSTTYPE}/book.guile
 # Run all tests for all schemes. This includes all tests from the
 # test.interpreters and grand.test targets, plus a handful of other
 # targets. -- appleby
-ALL_SCHEMES = bigloo guile gsi mit
+ALL_SCHEMES = bigloo guile mit
 EXTRA_TESTS = chap10e.example chap10k.example o/chap10ex.E test.chap10e.c
 MISC_TARGETS = test.chap6.bgl test.chap6.ml compare.chap10
 GRAND_BENCH = ${BENCH_CHAP5} ${BENCH_CHAP6} ${BENCH_CHAP7}

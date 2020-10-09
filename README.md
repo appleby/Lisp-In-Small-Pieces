@@ -3,7 +3,7 @@ Lisp In Small Pieces for Modern Schemes
 
 This repository contains source code from the book
 [Lisp In Small Pieces][LiSP] by Christian Queinnec, updated to work
-with modern versions of [Bigloo][bigloo], [Gambit][gambit],
+with modern versions of [Bigloo][bigloo],
 [MIT Scheme][mit-scheme], and [Guile][guile].
 
 
@@ -93,7 +93,6 @@ only for reference.
 - Perl 5.28.0
 - One or more of the following schemes
   - bigloo 4.3a
-  - gambit 4.9.0
   - guile 2.2.4
   - mit-scheme 9.2
 
@@ -116,7 +115,7 @@ Running the Code
 
 2. Edit the `Makefile` and set the `MYSCHEME` variable to the scheme
    interpreter you want. The supported values for `MYSCHEME` are:
-   `bigloo`, `gsi`, `guile`, and `mit`.
+   `bigloo`, `guile`, and `mit`.
 
 3. Run `make grand.test` or `make grand.test.quietly` to run the test
    suite. Running the tests will take a while, but at the end you
@@ -137,6 +136,17 @@ If you want to run all tests for all schemes, run `make all.test`. You
 probably don't want to run this target though, as it takes quite a
 while to complete. The `all.test` target is mostly useful for testing
 changes to this repo.
+
+What happened to Gambit support?
+--------------------------------
+
+Previous versions of this repo included support for Gambit scheme by
+setting `MYSCHEME=gsi`. Gambit support was dropped in v0.6 due to a
+[bug in Gambit's
+define-syntax](https://github.com/gambit/gambit/issues/384) at the
+time of release (Gambit v4.9.3).
+
+If you really want Gambit support, you can checkout the v0.5 tag of this repo and make sure you download the corresponding v0.5 release of whatever virtual image you want (vagrant, virtualbox ovf, docker).
 
 What happened to the VMware images?
 -----------------------------------
@@ -192,12 +202,14 @@ I'm not planning to fix the `test.reflisp` target since:
 Other Schemes
 -------------
 
-In addition to bigloo, gambit, and mit-scheme the
+In addition to bigloo and mit-scheme the
 [original sources][LiSP-2ndEdition] also supported elk, scheme2c, and
 scm.  I'm not planning to get those working myself, but pull requests
 are welcome.
 
 Guile was not supported in the original sources.
+
+Gambit was previously supported, but has been dropped for now do to a bug in define-syntax (see above).
 
 
 More Info
